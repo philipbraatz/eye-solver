@@ -138,6 +138,7 @@ public:
 	vector<float> Nnet::getLastLayer();
 
 private:
+	//const int MAX_WEIGHT = 9999;
 
 	float m_score;
 

@@ -111,10 +111,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EvoNet.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Nnet.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EvoNet.h" />
     <ClInclude Include="Nnet.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="utility.h" />

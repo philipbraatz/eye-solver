@@ -17,6 +17,9 @@
     <ClCompile Include="Nnet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EvoNet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Nnet.h">
@@ -26,6 +29,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="EvoNet.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Solution_finder.rc">

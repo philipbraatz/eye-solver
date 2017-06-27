@@ -14,10 +14,6 @@ Nnet::Nnet(std::string filename) {
 	loadNet(filename);
 	Setup(0,0,0,0,true);
 }
-//Nnet::Nnet(float Ninputs, float Nhiddens, int SizeHidden, float Noutputs, vector<float> goal) {
-//	m_goal = goal;
-//	Setup(Ninputs, Nhiddens, SizeHidden, Noutputs);
-//}
 
 void Nnet::Setup(float Ninputs, float Nhiddens, int SizeHidden, float Noutputs, bool loaded)
 {
@@ -44,9 +40,7 @@ void Nnet::Setup(float Ninputs, float Nhiddens, int SizeHidden, float Noutputs, 
 		if (!loaded)
 		{
 			for (size_t j = 0; j < hidden.front().size; j++)
-			{
 				input.neurons[i].weights[j] = RandNum();
-			}
 			input.neurons[i].bias = RandNum();
 		}
 	}
@@ -56,9 +50,7 @@ void Nnet::Setup(float Ninputs, float Nhiddens, int SizeHidden, float Noutputs, 
 		if (!loaded)
 		{
 			for (size_t j = 0; j < hidden.back().size; j++)
-			{
 				output.neurons[i].weights[j] = RandNum();
-			}
 			output.neurons[i].bias = RandNum();
 		}
 	}
@@ -70,9 +62,7 @@ void Nnet::Setup(float Ninputs, float Nhiddens, int SizeHidden, float Noutputs, 
 			if (!loaded)
 			{
 				for (size_t k = 0; k < hidden[i].size; k++)
-				{
 					hidden[i].neurons[j].weights[k] = RandNum();
-				}
 				hidden[i].neurons[j].bias = RandNum();
 			}
 		}
@@ -83,9 +73,7 @@ void Nnet::Setup(float Ninputs, float Nhiddens, int SizeHidden, float Noutputs, 
 		if (!loaded)
 		{
 			for (size_t j = 0; j < hidden[i].size; j++)
-			{
 				hidden.back().neurons[i].weights[j] = RandNum();
-			}
 			hidden.back().neurons[i].bias = RandNum();
 		}
 	}
@@ -178,24 +166,19 @@ std::vector<float> Nnet::Propigate(vector<float> inputs)
 	return out;
 }
 
-void Nnet::Normalize(float &input)
-{
+void Nnet::Normalize(float &input){
 	input = 1 / (1 + pow(e, -input));
 }
+
 void Nnet::AddBiases(vector<float> cur,vector<float> biases, vector<float> &out)
 {
 	if (cur.size() == biases.size())
 	{
 		for (size_t i = 0; i < cur.size(); i++)
-		{
 			out.push_back(cur[i]+biases[i]);
-		}
 	}
 	else
-	{
-		//TODO error invalid size
-	}
-
+		std::cout << "ERROR: Invalid vector size";
 }
 
 void Nnet::Mutate(double rate)
@@ -247,16 +230,16 @@ void Nnet::Mutate(double rate)
 
 void Nnet::MutTable(float &weight)
 {
-	const float MAX = 9999;
+	const int MAX_WEIGHT = 9999;
 
 	int choice = (int)(RandNum() * 3);
 	float r = RandNum();
 
 	//limit min/max
-	if (weight > MAX)
-		weight = MAX;
-	else if (weight < -MAX)
-		weight = -MAX;
+	if (weight > MAX_WEIGHT)
+		weight = MAX_WEIGHT;
+	else if (weight < -MAX_WEIGHT)
+		weight = -MAX_WEIGHT;
 
 	switch (choice)
 	{
@@ -266,7 +249,8 @@ void Nnet::MutTable(float &weight)
 	case 1://invert weight
 		weight *= -1;
 			break;
-	case 2://aproach -1,0,
+	case 2://aproach a round number
+		weight = (int)weight * r;
 		break;
 	}
 }
