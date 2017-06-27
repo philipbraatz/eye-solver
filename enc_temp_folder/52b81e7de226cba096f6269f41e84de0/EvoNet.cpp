@@ -39,14 +39,13 @@ void EvoNet::Reorder()
 
 	for (size_t i = 0; i < size; i++)
 	{
-		int spot=-1;
+		int spot;
 		for (size_t j = 0; j < i; j++)
 		{
 			if (pop[i].getScore() < pop[j].getScore())//if test is less than anything infront it
 				spot = j;//make it the best spot to be
 		}
-		if(spot != -1)
-			std::swap(pop[i], pop[spot]);//they trade places with best spot
+		std::swap(pop[i], pop[spot]);//they trade places with best spot
 	}
 }
 void EvoNet::repopulate(float save)
