@@ -1,3 +1,4 @@
+#pragma once
 #include "Nnet.h"
 #include "utility.h"
 
@@ -7,7 +8,8 @@ using std::vector;
 
 //initialize
 
-Nnet::Nnet(float Ninputs, float Nhiddens, int SizeHidden, float Noutputs) { Setup(Ninputs, Nhiddens,SizeHidden, Noutputs);}
+Nnet::Nnet(){ Setup(0, 0, 0, 0); }
+Nnet::Nnet(float Ninputs, float Nhiddens, int SizeHidden, float Noutputs) { Setup(Ninputs, Nhiddens, SizeHidden, Noutputs); }
 Nnet::Nnet(std::string filename) {
 	loadNet(filename);
 	Setup(0,0,0,0,true);
@@ -106,6 +108,7 @@ unsigned int Nnet::GetLayerSize(type l)
 		return hidden.front().size;
 		break;
 	default:
+		return -1;
 		break;
 	}
 }
@@ -193,5 +196,87 @@ void Nnet::AddBiases(vector<float> cur,vector<float> biases, vector<float> &out)
 		//TODO error invalid size
 	}
 
-	//std::transform(cur.begin(), cur.end(), biases.begin(), out.begin(), std::plus<float>());
+}
+
+void Nnet::Mutate(double rate)
+{
+	//weights
+	if (rate) { rate = rate; }
+	for (size_t i = 0; i < input.size; i++) {//input
+		for (size_t j = 0; j < hidden.front().size; j++) {
+			if (rate > RandNum())//if rand is less that its mutate rate
+				MutTable(input.neurons[i].weights[j]);//mutate
+		}
+	}
+	if (rate) { rate = rate; }
+	for (size_t i = 1; i < m_Nhidden; i++) {//hidden
+		for (size_t j = 0; j < hidden[i].size; j++) {
+			for (size_t k = 0; k < hidden[i].size; k++) {
+				if (rate > RandNum())//if rand is less that its mutate rate
+					MutTable(hidden[i - 1].neurons[j].weights[k]);//mutate
+			}
+		}
+	}
+	if (rate) { rate = rate; }
+	for (size_t i = 0; i < hidden.back().size; i++) {//last hidden
+		for (size_t j = 0; j < output.size; j++) {
+			if (rate > RandNum())//if rand is less that its mutate rate
+				MutTable(hidden.back().neurons[i].weights[j]);//mutate
+		}
+	}
+
+	//biases
+	if (rate) { rate = rate; }
+	for (size_t i = 0; i < input.size; i++) {
+		if (rate > RandNum())
+			MutTable(input.neurons[i].bias);
+	}
+	if (rate) { rate = rate; }
+	for (size_t i = 0; i < m_Nhidden; i++) {
+		for (size_t j = 0; j < hidden[i].size; j++) {
+			if (rate > RandNum())
+				MutTable(hidden[i].neurons[j].bias);
+		}
+	}
+	if (rate) { rate = rate; }
+	for (size_t i = 0; i < output.size; i++) {
+		if (rate > RandNum())
+			MutTable(output.neurons[i].bias);
+	}
+}
+
+void Nnet::MutTable(float &weight)
+{
+	const float MAX = 9999;
+
+	int choice = (int)(RandNum() * 3);
+	float r = RandNum();
+
+	//limit min/max
+	if (weight > MAX)
+		weight = MAX;
+	else if (weight < -MAX)
+		weight = -MAX;
+
+	switch (choice)
+	{
+	case 0://change weight by percent
+		weight *= r*1.5;
+		break;
+	case 1://invert weight
+		weight *= -1;
+			break;
+	case 2://aproach -1,0,
+		break;
+	}
+}
+
+vector<float> Nnet::getLastLayer()
+{
+	vector<float> out;
+	for (size_t i = 0; i < output.size; i++)
+	{
+		out.push_back(output.neurons[i].value);
+	}
+	return out;
 }

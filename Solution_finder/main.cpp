@@ -1,4 +1,7 @@
+#pragma once
 #include <ctime>
+
+#include <iomanip>
 
 #include <string>
 #include <iostream>
@@ -8,6 +11,7 @@
 #include <algorithm>
 
 #include "Nnet.h"
+#include "utility.h"
 using std::vector;
 
 
@@ -36,16 +40,22 @@ public:
 		}
 	}
 
-	void DoEpoch(vector<float> inputs)
+	void DoEpoch(vector<float> truth)
 	{
+		vector<float> output;
 		for (size_t i = 0; i < size; i++)
 		{
 			pop[i].setScore(
-				GetTotalDif(inputs,
-					pop[i].Propigate(inputs)
+				GetTotalDif(truth,
+					output=pop[i].Propigate(truth)
 				)
 			);
+			//for (size_t i = 0; i < truth.size(); i++) {
+			//	std::cout << (char)(output[i]*(126-33)+33);
+			//}
+			//std::cout <<" : "<<pop[i].getScore() << std::endl;//DEBUG
 		}
+		Reorder();
 	}
 
 
@@ -56,30 +66,66 @@ public:
 		float value;
 	};
 
-	void Rank()
+	void Reorder()
 	{
+
 		for (size_t i = 0; i < size; i++)
 		{
-			order temp;
-			temp.place = i;
-			temp.value = pop[i].getScore();
-			rank.push_back(temp);//gets next score
 			for (size_t j = 0; j < i; j++)
 			{
-				if (rank.back().value<rank[j].value)//if next score is less than any other score
+				if (pop[i].getScore() < pop[j].getScore())//if test is less than anything infront it
 				{
-					rank.back().place = rank[j].place -1;//move it to where the next smallest score is
+					std::swap(pop[i], pop[j]);//they trade places
 				}
 			}
+			
 		}
 	}
+	// % of survivors to save and repopulate with
+	void repopulate(float save)
+	{
+		int saved = save*size;
+		pop.resize((int)(size*save));
+		for (size_t i = 0; i < size-saved; i++)
+		{
+			int parent = (int)(RandNum()*saved);
+			pop.push_back(pop[i]);
+			pop.back().Mutate(rate);
+		}
+	}
+
+	void updateStats()
+	{
+		prevmed = median;
+		best = 0;
+		median = 0;
+		for (size_t i = 0; i < size; i++)
+		{
+			median += pop[i].getScore();
+			if (best < pop[i].getScore())
+			{
+				best = pop[i].getScore();
+				bestout = pop[i].getLastLayer();
+			}
+		}
+		median /= size;
+	}
+
+	vector<float> getbest() { return bestout; }
+	float getInprovement() {return median - prevmed; }
 
 private:
 	unsigned int size;
 	float rate;
 
 	vector<Nnet> pop;
-	vector<order> rank;//lower place = lower value
+
+	vector<float> bestin;
+	vector<float> bestout;
+	
+	float prevmed;
+	float best;
+	float median;
 };
 
 int main()
@@ -87,26 +133,42 @@ int main()
 	//pre-initialization
 	srand(static_cast <unsigned> (time(0)));
 
+	int start = 33;
+	int end=126;
 	std::string answer = "It's Alive!";
 	vector<float> input, output;
 	for (size_t i = 0; i < answer.length(); i++){
-		input.push_back((int)answer[i]/65.0);
-		std::cout << (char)(input[i]*65);
+		input.push_back(((int)answer[i]-33)/(126-33));
+		std::cout << (char)((input[i]-33)/(126-33));
 	}
 	std::cout <<std::endl;
 	
-	//neural network
-	Nnet test(answer.length(),2,8,answer.length());
-	output =test.Propigate(input);
 
-	//show output
-	for (size_t i = 0; i < output.size(); i++) {
-		std::cout << (char)(output[i]*65);
+	EvoNet group(100, .05, answer.length(), 2, 8, answer.length());
+
+	int count =0;
+	std::string sbest;
+
+	//MAIN LOOP
+	while (true)
+	{
+		group.DoEpoch(input);
+		group.repopulate(.2);
+		group.updateStats();
+
+		for (size_t i = 0; i < answer.length(); i++)
+		{
+			
+		}
+
+		std::cout << std::fixed << std::setprecision(5);
+		std::cout <<"..."<<group.getInprovement() << std::endl;
+
+
+
+		count++;
+		//_getch();
 	}
-	std::cout << std::endl;
-	
-	//test.saveNet("first");
-
 	_getch();
 	return 0;
 }

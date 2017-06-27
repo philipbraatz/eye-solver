@@ -34,6 +34,7 @@ public:
 
 	vector<float> m_goal;
 
+	Nnet();
 	Nnet(float Ninputs, float Nhiddens, int SizeHidden, float Noutputs);
 	Nnet(std::string filename);
 	//Nnet(float Ninputs, float Nhiddens, int SizeHidden, float Noutputs, std::vector<float> goal);
@@ -132,6 +133,10 @@ public:
 		}
 	}
 
+	void Mutate(double rate);
+
+	vector<float> Nnet::getLastLayer();
+
 private:
 
 	float m_score;
@@ -145,4 +150,8 @@ private:
 
 	void Normalize(float &input);
 	void AddBiases(vector<float> cur, vector<float> biases, vector<float> &out);
+
+	void MutTable(float &weight);
+
+
 };
