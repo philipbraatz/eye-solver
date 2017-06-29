@@ -159,7 +159,7 @@ std::vector<float> Nnet::Propigate(vector<float> inputs)
 		for (size_t j = 0; j < m_Nhidden; j++)
 			adder += hidden.back().neurons[j].value * output.neurons[i].weights[j];//node*weight
 		adder += output.neurons[i].bias;
-		Normalize(adder);//normalize
+		//Normalize(adder);//normalize
 		output.neurons[i].value = adder;
 		out[i] = adder;
 	}

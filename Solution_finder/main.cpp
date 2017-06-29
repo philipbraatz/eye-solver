@@ -10,21 +10,46 @@
 #include <vector>
 #include <algorithm>
 
+#include <Windows.h>
+#include <Winuser.h>
+
+#include "graphic.h"
+
 #include "EvoNet.h"
 #include "Nnet.h"
 #include "utility.h"
+
 using std::vector;
-
-
 
 int main()
 {
 	//pre-initialization
+
+	///hide console
+	//ShowWindow(GetConsoleWindow(), SW_HIDE);
+
 	srand(static_cast <unsigned> (time(0)));
 
-	int start = 33;
+	//Setup Display
+	Screen display;
+	display.height = 1080;
+	display.width = 720;
+	display.x = 100;
+	display.y = 50;
+	display.name = "chart";
+	display.image = Mat::zeros(display.width, display.height, CV_8UC3);
+
+	//Setup Graph
+	vector<fPoint> zero;
+	zero.push_back({0,0});
+
+	Graph  g("Chart",display.width, display.height);
+	g.AddLine(zero);//put zero in first line
+	
+	//Setup Problem
+	int start = 32;
 	int end=126;
-	std::string answer = "It's Alive!";
+	std::string answer = "helloworld";
 	vector<float> input, output;
 	for (size_t i = 0; i < answer.length(); i++){
 		input.push_back(((int)answer[i]- start)/(end - start));
@@ -33,30 +58,36 @@ int main()
 	std::cout <<std::endl;
 	
 
-	EvoNet group(100, .05, answer.length(), 2, 8, answer.length());
+	EvoNet group(100, .02, answer.length(), 2, answer.length(), answer.length());
 
-	int count =0;
+	unsigned int count =0;
 	vector<float> sbest;
 
 	//MAIN LOOP
 	while (true)
 	{
+		
+
 		group.DoEpoch(input);
 		group.repopulate(.2);
 		group.updateStats();
 
-		sbest =group.getBest();
+		sbest =group.getBestOut();
 		for (size_t i = 0; i < answer.length(); i++)
 		{
 			std::cout << (char)(sbest[i] * (end - start) + start);
 		}
 
-		std::cout << std::fixed << std::setprecision(16);
+		//std::cout << std::fixed << std::setprecision(16);
 		std::cout << std::endl;
+		fPoint p;
+		p.x = count; 
+		p.y = group.getBestScore();
+		g.AddData(p,0);
 
+		g.DrawGraph();
 
-
-		count++;
+		std:: cout << count++ -1 << " | ";
 		//_getch();
 	}
 	_getch();

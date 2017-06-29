@@ -27,8 +27,8 @@ public:
 
 	void updateStats();
 
-	vector<float> getBest() { return bestout; }
-	float getInprovement() { return median - prevmed; }
+	vector<float> getBestOut() { return bestout; }
+	float getBestScore() { return best; }
 
 private:
 	unsigned int size;

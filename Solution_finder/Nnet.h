@@ -45,7 +45,7 @@ public:
 	//set input and get output
 	vector<float> Propigate(vector<float> inputs);
 
-	void setScore(float score) { Normalize(score); m_score = score; }
+	void setScore(float score) { m_score = score; }
 	float getScore() { return m_score; }
 
 	void saveNet(std::string name)

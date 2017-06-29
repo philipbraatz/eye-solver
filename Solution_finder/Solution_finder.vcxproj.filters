@@ -9,14 +9,38 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Neural Network">
+      <UniqueIdentifier>{f1e15da5-f283-4b07-bdb3-75cf6a5fb0dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{9a2f6824-ad73-412f-bcc3-773abc322169}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EvoNet.cpp">
+      <Filter>Source Files\Neural Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Nnet.cpp">
+      <Filter>Source Files\Neural Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="utility.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EvoNet.h">
+      <Filter>Source Files\Neural Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Nnet.h">
+      <Filter>Source Files\Neural Network</Filter>
+    </ClInclude>
+    <ClInclude Include="graphic.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Solution_finder.rc">
