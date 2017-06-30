@@ -32,8 +32,8 @@ int main()
 
 	//Setup Display
 	Screen display;
-	display.height = 1080;
-	display.width = 720;
+	display.height = 720;
+	display.width = 1080;
 	display.x = 100;
 	display.y = 50;
 	display.name = "chart";
@@ -44,7 +44,8 @@ int main()
 	zero.push_back({0,0});
 
 	Graph  g("Chart",display.width, display.height);
-	g.AddLine(zero);//put zero in first line
+	g.AddLine(zero);		//Best line 0
+	g.AddLine(zero);		//Average line 1
 	
 	//Setup Problem
 	int start = 32;
@@ -58,7 +59,7 @@ int main()
 	std::cout <<std::endl;
 	
 
-	EvoNet group(100, .02, answer.length(), 2, answer.length(), answer.length());
+	EvoNet group(250, .05, answer.length(), 3, answer.length(), answer.length());
 
 	unsigned int count =0;
 	vector<float> sbest;
@@ -67,10 +68,13 @@ int main()
 	while (true)
 	{
 		
-
+		//LOGIC
 		group.DoEpoch(input);
-		group.repopulate(.2);
+		group.repopulate(.1);
 		group.updateStats();
+
+		//PRINT
+		std:: cout << count++ -1 << " | ";
 
 		sbest =group.getBestOut();
 		for (size_t i = 0; i < answer.length(); i++)
@@ -78,16 +82,22 @@ int main()
 			std::cout << (char)(sbest[i] * (end - start) + start);
 		}
 
-		//std::cout << std::fixed << std::setprecision(16);
+
+		//Data
 		std::cout << std::endl;
 		fPoint p;
 		p.x = count; 
+
 		p.y = group.getBestScore();
 		g.AddData(p,0);
 
+		p.y = group.getAveScore();
+		g.AddData(p, 1);
+
+		//DRAW
 		g.DrawGraph();
 
-		std:: cout << count++ -1 << " | ";
+
 		//_getch();
 	}
 	_getch();

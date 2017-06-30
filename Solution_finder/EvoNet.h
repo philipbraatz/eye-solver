@@ -29,6 +29,7 @@ public:
 
 	vector<float> getBestOut() { return bestout; }
 	float getBestScore() { return best; }
+	float getAveScore() { return average; }
 
 private:
 	unsigned int size;
@@ -41,5 +42,5 @@ private:
 
 	float prevmed;
 	float best;
-	float median;
+	float average;
 };

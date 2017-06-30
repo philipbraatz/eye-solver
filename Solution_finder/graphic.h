@@ -2,6 +2,8 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
+//#include <opencv2/core/types.hpp>
+
 #include <vector>
 
 #include "utility.h"
@@ -27,7 +29,7 @@ int SetWindow(char name[], Mat Img, int x, int y)
 	else
 	{
 		namedWindow(name, CV_WINDOW_KEEPRATIO);
-		resizeWindow(name, Img.cols, Img.rows);
+		resizeWindow(name, Img.rows, Img.cols);
 		moveWindow(name, x, y);
 		imshow(name, Img);
 
@@ -64,6 +66,7 @@ public:
 		linedata newline;
 		newline.rawData = alldata;
 		lines.push_back(newline);
+		colors.push_back(Scalar(RandNum() * 255, RandNum() * 255, RandNum() * 255));
 		return lines.size();//return lines id
 	}
 	void AddData(fPoint p, int id){lines[id].rawData.push_back(p);}
@@ -72,7 +75,6 @@ public:
 
 	vector<vector<fPoint>> GetGraph()
 	{
-		SortData();
 		ScaleData();
 
 		outData.clear();//TEST THIS
@@ -91,13 +93,11 @@ public:
 		GetGraph();
 		image = Mat::zeros(m_width, m_height, CV_8UC3);
 
-		//line(
-		//	image,
-		//	{50,100 },
-		//	{ 200,700 },
-		//	Scalar(125, 0, 255)
-		//	);
-
+		rectangle(
+			image,
+			Rect(xmin*xscale, ymin*yscale, xmax*xscale, ymax*yscale),
+			Scalar(255, 0, 0)
+		);
 
 		for (int i = 0; i < outData.size(); i++)
 		{
@@ -105,9 +105,11 @@ public:
 			{
 				line(
 					image,
-					{(int)outData[i][j - 1].x,(int)outData[i][j - 1].y },
+					{ (int)outData[i][j - 1].x,(int)outData[i][j - 1].y },
 					{ (int)outData[i][j].x,(int)outData[i][j].y },
-					Scalar(125, 0, 255)
+					colors[i],
+					1,
+					8
 					);
 			}
 		}
@@ -120,15 +122,17 @@ private:
 	int m_width, m_height;
 
 	vector<linedata> lines;
+	vector<Scalar> colors;
 	vector<vector<fPoint>> outData;
 	char* m_name;
 
 	Mat image;
 
-	void SortData() {
-		for (size_t i = 0; i < lines.size(); i++)//TODO sort data
-			lines[i].sortData = lines[i].rawData;
-	}
+	//void SortData() {
+	//	for (size_t i = 0; i < lines.size(); i++)//TODO sort data
+	//		lines[i].sortData = lines[i].rawData;
+	//}
+
 	//{
 	//	for (size_t i = 0; i < lines.size(); i++)
 	//	{
@@ -175,18 +179,18 @@ private:
 		//set scales
 		float xdiff = xmax - xmin;
 		float ydiff = ymax - ymin;
-		xscale = m_width / xdiff;
-		yscale = m_height / ydiff;
+		xscale = m_width / xdiff/1.5;
+		yscale = m_height / ydiff*1.5;
 
 		//scale data
 		for (size_t i = 0; i < lines.size(); i++)
 		{
-			lines[i].scaleData.resize(lines[i].sortData.size());
-			for (size_t j = 0; j < lines[i].sortData.size(); j++)
+			lines[i].scaleData.resize(lines[i].rawData.size());
+			for (size_t j = 0; j < lines[i].rawData.size(); j++)
 			{
 				fPoint temp;
-				temp.x = (lines[i].sortData[j].x-xmin)*xscale;
-				temp.y =(lines[i].sortData[j].y-ymin)*yscale;
+				temp.x = (lines[i].rawData[j].x-xmin-1)*xscale;
+				temp.y =(lines[i].rawData[j].y-xmin-1)*yscale;
 				lines[i].scaleData[j] = temp;
 			}
 		}

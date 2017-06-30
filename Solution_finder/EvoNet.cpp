@@ -22,14 +22,10 @@ void EvoNet::DoEpoch(vector<float> truth)
 	for (size_t i = 0; i < size; i++)
 	{
 		pop[i].setScore(
-			GetTotalDif(truth,
+			(int)GetTotalDif(truth,
 				output = pop[i].Propigate(truth)
 			)
 		);
-		//for (size_t i = 0; i < truth.size(); i++) {
-		//	std::cout << (char)(output[i]*(126-33)+33);
-		//}
-		//std::cout <<" : "<<pop[i].getScore() << std::endl;//DEBUG
 	}
 	Reorder();
 }
@@ -63,17 +59,17 @@ void EvoNet::repopulate(float save)
 
 void EvoNet::updateStats()
 {
-	prevmed = median;
+	prevmed = average;
 	best = 0;
-	median = 0;
+	average = 0;
 	for (size_t i = 0; i < size; i++)
 	{
-		median += pop[i].getScore();
+		average += pop[i].getScore();
 		if (best < pop[i].getScore())
 		{
 			best = pop[i].getScore();
 			bestout = pop[i].getLastLayer();
 		}
 	}
-	median /= size;
+	average /= size;
 }
