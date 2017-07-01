@@ -72,7 +72,7 @@ void Nnet::Setup(float Ninputs, float Nhiddens, int SizeHidden, float Noutputs, 
 		hidden.back().neurons[i].weights.resize(output.size);
 		if (!loaded)
 		{
-			for (size_t j = 0; j < output.size; j++)
+			for (size_t j = 0; j < hidden[i].size; j++)
 				hidden.back().neurons[i].weights[j] = RandNum();
 			hidden.back().neurons[i].bias = RandNum();
 		}

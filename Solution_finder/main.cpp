@@ -44,8 +44,6 @@ int main()
 	zero.push_back({0,0});
 
 	Graph  g("Chart",display.width, display.height);
-	g.AddLine(zero);		//Best line 0
-	g.AddLine(zero);		//Average line 1
 	
 	//Setup Problem
 	int start = 32;
@@ -58,9 +56,46 @@ int main()
 	}
 	std::cout <<std::endl;
 	
+	vector<EvoNet> fits;
+	double size,rate,hiddens,hsize;
+	double msize =10, mrate=.001, mhiddens=1, mhsize=2;
+	double xsize = 1000, xrate = .25, xhiddens = 6, xhsize = 25;
 
-	EvoNet group(250, .05, answer.length(), 3, answer.length(), answer.length());
+	size = msize;
+	rate = .05;
+	hiddens = 2;
+	hsize = 11;
+	fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
+	g.AddLine(zero);
 
+	size = msize*10;
+	rate = .05;
+	hiddens = 2;
+	hsize = 15;
+	fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
+	g.AddLine(zero);
+
+	size = msize*25;
+	rate = .05;
+	hiddens = 2;
+	fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
+	g.AddLine(zero);
+
+	size = msize * 50;
+	rate = .05;
+	hiddens = 2;
+	hsize = 15;
+	fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
+	g.AddLine(zero);
+
+	size = msize * 100;
+	rate = .05;
+	hiddens = 2;
+	hsize = 15;
+	fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
+	g.AddLine(zero);
+
+	
 	unsigned int count =0;
 	vector<float> sbest;
 
@@ -69,34 +104,39 @@ int main()
 	{
 		
 		//LOGIC
-		group.DoEpoch(input);
-		group.repopulate(.1);
-		group.updateStats();
+		for (size_t i = 0; i < fits.size(); i++)
+		{
+			fits[i].DoEpoch(input);
+			fits[i].repopulate(.5);
+			fits[i].updateStats();
+
+			sbest =fits[i].getBestOut();
+			
+			for (size_t j = 0; j < answer.length(); j++)
+			std::cout << (char)(sbest[j] * (end - start) + start);
+
+
+		}
 
 		//PRINT
+		std::cout << std::endl;
 		std:: cout << count++ -1 << " | ";
 
-		sbest =group.getBestOut();
-		for (size_t i = 0; i < answer.length(); i++)
-		{
-			std::cout << (char)(sbest[i] * (end - start) + start);
-		}
 
 
 		//Data
-		std::cout << std::endl;
+
 		fPoint p;
-		p.x = count; 
+		p.x = count;
 
-		p.y = group.getBestScore();
-		g.AddData(p,0);
-
-		p.y = group.getAveScore();
-		g.AddData(p, 1);
+		for (size_t i = 0; i < fits.size(); i++)
+		{
+			p.y = fits[i].getBestScore();
+			g.AddData(p, i);
+		}
 
 		//DRAW
 		g.DrawGraph();
-
 
 		//_getch();
 	}
