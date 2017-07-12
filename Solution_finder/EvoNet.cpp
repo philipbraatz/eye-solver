@@ -79,28 +79,31 @@ void EvoNet::repopulate(float save)
 void EvoNet::updateStats(bool max)
 {
 	prevmed = average;
+	//reset max to get new best
 	if (max)
-		best = -RAND_MAX;
-	else
 		best = RAND_MAX;
+	else
+		best = -RAND_MAX;
 	average = 0;
 
-	bestout = pop.front().getLastLayer();
+	bestout = pop.front().getLastLayer();//set an output as a fall back in case of error
 	for (size_t i = 0; i < size; i++)
 	{
 		average += pop[i].getScore();
 		if (max)
+		{
 			if (best > pop[i].getScore())
 			{
 				best = pop[i].getScore();
 				bestout = pop[i].getLastLayer();
 			}
+		}
 		else
-			if (best < pop[i].getScore())
-			{
-				best = pop[i].getScore();
-				bestout = pop[i].getLastLayer();
-			}
+		if (best < pop[i].getScore())
+		{
+			best = pop[i].getScore();
+			bestout = pop[i].getLastLayer();
+		}
 
 	}
 	if (best == abs(RAND_MAX))
