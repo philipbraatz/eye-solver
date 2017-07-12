@@ -104,6 +104,9 @@ unsigned int Nnet::GetLayerSize(type l)
 //set input and get output
 std::vector<float> Nnet::Propigate(vector<float> inputs)
 {
+	//TIMER first
+	startProp = clock(); //Start timer
+
 	std::vector<float> biases;
 	std::vector<float> out;
 		
@@ -163,6 +166,8 @@ std::vector<float> Nnet::Propigate(vector<float> inputs)
 		output.neurons[i].value = adder;
 		out[i] = adder;
 	}
+
+	PassedProp = (clock() - startProp);// / CLOCKS_PER_SEC;
 	return out;
 }
 
@@ -183,6 +188,9 @@ void Nnet::AddBiases(vector<float> cur,vector<float> biases, vector<float> &out)
 
 void Nnet::Mutate(double rate)
 {
+	//TIMER first
+	startMut = clock(); //Start timer
+
 	//weights
 	if (rate) { rate = rate; }
 	for (size_t i = 0; i < input.size; i++) {//input
@@ -226,6 +234,8 @@ void Nnet::Mutate(double rate)
 		if (rate > RandNum())
 			MutTable(output.neurons[i].bias);
 	}
+
+	PassedMut = (clock() - startMut);// / CLOCKS_PER_SEC;
 }
 
 void Nnet::MutTable(float &weight)

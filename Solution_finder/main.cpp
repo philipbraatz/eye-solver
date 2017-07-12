@@ -51,92 +51,70 @@ int main()
 	std::string answer = "helloworld";
 	vector<float> input, output;
 	for (size_t i = 0; i < answer.length(); i++){
-		input.push_back(((int)answer[i]- start)/(end - start));
+		input.push_back(((float)answer[i]- start)/(end - start));
 		std::cout << (char)((input[i]- start)/(end - start));
 	}
 	std::cout <<std::endl;
 	
-	vector<EvoNet> fits;
+	//declare all EvoNet
+	vector<EvoNet> fits;//EvoNet List
 	double size,rate,hiddens,hsize;
-	double msize =10, mrate=.001, mhiddens=1, mhsize=2;
+	double msize =750, mrate=.001, mhiddens=1, mhsize=2;
 	double xsize = 1000, xrate = .25, xhiddens = 6, xhsize = 25;
 
 	size = msize;
-	rate = .05;
-	hiddens = 2;
-	hsize = 11;
+	rate = .075;
+	hiddens = 1;
+	hsize = 1;
 	fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
 	g.AddLine(zero);
-
-	size = msize*10;
-	rate = .05;
-	hiddens = 2;
-	hsize = 15;
-	fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
-	g.AddLine(zero);
-
-	size = msize*25;
-	rate = .05;
-	hiddens = 2;
-	fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
-	g.AddLine(zero);
-
-	size = msize * 50;
-	rate = .05;
-	hiddens = 2;
-	hsize = 15;
-	fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
-	g.AddLine(zero);
-
-	size = msize * 100;
-	rate = .05;
-	hiddens = 2;
-	hsize = 15;
-	fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
-	g.AddLine(zero);
-
 	
 	unsigned int count =0;
 	vector<float> sbest;
 
+	clock_t startt;
+	double Passed;
+
 	//MAIN LOOP
 	while (true)
 	{
-		
+		//TIMER first
+		startt = clock(); //Start timer
+
+		for (size_t i = 0; i < answer.length(); i++) {
+			std::cout << (char)((input[i]) * (end - start)+start);
+		}
+
 		//LOGIC
 		for (size_t i = 0; i < fits.size(); i++)
 		{
-			fits[i].DoEpoch(input);
+			fits[i].DoEpoch(input,false);
 			fits[i].repopulate(.5);
-			fits[i].updateStats();
+			fits[i].updateStats(false);
+
+			//Data
+
+			fPoint p;
+			p.x = count;
+			p.y = fits[i].getBestScore();// /fits[i].getTime();
+			g.AddData(p, i);
+
+			std::cout << "\tScore: " << p.y << " | ";
 
 			sbest =fits[i].getBestOut();
-			
 			for (size_t j = 0; j < answer.length(); j++)
-			std::cout << (char)(sbest[j] * (end - start) + start);
-
-
+				std::cout << (char)(sbest[j] * (end - start) + start);
 		}
 
 		//PRINT
 		std::cout << std::endl;
-		std:: cout << count++ -1 << " | ";
-
-
-
-		//Data
-
-		fPoint p;
-		p.x = count;
-
-		for (size_t i = 0; i < fits.size(); i++)
-		{
-			p.y = fits[i].getBestScore();
-			g.AddData(p, i);
-		}
+		std:: cout << "Gen: "<< count++ -1 << " | ";
 
 		//DRAW
 		g.DrawGraph();
+
+		Passed = (clock() - startt) / CLOCKS_PER_SEC;
+		//std::cout << "\ttime:" << Passed;
 
 		//_getch();
 	}

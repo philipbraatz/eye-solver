@@ -90,6 +90,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Users\Philip\Documents\Programming_Libraries\glew-2.0.0-win32\glew-2.0.0\include\GL;C:\Users\Philip\Documents\Programming_Libraries\openCV 3.1.0\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>C:\Users\Philip\Documents\Programming_Libraries\glew-2.0.0-win32\glew-2.0.0\lib\Release\x64;C:\Users\Philip\Documents\Programming_Libraries\openCV 3.1.0\opencv\build\x64\vc14\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -102,6 +103,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Users\Philip\Documents\Programming_Libraries\glew-2.0.0-win32\glew-2.0.0\include\GL;C:\Users\Philip\Documents\Programming_Libraries\openCV 3.1.0\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
     </ClCompile>
     <Link />
     <Link>
@@ -117,6 +119,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Users\Philip\Documents\Programming_Libraries\glew-2.0.0-win32\glew-2.0.0\include\GL;C:\Users\Philip\Documents\Programming_Libraries\openCV 3.1.0\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -133,6 +136,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Users\Philip\Documents\Programming_Libraries\glew-2.0.0-win32\glew-2.0.0\include\GL;C:\Users\Philip\Documents\Programming_Libraries\openCV 3.1.0\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

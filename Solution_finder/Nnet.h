@@ -5,6 +5,10 @@
 #include <fstream>
 #include <iostream>//DEBUG
 
+//timer
+#include <ctime>
+#include <cstdlib>
+
 using std::vector;
 
 const double e = 2.71828182845904523536;
@@ -137,10 +141,22 @@ public:
 
 	vector<float> Nnet::getLastLayer();
 
+	//in seconds
+	//call after propigate and mutate
+	double GetSpeed(){
+		double total = PassedMut + PassedProp;
+		PassedMut = 0;	//prevents double counting	//
+		PassedProp = 0;	//							//
+		return total;
+	}
+
 private:
 	//const int MAX_WEIGHT = 9999;
 
 	float m_score;
+
+	clock_t startProp,startMut;
+	double PassedProp,PassedMut;
 
 	//layers
 	layer input;
@@ -153,6 +169,4 @@ private:
 	void AddBiases(vector<float> cur, vector<float> biases, vector<float> &out);
 
 	void MutTable(float &weight);
-
-
 };

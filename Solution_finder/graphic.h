@@ -18,8 +18,6 @@ struct linedata
 	vector<fPoint> scaleData;
 };
 
-
-
 //shows image under name at x,y. resized to fit the image
 //call once to make the window
 int SetWindow(char name[], Mat Img, int x, int y)
@@ -95,7 +93,7 @@ public:
 
 		rectangle(
 			image,
-			Rect(xmin*xscale, ymin*yscale, xmax*xscale, ymax*yscale),
+			Rect(xmin*xscale+space, ymin*yscale+space, xmax*xscale-space, ymax*yscale-space),
 			Scalar(255, 0, 0)
 		);
 
@@ -120,6 +118,8 @@ public:
 private:
 	float xmin, xmax,ymin,ymax,xscale,yscale;
 	int m_width, m_height;
+
+	const int space = 5;
 
 	vector<linedata> lines;
 	vector<Scalar> colors;
@@ -179,8 +179,10 @@ private:
 		//set scales
 		float xdiff = xmax - xmin;
 		float ydiff = ymax - ymin;
-		xscale = m_width / xdiff/1.5;
-		yscale = m_height / ydiff*1.5;
+		xscale = (m_width-space*2) / xdiff/1.5;
+		yscale = (m_height-space*2) / ydiff*1.5;
+		//xscale = m_width / xmax / 1.5;
+		//yscale= m_height / ymax * 1.5;
 
 		//scale data
 		for (size_t i = 0; i < lines.size(); i++)
@@ -188,10 +190,10 @@ private:
 			lines[i].scaleData.resize(lines[i].rawData.size());
 			for (size_t j = 0; j < lines[i].rawData.size(); j++)
 			{
-				fPoint temp;
-				temp.x = (lines[i].rawData[j].x-xmin-1)*xscale;
-				temp.y =(lines[i].rawData[j].y-xmin-1)*yscale;
-				lines[i].scaleData[j] = temp;
+				fPoint scaled;
+				scaled.x = (lines[i].rawData[j].x- xmin)*xscale+space;
+				scaled.y =(lines[i].rawData[j].y-xmin)*yscale+space;
+				lines[i].scaleData[j] = scaled;
 			}
 		}
 	}

@@ -44,17 +44,17 @@ void EvoNet::Reorder(bool max)
 		{
 			if (max)
 			{
-				if (pop[i].getScore() > pop[j].getScore())//if i is greater than j
+				if (pop[i].getScore() < pop[j].getScore())//if test is less/greater than anything infront it
 								spot = j;//make it the best spot to be
 			}
 			else
 			{
-				if (pop[i].getScore() < pop[j].getScore())//if i is smaller than j
+				if (pop[i].getScore() > pop[j].getScore())//if test is less/greater than anything infront it
 					spot = j;//make it the best spot to be
 			}
 			
 		}
-		if(spot != -1)//if better spot
+		if(spot != -1)
 			std::swap(pop[i], pop[spot]);//they trade places with best spot
 	}
 }
