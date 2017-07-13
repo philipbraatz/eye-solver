@@ -1,6 +1,10 @@
 #pragma once
 #include <cstdlib>
 #include <vector>
+#include <string>
+#include <Windows.h>
+
+using std::string;
 
 struct fPoint
 {
@@ -16,3 +20,11 @@ static float GetTotalDif(std::vector<float> input, std::vector<float> output)
 		total += abs(input[i] - output[i]);
 	return total;
 }
+
+//string GetActiveWindowTitle()
+//{
+//	char wnd_title[256];
+//	HWND hwnd = GetForegroundWindow(); // get handle of currently active window
+//	GetWindowText(hwnd, wnd_title, sizeof(wnd_title));
+//	return wnd_title;
+//}

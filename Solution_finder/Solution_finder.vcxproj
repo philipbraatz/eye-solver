@@ -151,6 +151,7 @@
     <ClCompile Include="Nnet.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="capture.h" />
     <ClInclude Include="EvoNet.h" />
     <ClInclude Include="graphic.h" />
     <ClInclude Include="Nnet.h" />

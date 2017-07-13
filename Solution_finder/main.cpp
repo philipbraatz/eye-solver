@@ -18,6 +18,7 @@
 #include "EvoNet.h"
 #include "Nnet.h"
 #include "utility.h"
+#include "capture.h"
 
 using std::vector;
 
@@ -30,13 +31,39 @@ int main()
 
 	srand(static_cast <unsigned> (time(0)));
 
+	//Setup Screen Capture
+
+	HWND handle;
+	waitKey(1000);
+	std::cout << "5 Seconds left!";
+	waitKey(5000);
+	std::cout << "started!";
+	
+	if (handle = FindWindow(NULL, TEXT("Calculator")))
+	{
+		std::cout << "Worked";
+	}
+	Veiwer vscreen({50,100,300,500});
+	
+	waitKey();
+
+
+	Screen ss;
+	ss.height =vscreen.Capture().rows;
+	ss.width = vscreen.Capture().cols;
+	ss.image = Mat::zeros(ss.width, ss.height, CV_8UC3);
+	ss.name ="Capture";
+	ss.x=0;
+	ss.y=0;
+	SetWindow(ss.name, ss.image, ss.x, ss.y);
+
 	//Setup Display
 	Screen display;
-	display.height = 720;
-	display.width = 1080;
+	display.height = 300;
+	display.width = 400;
 	display.x = 100;
 	display.y = 50;
-	display.name = "chart";
+	display.name = "Chart";
 	display.image = Mat::zeros(display.width, display.height, CV_8UC3);
 
 	//Setup Graph
@@ -81,6 +108,13 @@ int main()
 		//TIMER first
 		startt = clock(); //Start timer
 
+		//get window screen
+		char wnd_title[256];
+		std::cout<< GetWindowText(GetActiveWindow(), wnd_title, sizeof(wnd_title));
+		std::cout << wnd_title;
+		//waitKey();
+		ss.image =vscreen.Capture();
+
 		for (size_t i = 0; i < answer.length(); i++) {
 			std::cout << (char)((input[i]) * (end - start)+start);
 		}
@@ -112,6 +146,8 @@ int main()
 
 		//DRAW
 		g.DrawGraph();
+		imshow(ss.name, ss.image);
+		waitKey(1);
 
 		Passed = (clock() - startt) / CLOCKS_PER_SEC;
 		//std::cout << "\ttime:" << Passed;
