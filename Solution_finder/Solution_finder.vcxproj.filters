@@ -15,6 +15,9 @@
     <Filter Include="Source Files\Graphics">
       <UniqueIdentifier>{9a2f6824-ad73-412f-bcc3-773abc322169}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Controls">
+      <UniqueIdentifier>{6011a597-0ee5-4556-a3a6-92a387dbd1df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -25,6 +28,15 @@
     </ClCompile>
     <ClCompile Include="Nnet.cpp">
       <Filter>Source Files\Neural Network</Filter>
+    </ClCompile>
+    <ClCompile Include="controller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mouse.cpp">
+      <Filter>Source Files\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="OCR.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -44,6 +56,10 @@
     <ClInclude Include="capture.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="mouse.h">
+      <Filter>Source Files\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="controller.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Solution_finder.rc">
