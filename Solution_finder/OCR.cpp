@@ -12,15 +12,15 @@ using namespace cv;
 using std::string;
 
 
-//pretty useless for now
+//give it a name and a image and it will return the text
 string textReconition(string Display, Mat ColorImage)
 {
 	Mat font = imread("C:\\Users\\Philip\\Documents\\Visual Studio 2015\\Projects\\OPENCVtest\\ascii.png", CV_LOAD_IMAGE_GRAYSCALE);
 
-	//namedWindow(Display, CV_WINDOW_KEEPRATIO);
-	//moveWindow(Display, 2050, 300);
+	namedWindow(Display, CV_WINDOW_KEEPRATIO);
+	moveWindow(Display, 2050, 300);
 
-	//namedWindow("font", CV_WINDOW_KEEPRATIO);
+	namedWindow("font", CV_WINDOW_KEEPRATIO);
 
 	//image to read converted to binary
 	Mat greytext(ColorImage.size(), CV_8U);
@@ -49,13 +49,13 @@ string textReconition(string Display, Mat ColorImage)
 	resize(font, newfont, size);
 
 
-	//resizeWindow(Display, greytext.cols, greytext.rows);
-	//imshow(Display, binarytext);
+	resizeWindow(Display, greytext.cols, greytext.rows);
+	imshow(Display, binarytext);
 
 	//displays font
-	///namedWindow("font", CV_WINDOW_KEEPRATIO);
-	///resizeWindow("font", font.cols, font.rows);
-	///imshow("font", font);
+	namedWindow("font", CV_WINDOW_KEEPRATIO);
+	resizeWindow("font", font.cols, font.rows);
+	imshow("font", font);
 
 
 	return "";
