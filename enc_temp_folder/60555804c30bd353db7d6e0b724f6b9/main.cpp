@@ -168,6 +168,10 @@ int main()
 			
 		}
 
+		//PRINT
+		//std::cout << std::endl;
+		//std:: cout << "Gen: "<< count++ -1 << " | ";
+
 		//DRAW
 		g.DrawGraph();
 		Mat scaled;

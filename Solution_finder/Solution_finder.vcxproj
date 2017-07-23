@@ -151,13 +151,14 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mouse.cpp" />
     <ClCompile Include="Nnet.cpp" />
-    <ClCompile Include="OCR.cpp" />
+    <ClCompile Include="OCR.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="capture.h" />
     <ClInclude Include="controller.h" />
     <ClInclude Include="EvoNet.h" />
     <ClInclude Include="graphic.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="Nnet.h" />
     <ClInclude Include="resource.h" />
