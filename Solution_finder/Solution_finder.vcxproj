@@ -148,9 +148,11 @@
   <ItemGroup>
     <ClCompile Include="controller.cpp" />
     <ClCompile Include="EvoNet.cpp" />
+    <ClCompile Include="graphic.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mouse.cpp" />
     <ClCompile Include="Nnet.cpp" />
+    <ClCompile Include="OCR.cpp" />
     <ClCompile Include="OCR.h" />
   </ItemGroup>
   <ItemGroup>

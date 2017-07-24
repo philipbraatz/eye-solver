@@ -102,12 +102,12 @@ int main()
 	fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
 	g.AddLine(zero);
 
-	size = xsize;
-	rate = .075;
-	hiddens = 1;
-	hsize = 2;
-	fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
-	g.AddLine(zero);
+	//size = xsize;
+	//rate = .075;
+	//hiddens = 1;
+	//hsize = 2;
+	//fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
+	//g.AddLine(zero);
 
 	//size = msize;
 	//rate = .075;
@@ -157,25 +157,29 @@ int main()
 
 			//std::cout << "\tScore: " << p.y << " | ";
 
-			cout << "Gen: " << count;
-
-			string out;
-			sbest =fits[i].getCurrentBestOut();
-			for (size_t j = 0; j < answer.length(); j++)//get the output as text
-				out +=(char)(sbest[j] * (end - start) + start);
-
-			if (fits[i].getAllBestOut().back()!= fits[i].getAllBestOut()[fits[i].getGenCount()-1])// if new output is diffrent from previous output
+			if (count > 1)
 			{
-				cout << " | " << out << " "<< endl;
-			}
-			else
-			{
-				cout << "\b\b\b\b\b";
-				for (size_t i = 0; i < std::to_string(count).length(); i++)
+				cout << "Gen: " << count;
+
+				string out;
+				sbest =fits[i].getCurrentBestOut();
+				for (size_t j = 0; j < answer.length(); j++)//get the output as text
+					out +=(char)(sbest[j] * (end - start) + start);
+
+				if (fits[i].getAllBestOut()[fits[i].getGenCount() - 2] != fits[i].getAllBestOut()[fits[i].getGenCount()-1])// if new output is diffrent from previous output
 				{
-					cout << "\b";
+					cout << " | " << out << " "<< endl;
+				}
+				else
+				{
+					cout << "\b\b\b\b\b";
+					for (size_t i = 0; i < std::to_string(count).length(); i++)
+					{
+						cout << "\b";
+					}
 				}
 			}
+
 			
 		}
 

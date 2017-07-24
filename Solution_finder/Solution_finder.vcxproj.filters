@@ -41,6 +41,12 @@
     <ClCompile Include="OCR.h">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="OCR.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphic.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
