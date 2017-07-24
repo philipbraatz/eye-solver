@@ -14,7 +14,7 @@ using namespace cv;
 
 void StartMenu(RECT * area)
 {
-	double version = 0.31;
+	double version = 0.4;
 	cout << "Solution Finder " << version << ":" << endl;
 
 	HWND handle;

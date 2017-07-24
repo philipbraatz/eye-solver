@@ -101,14 +101,26 @@ int main()
 	hsize = 1;
 	fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
 	g.AddLine(zero);
-	
-	unsigned int count =0;
+
+	size = xsize;
+	rate = .075;
+	hiddens = 1;
+	hsize = 2;
+	fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
+	g.AddLine(zero);
+
+	//size = msize;
+	//rate = .075;
+	//hiddens = 1;
+	//hsize = 2;
+	//fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
+	//g.AddLine(zero);
+
 	vector<float> sbest;
 
 	clock_t startt;
 	double Passed;
 
-	vector<string> outputs;
 	int loadState = 0;
 
 	//MAIN LOOP
@@ -135,6 +147,7 @@ int main()
 			fits[i].repopulate(.5);
 			fits[i].updateStats(false);
 
+			unsigned int count = fits[i].getGenCount();
 			//Data
 
 			fPoint p;
@@ -147,14 +160,12 @@ int main()
 			cout << "Gen: " << count;
 
 			string out;
-			sbest =fits[i].getBestOut();
+			sbest =fits[i].getCurrentBestOut();
 			for (size_t j = 0; j < answer.length(); j++)//get the output as text
 				out +=(char)(sbest[j] * (end - start) + start);
-			if(count <= 1)
-				outputs.push_back(out);//get first output
-			if (outputs.back()!= out)// if new output is diffrent from previous output
+
+			if (fits[i].getAllBestOut().back()!= fits[i].getAllBestOut()[fits[i].getGenCount()-1])// if new output is diffrent from previous output
 			{
-				outputs.push_back(out);//add it
 				cout << " | " << out << " "<< endl;
 			}
 			else
@@ -174,8 +185,6 @@ int main()
 		//resize(ss.image,scaled, cvSize(0,0),0.75,1);
 		imshow(ss.name, ss.image);
 		waitKey(1);
-
-		count++;
 
 		Passed = (clock() - startt) / CLOCKS_PER_SEC;
 		//std::cout << "\ttime:" << Passed;

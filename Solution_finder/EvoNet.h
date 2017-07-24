@@ -29,7 +29,11 @@ public:
 
 	void updateStats(bool max);
 
-	vector<float> getBestOut() { return bestout; }
+	unsigned int getGenCount() { return genCount; }
+
+	vector<vector<float>> getAllBestOut() { return bestout; }
+	vector<float> getCurrentBestOut() 
+	{ return bestout[genCount-1]; }
 	float getBestScore() { return best; }
 	float getAveScore() { return average; }
 
@@ -38,17 +42,16 @@ public:
 	double getTime() { return time_epoch+time_repop; }
 
 private:
-	unsigned int size;
+	int size;
 	float rate;
+
+	unsigned int genCount;
 
 	double time_epoch,time_repop;
 
 	vector<Nnet> pop;
 
-	vector<float> bestin;
-	vector<float> bestout;
+	vector<vector<float>> bestin, bestout;//history of all bests
 
-	float prevmed;
-	float best;
-	float average;
+	float prevmed,best,average;
 };
