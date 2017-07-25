@@ -143,7 +143,7 @@ int main()
 		//LOGIC
 		for (size_t i = 0; i < fits.size(); i++)
 		{
-			fits[i].DoEpoch(input,false);
+			fits[i].DoEpoch(input,true);//set goal min or max
 			fits[i].repopulate(.5);
 			fits[i].updateStats(false);
 

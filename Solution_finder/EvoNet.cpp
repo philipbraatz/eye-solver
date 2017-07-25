@@ -35,16 +35,16 @@ void EvoNet::DoEpoch(vector<float> truth,bool max)
 
 		output = pop[i].Propigate(truth);
 
-		int score=0;
+		float score=0;
 		for (size_t j = 0; j < truth.size(); j++)
 		{
 			if ((int)(output[j] * (126 - 32) + 32) ==(int)(truth[j] * (126 - 32) + 32))
 			{
-				score+=126-32;
+				score++;
 			}
 			else
 			{
-				score += abs(output[j] - truth[j]);
+				score -= abs(output[j] - truth[j]);
 			}
 		}
 		pop[i].setScore(score);
