@@ -49,6 +49,8 @@ public:
 	//set input and get output
 	vector<float> Propigate(vector<float> inputs);
 
+	unsigned int getAge() { return age; }
+
 	void setScore(float score) { m_score = score; }
 	float getScore() { return m_score; }
 
@@ -67,6 +69,8 @@ private:
 	//const int MAX_WEIGHT = 9999;
 
 	float m_score;
+
+	int age;
 
 	clock_t startProp,startMut;
 	double PassedProp,PassedMut;

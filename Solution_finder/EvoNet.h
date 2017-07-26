@@ -33,13 +33,15 @@ public:
 
 	vector<vector<float>> getAllBestOut() { return bestout; }
 	vector<float> getCurrentBestOut() 
-	{ return bestout[genCount-1]; }
+	{ return bestout[genCount]; }
 	float getBestScore() { return best; }
 	float getAveScore() { return average; }
 
 	//in seconds
 	//call after epoch and repopulation
 	double getTime() { return time_epoch+time_repop; }
+
+	void SaveBest(string name);
 
 private:
 	int size;
@@ -52,6 +54,7 @@ private:
 	vector<Nnet> pop;
 
 	vector<vector<float>> bestin, bestout;//history of all bests
+	int bestNet;
 
 	float prevmed,best,average;
 };

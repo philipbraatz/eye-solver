@@ -237,6 +237,8 @@ void Nnet::Mutate(double rate)
 			MutTable(output.neurons[i].bias);
 	}
 
+	age++;
+
 	PassedMut = (clock() - startMut);// / CLOCKS_PER_SEC;
 }
 

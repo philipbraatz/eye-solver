@@ -35,166 +35,172 @@ int main()
 	srand(static_cast <unsigned> (time(0)));
 
 	//start menu
+	
 	RECT* pArea = new RECT();
-	StartMenu(pArea);
+	state option;
+	option = StartMenu(pArea);
 	Rect area;
 	area.x	= pArea->left*1.25;
 	area.y = pArea->top;
 	area.width =( pArea->right - pArea->left)*1.25;
 	area.height = (pArea->bottom - pArea->top)*1.25;
 
-	//Setup Screen Capture
 	Veiwer vscreen(area);
 	OCR ocr;
-	Mat screen= vscreen.Capture();
-	ocr.SetFont("C:\\Users\\Philip\\Documents\\Visual Studio 2015\\Projects\\Solution_finder\\fonts\\arial.PNG",16,16);
-	ocr.textReconition("Result", screen);
-	waitKey(1);
+	Screen OCRScr;
 
-	waitKey();
-
-
-	Screen ss;
-	ss.height =vscreen.Capture().rows;
-	ss.width = vscreen.Capture().cols;
-	ss.image = Mat::zeros(ss.width, ss.height, CV_8UC3);
-	ss.name ="Capture";
-	ss.x=0;
-	ss.y=0;
-	SetWindow(ss.name, ss.image, ss.x, ss.y);
-
-	//Setup Display
-	Screen display;
-	display.height =720;
-	display.width = 1080;
-	display.x = 40;
-	display.y = 10;
-	display.name = "Chart";
-	display.image = Mat::zeros(display.width, display.height, CV_8UC3);
-
-	//Setup Graph
+	Screen chartScr;
 	vector<fPoint> zero;
-	zero.push_back({0,0});
 
-	Graph  g("Chart",display.width, display.height);
-	
-	//Setup Problem
-	int start = 32;
-	int end=126;
-	std::string answer = "helloworld";
-	vector<float> input, output;
-	for (size_t i = 0; i < answer.length(); i++){
-		input.push_back(((float)answer[i]- start)/(end - start));
-		std::cout << (char)((input[i]- start)/(end - start));
-	}
-	std::cout <<std::endl;
-	
-	//declare all EvoNet
-	vector<EvoNet> fits;//EvoNet List
-	double size,		rate,		hiddens,	hsize;
-	double msize = 750, mrate= .001,mhiddens= 1,mhsize= 2;
-	double xsize = 1000,xrate= .25,	xhiddens= 6,xhsize = 25;
-
-	size = xsize;
-	rate = .075;
-	hiddens = 1;
-	hsize = 1;
-	fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
-	g.AddLine(zero);
-
-	//size = xsize;
-	//rate = .075;
-	//hiddens = 1;
-	//hsize = 2;
-	//fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
-	//g.AddLine(zero);
-
-	//size = msize;
-	//rate = .075;
-	//hiddens = 1;
-	//hsize = 2;
-	//fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
-	//g.AddLine(zero);
-
-	vector<float> sbest;
-
-	clock_t startt;
-	double Passed;
-
-	int loadState = 0;
-
-	//MAIN LOOP
-	while (true)
+	if (option == NEW || option == CONTINUE)//if needs training
 	{
-		//TIMER first
-		startt = clock(); //Start timer
+		ocr.SetFont("C:\\Users\\Philip\\Documents\\Visual Studio 2015\\Projects\\Solution_finder\\fonts\\arial.PNG",16,16);
 
-		//get window screen
-		//char wnd_title[256];
-		//std::cout<< GetWindowText(GetActiveWindow(), wnd_title, sizeof(wnd_title));
-		//std::cout << wnd_title;
-		//waitKey();
-		ss.image =vscreen.Capture();
+		//setup OCR screen
 
-		/*for (size_t i = 0; i < answer.length(); i++) {
-			std::cout << (char)((input[i]) * (end - start)+start);
-		}*/
+		OCRScr.height =area.height;
+		OCRScr.width = area.width;
+		OCRScr.image = Mat::zeros(OCRScr.height, OCRScr.width, CV_8UC3);
+		OCRScr.name ="Capture";
+		OCRScr.x=0;
+		OCRScr.y=0;
+		ocr.SetVeiwer(OCRScr.name, OCRScr.image);
 
-		//LOGIC
-		for (size_t i = 0; i < fits.size(); i++)
+		//Setup Graph screen
+
+		chartScr.height =720;
+		chartScr.width = 1080;
+		chartScr.x = 40;
+		chartScr.y = 10;
+		chartScr.name = "Chart";
+		chartScr.image = Mat::zeros(chartScr.width, chartScr.height, CV_8UC3);
+
+		//Setup Graph
+
+		zero.push_back({0,0});
+	}
+
+	Graph  g(chartScr.name, chartScr.width, chartScr.height);
+
+	if (option == NEW || option == CONTINUE)//if needs training
+	{
+		//Setup Problem
+		int start = 32;
+		int end = 126;
+		std::string answer = "abc";
+		vector<float> input, output;
+		for (size_t i = 0; i < answer.length(); i++) {
+			input.push_back(((float)answer[i] - start) / (end - start));
+			std::cout << (char)((input[i] - start) / (end - start));
+		}
+		std::cout << std::endl;
+
+		//declare all EvoNet
+		vector<EvoNet> fits;//EvoNet List
+		double size, rate, hiddens, hsize;
+		double msize = 750, mrate = .001, mhiddens = 1, mhsize = 2;
+		double xsize = 1000, xrate = .25, xhiddens = 6, xhsize = 25;
+
+		size = xsize;
+		rate = .075;
+		hiddens = 1;
+		hsize = 1;
+		fits.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
+		g.AddLine(zero);
+
+		vector<float> sbest;
+
+		clock_t startt;
+		double Passed;
+
+		bool done = false;
+
+		unsigned int count;
+		///Learning loop
+		while (!done)
 		{
-			fits[i].DoEpoch(input,true);//set goal min or max
-			fits[i].repopulate(.5);
-			fits[i].updateStats(false);
+			//TIMER first
+			startt = clock(); //Start timer
 
-			unsigned int count = fits[i].getGenCount();
-			//Data
+			OCRScr.image = vscreen.Capture();
+			ocr.textReconition(OCRScr.name, OCRScr.image);
 
-			fPoint p;
-			p.x = count;
-			p.y = fits[i].getBestScore();// /fits[i].getTime();
-			g.AddData(p, i);
+			/*for (size_t i = 0; i < answer.length(); i++) {
+				std::cout << (char)((input[i]) * (end - start)+start);
+			}*/
 
-			//std::cout << "\tScore: " << p.y << " | ";
-
-			if (count > 1)
+			//LOGIC
+			for (size_t i = 0; i < fits.size(); i++)
 			{
-				cout << "Gen: " << count;
+				fits[i].DoEpoch(input, true);//set goal min or max
+				fits[i].repopulate(.5);
+				fits[i].updateStats(false);
 
-				string out;
-				sbest =fits[i].getCurrentBestOut();
-				for (size_t j = 0; j < answer.length(); j++)//get the output as text
-					out +=(char)(sbest[j] * (end - start) + start);
+				count = fits[i].getGenCount();
+				//Data
 
-				if (fits[i].getAllBestOut()[fits[i].getGenCount() - 2] != fits[i].getAllBestOut()[fits[i].getGenCount()-1])// if new output is diffrent from previous output
+				fPoint p;
+				p.x = count;
+				p.y = fits[i].getBestScore();// /fits[i].getTime();
+				g.AddData(p, i);
+
+				//std::cout << "\tScore: " << p.y << " | ";
+
+				if (count > 1)
 				{
-					cout << " | " << out << " "<< endl;
-				}
-				else
-				{
-					cout << "\b\b\b\b\b";
-					for (size_t i = 0; i < std::to_string(count).length(); i++)
+					count = fits[i].getGenCount();
+					cout << "Gen: " << count;
+
+					string out;
+					sbest = fits[i].getCurrentBestOut();
+					for (size_t j = 0; j < answer.length(); j++)//get the output as text
+						out += (char)(sbest[j] * (end - start) + start);
+
+					if (fits[i].getAllBestOut()[fits[i].getGenCount() - 2] != fits[i].getAllBestOut()[fits[i].getGenCount() - 1])// if new output is diffrent from previous output
 					{
-						cout << "\b";
+						cout << " | " << out << " " << endl;
 					}
+					else
+					{
+						cout << "\b\b\b\b\b";
+						for (size_t i = 0; i < std::to_string(count).length(); i++)
+							cout << "\b";
+					}
+
+					if (out == answer)
+						done = true;
 				}
+
+
 			}
 
-			
+			//DRAW
+			g.DrawGraph();
+			Mat scaled;
+			//resize(ss.image,scaled, cvSize(0,0),0.75,1);
+			//imshow(OCRScr.name, OCRScr.image);
+			waitKey(1);
+
+			Passed = (clock() - startt) / CLOCKS_PER_SEC;
+			//std::cout << "\ttime:" << Passed;
+
+			//_getch();
 		}
+		cout << "Done Generating Network" << endl;
+		if (yesNoPromt("would you like to save the Network?"))
+		{
+			fits.front().SaveBest("testBigSave");
+		}
+		cout << "Do you want to test the Network? (y/n)" << endl;
 
-		//DRAW
-		g.DrawGraph();
-		Mat scaled;
-		//resize(ss.image,scaled, cvSize(0,0),0.75,1);
-		imshow(ss.name, ss.image);
-		waitKey(1);
-
-		Passed = (clock() - startt) / CLOCKS_PER_SEC;
-		//std::cout << "\ttime:" << Passed;
-
-		//_getch();
+		_getch();
 	}
-	_getch();
+
+	//Testing loop
+	while (true)
+	{
+
+	}
+
 	return 0;
 }

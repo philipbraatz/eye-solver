@@ -19,12 +19,15 @@ int SetWindow(char name[], Mat Img, int x, int y)
 
 Graph::Graph(char name[], int width, int height)
 {
-	m_width = width; m_height = height;
-	m_name = name;
-	image = Mat::zeros(m_width, m_height, CV_8UC3);
+	Screen n;
+	if (name !=n.name )
+	{
+		m_width = width; m_height = height;
+		m_name = name;
+		image = Mat::zeros(m_width, m_height, CV_8UC3);
 
-	SetWindow(m_name, image, 0, 0);
-
+		SetWindow(m_name, image, 0, 0);
+	}
 }
 
 int Graph::AddLine(vector<fPoint> alldata) {

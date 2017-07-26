@@ -1,3 +1,4 @@
+#pragma once
 #include "EvoNet.h"
 
 
@@ -14,16 +15,14 @@ EvoNet::EvoNet(
 		Nnet temp(Ninputs, Nhiddens, SizeHidden, Noutputs);
 		pop.push_back(temp);
 	}
-
-	genCount = 0;
 }
 
 void EvoNet::DoEpoch(vector<float> truth,bool max)
 {
 	time_epoch = 0;
 
-	genCount++;
-	bestout.resize(genCount);
+	genCount = pop.front().getAge();
+	bestout.resize(genCount+1);
 
 	vector<float> output;
 	for (size_t i = 0; i < size; i++)
@@ -106,7 +105,7 @@ void EvoNet::updateStats(bool max)
 		best = -RAND_MAX;
 	average = 0;
 
-	bestout[genCount-1] = pop.front().getLastLayer();//set an output as a fall back in case of error
+	bestout[genCount] = pop.front().getLastLayer();//set an output as a fall back in case of error
 	for (size_t i = 0; i < size; i++)
 	{
 		average += pop[i].getScore();
@@ -115,20 +114,29 @@ void EvoNet::updateStats(bool max)
 			if (best > pop[i].getScore())
 			{
 				best = pop[i].getScore();
-				bestout[genCount-1] = pop[i].getLastLayer();
+				bestout[genCount] = pop[i].getLastLayer();
+
+				best = i;
 			}
 		}
 		else
 		if (best < pop[i].getScore())
 		{
 			best = pop[i].getScore();
-			bestout[genCount-1] = pop[i].getLastLayer();
+			bestout[genCount] = pop[i].getLastLayer();
+
+			best = i;
 		}
 
 	}
 	if (best == abs(RAND_MAX))
 	{
-		
+		best = 0;
 	}
 	average /= size;
+}
+
+void EvoNet::SaveBest(string name)
+{
+	pop[bestNet].saveNet(name);
 }

@@ -20,6 +20,7 @@ class OCR
 public:
 
 	void SetFont(string path, int width, int height);
+	void OCR::SetVeiwer(string Display, Mat size);
 	//give it a name and a color image and it will return the text using the set font
 	string textReconition(string Display, Mat ColorImage);
 

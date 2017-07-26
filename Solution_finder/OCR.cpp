@@ -1,3 +1,4 @@
+#pragma once
 #include "OCR.h"
 
 void OCR::SetFont(string path, int width, int height) {
@@ -19,15 +20,22 @@ void OCR::SetFont(string path, int width, int height) {
 		}
 	}
 }
+//call to enable OCR screen
+void OCR::SetVeiwer(string Display, Mat size)
+{
+	namedWindow(Display, CV_WINDOW_KEEPRATIO);
+	moveWindow(Display, 20, 300);
+
+	resizeWindow(Display, size.cols, size.rows);
+}
 
 //give it a name and a color image and it will return the text using the set font
 string OCR::textReconition(string Display, Mat ColorImage)
 {
 
-	namedWindow(Display, CV_WINDOW_KEEPRATIO);
-	moveWindow(Display, 2050, 300);
 
-	namedWindow("font", CV_WINDOW_KEEPRATIO);
+
+	//namedWindow("font", CV_WINDOW_KEEPRATIO);
 
 	//image to read converted to binary
 	Mat greytext(ColorImage.size(), CV_8U);
@@ -44,15 +52,8 @@ string OCR::textReconition(string Display, Mat ColorImage)
 	//Size size(font.cols*diff, font.rows*diff);
 	//resize(font, newfont, size);
 
-
-	resizeWindow(Display, greytext.cols, greytext.rows);
 	imshow(Display, binarytext);
 	waitKey(1);
-
-	///displays font
-	//namedWindow("font", CV_WINDOW_KEEPRATIO);
-	//resizeWindow("font", font.cols, font.rows);
-	//imshow("font", font);
 
 
 	return "";

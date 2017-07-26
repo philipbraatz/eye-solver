@@ -9,14 +9,19 @@
 
 #include "EvoNet.h"
 
-using namespace std;
+#include "utility.h"
+
+using std::cout;
 using namespace cv;
 
-void StartMenu(RECT * area)
+enum state
 {
-	double version = 0.4;
-	cout << "Solution Finder " << version << ":" << endl;
-
+	NEW,
+	CONTINUE,
+	LOAD
+};
+void SizeWindow(RECT * area)
+{
 	HWND handle;
 	//string window;
 	//cout << "Select name of window to watch: ";
@@ -34,31 +39,31 @@ void StartMenu(RECT * area)
 	}
 	//else {std::cout << "not found";}
 }
-////displays output of current generations best
-//void CurrentGen(std::vector<EvoNet> fits,vector<float> input,)
-//{
-//	//LOGIC
-//	for (size_t i = 0; i < fits.size(); i++)
-//	{
-//		fits[i].DoEpoch(input, false);
-//		fits[i].repopulate(.5);
-//		fits[i].updateStats(false);
-//
-//		//Data
-//
-//		fPoint p;
-//		p.x = count;
-//		p.y = fits[i].getBestScore();// /fits[i].getTime();
-//		g.AddData(p, i);
-//
-//		std::cout << "\tScore: " << p.y << " | ";
-//
-//		sbest = fits[i].getBestOut();
-//		for (size_t j = 0; j < answer.length(); j++)
-//			std::cout << (char)(sbest[j] * (end - start) + start);
-//	}
-//
-//	//PRINT
-//	std::cout << std::endl;
-//	std::cout << "Gen: " << count++ - 1 << " | ";
-//}
+
+state StartMenu(RECT * area)
+{
+	double version = 0.5;
+	cout << "Solution Finder " << version << ":" << endl;
+
+	
+	int chose =0;//SAFTY
+	while (true)//LOAD / NEW
+	{
+		if (yesNoPromt("Would you like to load a Network?"))
+		{//Load Network
+			if (yesNoPromt("Do you want to train the Network?"))
+			{//Train Network
+				SizeWindow(area);
+				return CONTINUE; 
+			}
+			else//Test Network
+				return LOAD;
+		}
+		else//New Network
+		{ 
+			SizeWindow(area);
+			return NEW;
+		}
+	}
+}
+

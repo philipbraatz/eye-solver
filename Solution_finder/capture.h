@@ -11,30 +11,37 @@ class Veiwer
 {
 public:
 	Veiwer(Rect area) {
+		if (area.width != 0)
+		{
+			hdcSys = GetDC(NULL); // Get DC of the target capture..
+			hdcMem = CreateCompatibleDC(hdcSys); // Create compatible DC 
 
-		hdcSys = GetDC(NULL); // Get DC of the target capture..
-		hdcMem = CreateCompatibleDC(hdcSys); // Create compatible DC 
+			size = area;
 
-		size = area;
+			// Initialize DCs
+			// Create hBitmap with Pointer to the pixels of the Bitmap
+			ZeroMemory(&bi, sizeof(BITMAPINFO));
+			bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+			bi.bmiHeader.biWidth = size.width;
+			bi.bmiHeader.biHeight = -size.height;  //negative so (0,0) is at top left
+			bi.bmiHeader.biPlanes = 1;
+			bi.bmiHeader.biBitCount = 32;
+			hdc = GetDC(NULL);
 
-		// Initialize DCs
-		// Create hBitmap with Pointer to the pixels of the Bitmap
-		ZeroMemory(&bi, sizeof(BITMAPINFO));
-		bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-		bi.bmiHeader.biWidth = size.width;
-		bi.bmiHeader.biHeight = -size.height;  //negative so (0,0) is at top left
-		bi.bmiHeader.biPlanes = 1;
-		bi.bmiHeader.biBitCount = 32;
-		hdc = GetDC(NULL);
-
-		hBitmap = CreateDIBSection(hdc, &bi, DIB_RGB_COLORS, &ptrBitmapPixels, NULL, 0);
-		// ^^ The output: hBitmap & ptrBitmapPixels
-		// Set hBitmap in the hdcMem 
-		SelectObject(hdcMem, hBitmap);
-		// Set matBitmap to point to the pixels of the hBitmap
-		matBitmap = Mat(size.height, size.width, CV_8UC4, ptrBitmapPixels, 0);
-		//              ^^ note: first it is y, then it is x. very confusing
-		// * SETUP DONE *
+			hBitmap = CreateDIBSection(hdc, &bi, DIB_RGB_COLORS, &ptrBitmapPixels, NULL, 0);
+			// ^^ The output: hBitmap & ptrBitmapPixels
+			// Set hBitmap in the hdcMem 
+			SelectObject(hdcMem, hBitmap);
+			// Set matBitmap to point to the pixels of the hBitmap
+			matBitmap = Mat(size.height, size.width, CV_8UC4, ptrBitmapPixels, 0);
+			//              ^^ note: first it is y, then it is x. very confusing
+			// * SETUP DONE *
+		}
+		else
+		{
+			cout << "Veiwer not loader" << endl;
+		}
+		
 	}
 
 	//call to get new image
