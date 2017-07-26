@@ -54,7 +54,7 @@ int main()
 
 	if (option == NEW || option == CONTINUE)//if needs training
 	{
-		ocr.SetFont("C:\\Users\\Philip\\Documents\\Visual Studio 2015\\Projects\\Solution_finder\\fonts\\arial.PNG",16,16);
+		//ocr.SetFont("C:\\Users\\Philip\\Documents\\Visual Studio 2015\\Projects\\Solution_finder\\fonts\\arial.PNG",16,16);
 
 		//setup OCR screen
 
@@ -64,7 +64,7 @@ int main()
 		OCRScr.name ="Capture";
 		OCRScr.x=0;
 		OCRScr.y=0;
-		ocr.SetVeiwer(OCRScr.name, OCRScr.image);
+		//ocr.SetVeiwer(OCRScr.name, OCRScr.image);
 
 		//Setup Graph screen
 
@@ -87,7 +87,7 @@ int main()
 		//Setup Problem
 		int start = 32;
 		int end = 126;
-		std::string answer = "abc";
+		std::string answer = "abc123EFG";
 		vector<float> input, output;
 		for (size_t i = 0; i < answer.length(); i++) {
 			input.push_back(((float)answer[i] - start) / (end - start));
@@ -111,19 +111,22 @@ int main()
 		vector<float> sbest;
 
 		clock_t startt;
-		double Passed;
+		int Passed;
+		float frames;
 
 		bool done = false;
 
 		unsigned int count;
 		///Learning loop
+		
+		//TIMER first
+		startt = clock(); //Start timer
+
 		while (!done)
 		{
-			//TIMER first
-			startt = clock(); //Start timer
 
 			OCRScr.image = vscreen.Capture();
-			ocr.textReconition(OCRScr.name, OCRScr.image);
+			//ocr.textReconition(OCRScr.name, OCRScr.image);
 
 			/*for (size_t i = 0; i < answer.length(); i++) {
 				std::cout << (char)((input[i]) * (end - start)+start);
@@ -132,7 +135,7 @@ int main()
 			//LOGIC
 			for (size_t i = 0; i < fits.size(); i++)
 			{
-				fits[i].DoEpoch(input, true);//set goal min or max
+				fits[i].DoEpoch(input, false);//set goal max =
 				fits[i].repopulate(.5);
 				fits[i].updateStats(false);
 
@@ -162,6 +165,12 @@ int main()
 					}
 					else
 					{
+						cout << "\b\b\b\b\b\b\b\b\b\b\b\b";
+						for (size_t i = 0; i < std::to_string(Passed).length(); i++)
+						{
+							cout << "\b";
+						}
+
 						cout << "\b\b\b\b\b";
 						for (size_t i = 0; i < std::to_string(count).length(); i++)
 							cout << "\b";
@@ -181,8 +190,18 @@ int main()
 			//imshow(OCRScr.name, OCRScr.image);
 			waitKey(1);
 
-			Passed = (clock() - startt) / CLOCKS_PER_SEC;
-			//std::cout << "\ttime:" << Passed;
+			
+			if ((clock() - startt) / CLOCKS_PER_SEC >= 1)
+			{
+				startt = clock();
+				frames = Passed;
+				Passed = 0;
+			}
+			else
+			{
+				Passed++;
+			}
+			std::cout << "Gen's/s:" << frames << " | ";
 
 			//_getch();
 		}

@@ -38,17 +38,10 @@ void EvoNet::DoEpoch(vector<float> truth,bool max)
 		int score=0;
 		for (size_t j = 0; j < truth.size(); j++)
 		{
-			if ((int)(output[j] * (126 - 32) + 32) ==(int)(truth[j] * (126 - 32) + 32))
-			{
-				score+=126-32;
-			}
-			else
-			{
-				score += abs(output[j] - truth[j]);
-			}
+			score += pow(abs(output[j] - truth[j])*truth.size(),2);
 		}
 		pop[i].setScore(score);
-		
+	
 		time_epoch += pop[i].GetSpeed();
 	}
 	Reorder(max);
