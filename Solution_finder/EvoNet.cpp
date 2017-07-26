@@ -8,6 +8,7 @@ EvoNet::EvoNet(
 	float Ninputs, float Nhiddens, int SizeHidden, float Noutputs
 )
 {
+	genCount = 0;
 	size = population;
 	rate = mutateRate;
 	for (size_t i = 0; i < population; i++)
@@ -21,8 +22,8 @@ void EvoNet::DoEpoch(vector<float> truth,bool max)
 {
 	time_epoch = 0;
 
-	genCount = pop.front().getAge();
-	bestout.resize(genCount+1);
+	genCount++; //= pop.front().getAge();
+	bestout.resize(genCount);
 
 	vector<float> output;
 	for (size_t i = 0; i < size; i++)
@@ -51,6 +52,8 @@ void EvoNet::DoEpoch(vector<float> truth,bool max)
 		time_epoch += pop[i].GetSpeed();
 	}
 	Reorder(max);
+
+
 }
 
 void EvoNet::Reorder(bool max)
@@ -105,7 +108,7 @@ void EvoNet::updateStats(bool max)
 		best = -RAND_MAX;
 	average = 0;
 
-	bestout[genCount] = pop.front().getLastLayer();//set an output as a fall back in case of error
+	bestout[genCount-1] = pop.front().getLastLayer();//set an output as a fall back in case of error
 	for (size_t i = 0; i < size; i++)
 	{
 		average += pop[i].getScore();
@@ -114,18 +117,14 @@ void EvoNet::updateStats(bool max)
 			if (best > pop[i].getScore())
 			{
 				best = pop[i].getScore();
-				bestout[genCount] = pop[i].getLastLayer();
-
-				best = i;
+				bestout[genCount-1] = pop[i].getLastLayer();
 			}
 		}
 		else
 		if (best < pop[i].getScore())
 		{
 			best = pop[i].getScore();
-			bestout[genCount] = pop[i].getLastLayer();
-
-			best = i;
+			bestout[genCount-1] = pop[i].getLastLayer();
 		}
 
 	}

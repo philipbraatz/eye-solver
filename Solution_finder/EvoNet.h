@@ -33,7 +33,7 @@ public:
 
 	vector<vector<float>> getAllBestOut() { return bestout; }
 	vector<float> getCurrentBestOut() 
-	{ return bestout[genCount]; }
+	{ return bestout[genCount-1]; }
 	float getBestScore() { return best; }
 	float getAveScore() { return average; }
 
