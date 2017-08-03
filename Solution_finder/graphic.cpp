@@ -2,7 +2,7 @@
 
 //shows image under name at x,y. resized to fit the image
 //call once to make the window
-int SetWindow(char name[], Mat Img, int x, int y)
+int SetWindow(char name[] ,Mat Img, int x, int y)
 {
 	if (Img.empty())// Check for invalid input
 		return -1;
@@ -19,8 +19,13 @@ int SetWindow(char name[], Mat Img, int x, int y)
 
 Graph::Graph(char name[], int width, int height)
 {
+	Setup(name, width, height);
+}
+
+void Graph::Setup(char name[], int width, int height)
+{
 	Screen n;
-	if (name !=n.name )
+	if (name != n.name)
 	{
 		m_width = width; m_height = height;
 		m_name = name;
@@ -40,9 +45,10 @@ int Graph::AddLine(vector<fPoint> alldata) {
 
 vector<vector<fPoint>> Graph::GetGraph()
 {
+	//CompactData();
 	ScaleData();
 
-	outData.clear();//TEST THIS
+	outData.clear();
 	for (size_t i = 0; i < lines.size(); i++)
 	{
 		vector<fPoint> line;
@@ -73,13 +79,21 @@ void Graph::DrawGraph()
 				{ (int)outData[i][j - 1].x,(int)outData[i][j - 1].y },
 				{ (int)outData[i][j].x,(int)outData[i][j].y },
 				colors[i],
-				1,
+				4,
 				8
 			);
 		}
 	}
 	imshow(m_name, image);
 	waitKey(1);
+}
+
+void Graph::CompactData()//Broken
+{
+	for (size_t i = 0; i < lines.size(); i++)
+		if (lines[i].rawData.size() > COMPACT_SIZE)
+			for (size_t i = 0; i < lines[i].rawData.size()/2-1; i++)
+				lines[i].rawData.erase(lines[i].rawData.begin() + i*2);//delete every other
 }
 
 void Graph::ScaleData()

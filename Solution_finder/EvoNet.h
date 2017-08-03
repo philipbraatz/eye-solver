@@ -15,17 +15,21 @@ public:
 		float Ninputs, float Nhiddens, int SizeHidden, float Noutputs
 	);
 
-	void DoEpoch(vector<float> truth,bool max);
+	void DoEpoch(vector<float> truth,bool testing,bool max);
 
 	struct order{
 		int place;
 		float value;
 	};
 
+	//vector<Nnet> getPop() { return pop; }
+
 	void Reorder(bool max);
 
 	// % of survivors to save and repopulate with
 	void repopulate(float save);
+
+	void inbreed(Nnet parent);
 
 	void updateStats(bool max);
 
@@ -36,6 +40,9 @@ public:
 	{ return bestout[genCount-1]; }
 	float getBestScore() { return best; }
 	float getAveScore() { return average; }
+
+	int getInputSize() { return pop.front().GetInputSize(); }
+	int getOutputSize() { return pop.front().GetOutputSize(); }
 
 	//in seconds
 	//call after epoch and repopulation

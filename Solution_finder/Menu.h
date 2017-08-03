@@ -11,59 +11,32 @@
 
 #include "utility.h"
 
-using std::cout;
-using namespace cv;
-
 enum state
 {
 	NEW,
 	CONTINUE,
 	LOAD
 };
-void SizeWindow(RECT * area)
+
+class Menu
 {
-	HWND handle;
-	//string window;
-	//cout << "Select name of window to watch: ";
-	//cin >> window;
-	Mat blank;
-	namedWindow("Size Me", WINDOW_FREERATIO);
-	//imshow("Size Me",blank);
-	cout << "Set the size of the \"Size Me\" window and press enter";
-	waitKey();
+public:
+	//Menu(Nnet* net)
+	//{
+	//	m_net = net;
+	//}
 
-	if (handle = FindWindow(NULL, TEXT("Size Me"))) {
-		//std::cout << "Found!"; 
-		GetWindowRect(handle, area);
-		DestroyWindow(handle);
-	}
-	//else {std::cout << "not found";}
-}
+	void SizeWindow(RECT * area);
 
-state StartMenu(RECT * area)
-{
-	double version = 0.5;
-	cout << "Solution Finder " << version << ":" << endl;
+	state StartMenu(RECT * area, Nnet *&ref);
 
-	
-	int chose =0;//SAFTY
-	while (true)//LOAD / NEW
-	{
-		if (yesNoPromt("Would you like to load a Network?"))
-		{//Load Network
-			if (yesNoPromt("Do you want to train the Network?"))
-			{//Train Network
-				SizeWindow(area);
-				return CONTINUE; 
-			}
-			else//Test Network
-				return LOAD;
-		}
-		else//New Network
-		{ 
-			SizeWindow(area);
-			return NEW;
-		}
-	}
-}
+	state mainMenu(RECT * area, Nnet *&ref);
+
+	state FinishTrainMenu(RECT* area, Nnet *&ref);
+
+
+
+private:
+	void MenuSizeWindow(RECT * area);
+};
 

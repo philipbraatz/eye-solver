@@ -13,6 +13,8 @@
 using namespace cv;
 using namespace std;
 
+const int COMPACT_SIZE = 10000;
+
 struct linedata
 {
 	vector<fPoint> rawData;
@@ -37,12 +39,18 @@ int SetWindow(char name[], Mat Img, int x, int y);
 class Graph
 {
 public:
+	Graph() {}
 	Graph(char name[], int width, int height);
+
+	void Setup(char name[], int width, int height);
 	
 	void SetLocation(int x, int y){ moveWindow(m_name, x, y); }
 
 	int AddLine(vector<fPoint> alldata);
-	void AddData(fPoint p, int id){lines[id].rawData.push_back(p);}
+	void AddData(fPoint p, int id)
+	{
+		lines[id].rawData.push_back(p);
+	}
 
 	vector<vector<fPoint>> GetGraph();
 
@@ -86,4 +94,6 @@ private:
 	//}
 
 	void ScaleData();
+
+	void CompactData();
 };

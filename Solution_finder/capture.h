@@ -39,7 +39,7 @@ public:
 		}
 		else
 		{
-			cout << "Veiwer not loader" << endl;
+			cout << "Veiwer not loaded" << endl;
 		}
 		
 	}

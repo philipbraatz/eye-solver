@@ -62,8 +62,11 @@ public:
 	//call after propigate and mutate
 	double GetSpeed();
 
-	void Nnet::saveNet(std::string name);
+	void saveNet(std::string name);
 	void loadNet(std::string filename);
+
+	int GetInputSize() { return input.size; }
+	int GetOutputSize() { return output.size; }
 
 private:
 	//const int MAX_WEIGHT = 9999;

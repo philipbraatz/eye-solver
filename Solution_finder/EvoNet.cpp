@@ -18,11 +18,15 @@ EvoNet::EvoNet(
 	}
 }
 
-void EvoNet::DoEpoch(vector<float> truth,bool max)
+void EvoNet::DoEpoch(vector<float> input,bool testing,bool max)
 {
 	time_epoch = 0;
 
-	genCount++; //= pop.front().getAge();
+	if (!testing)
+	{
+		genCount++; //= pop.front().getAge();
+	}
+
 	bestout.resize(genCount);
 
 	vector<float> output;
@@ -33,18 +37,35 @@ void EvoNet::DoEpoch(vector<float> truth,bool max)
 		//	output = pop[i].Propigate(truth))
 		//);
 
-		output = pop[i].Propigate(truth);
+		output = pop[i].Propigate(input);
 
-		int score=0;
-		for (size_t j = 0; j < truth.size(); j++)
+		float score = 0;
+		for (size_t j = 0; j < input.size(); j++)
 		{
-			score += pow(abs(output[j] - truth[j])*truth.size(),2);
+			if ((int)(output[j] * (126 - 32) + 32) == (int)(input[j] * (126 - 32) + 32))
+			{
+				score++;
+			}
+			else
+			{
+				score -= pow(abs(output[j] - input[j]), 2);
+			}
 		}
+
+		//int score=0;
+		//for (size_t j = 0; j < truth.size(); j++)
+		//{
+		//	score += pow(abs(output[j] - truth[j])*truth.size(),2);
+		//}
 		pop[i].setScore(score);
 	
 		time_epoch += pop[i].GetSpeed();
 	}
-	Reorder(max);
+	if (!testing)
+	{
+		Reorder(max);
+	}
+
 
 
 }
@@ -73,6 +94,7 @@ void EvoNet::Reorder(bool max)
 			std::swap(pop[i], pop[spot]);//they trade places with best spot
 	}
 }
+//saves a percent of the population to be parents and produces mutated babies
 void EvoNet::repopulate(float save)
 {
 	time_repop = 0;
@@ -82,13 +104,11 @@ void EvoNet::repopulate(float save)
 	for (size_t i = 0; i < size - saved; i++)
 	{
 		int parent = (int)(RandNum()*saved);
-		pop.push_back(pop[i]);
+		pop.push_back(pop[parent]);
 		pop.back().Mutate(rate);
 
 		time_repop += pop.back().GetSpeed();
 	}
-	time_repop++;
-	time_repop--;
 }
 //maximize or minimize
 void EvoNet::updateStats(bool max)
@@ -126,6 +146,27 @@ void EvoNet::updateStats(bool max)
 		best = 0;
 	}
 	average /= size;
+}
+
+//repopulate optimized to save only one chosen parent
+void EvoNet::inbreed(Nnet parent)
+{
+	time_repop = 0;
+	double mult = 2.5;
+	rate *= mult;//multiply mutation due to inbreeding
+
+	//int saved = 1;
+	pop.clear();
+	pop.push_back(parent);
+	for (size_t i = 0; i < size - 1; i++)
+	{
+		int parent = (int)(RandNum());
+		pop.push_back(pop[i]);
+		pop.back().Mutate(rate);
+
+		time_repop += pop.back().GetSpeed();
+	}
+	rate /= mult;//reset mutation for normal repop
 }
 
 void EvoNet::SaveBest(string name)
