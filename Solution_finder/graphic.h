@@ -57,7 +57,7 @@ public:
 	void DrawGraph();
 
 private:
-	float xmin, xmax,ymin,ymax,xscale,yscale;
+	double xmin, xmax,ymin,ymax,xscale,yscale;
 	int m_width, m_height;
 
 	const int space = 5;
@@ -79,11 +79,11 @@ private:
 	//	{
 	//		for (size_t j = 0; j < lines[i].rawData.size(); j++)
 	//		{
-	//			float a = lines[i].rawData[j].x;
+	//			double a = lines[i].rawData[j].x;
 	//
 	//			for (size_t k = 0; k < lines[i].rawData.size(); k++)
 	//			{
-	//				float b = lines[i].rawData[k].x;
+	//				double b = lines[i].rawData[k].x;
 	//				if (a<b && j!=k)
 	//				{
 	//

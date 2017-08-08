@@ -27,6 +27,8 @@ void Menu::SizeWindow(RECT * area)
 
 state Menu::mainMenu(RECT * area, Nnet *&ref)
 {
+	cout << "--------------------MAIN----------------------------" << endl;
+
 	int chose = 0;//SAFTY not working
 	while (true)//LOAD / NEW
 	{
@@ -54,6 +56,7 @@ state Menu::mainMenu(RECT * area, Nnet *&ref)
 
 state Menu::StartMenu(RECT * area,Nnet *&ref)
 {
+	cout << "--------------------Start----------------------------" << endl;
 	string version = "0.6.1";
 	cout << "Solution Finder " << version << ":" << std::endl;
 
@@ -82,6 +85,7 @@ void Menu::MenuSizeWindow(RECT * area)
 
 state Menu::FinishTrainMenu(RECT* area,Nnet *&ref)
 {
+	cout << "--------------------END----------------------------" << endl;
 	cout << "Done Generating Network" << std::endl;
 	return mainMenu(area,ref);
 }

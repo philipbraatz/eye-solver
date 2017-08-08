@@ -66,7 +66,7 @@ void Graph::DrawGraph()
 
 	rectangle(
 		image,
-		Rect(xmin*xscale + space, ymin*yscale + space, xmax*xscale - space, ymax*yscale - space),
+		Rect( space, space, (xmax-xmin)*xscale - space, (ymax-ymin)*yscale - space),
 		Scalar(255, 0, 0)
 	);
 
@@ -121,8 +121,8 @@ void Graph::ScaleData()
 	}
 
 	//set scales
-	float xdiff = xmax - xmin;
-	float ydiff = ymax - ymin;
+	double xdiff = xmax - xmin;
+	double ydiff = ymax - ymin;
 	xscale = (m_width - space * 2) / xdiff / 1.5;
 	yscale = (m_height - space * 2) / ydiff*1.5;
 	//xscale = m_width / xmax / 1.5;

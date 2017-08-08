@@ -19,44 +19,44 @@ enum type {
 
 struct neuron
 {
-	float value;
-	vector<float> weights;
-	float bias;
+	double value;
+	vector<double> weights;
+	double bias;
 
-	vector<float> deltavalues;
+	vector<double> deltavalues;
 	neuron() {};
 };
 struct layer
 {
 	vector<neuron> neurons;
-	int size;
+	unsigned int size;
 };
 
 class Nnet
 {
 public:
 
-	vector<float> m_goal;
+	vector<double> m_goal;
 
 	Nnet();
-	Nnet(float Ninputs, float Nhiddens, int SizeHidden, float Noutputs);
+	Nnet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs);
 	Nnet(std::string filename);
-	//Nnet(float Ninputs, float Nhiddens, int SizeHidden, float Noutputs, std::vector<float> goal);
+	//Nnet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, std::vector<double> goal);
 
-	void Setup(float Ninputs, float Nhiddens, int SizeHidden, float Noutputs, bool loaded = false);
+	void Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, bool loaded = false);
 	unsigned int GetLayerSize(type l);
 
 	//set input and get output
-	vector<float> Propigate(vector<float> inputs);
+	vector<double> Propigate(vector<double> inputs);
 
 	unsigned int getAge() { return age; }
 
-	void setScore(float score) { m_score = score; }
-	float getScore() { return m_score; }
+	void setScore(double score) { m_score = score; }
+	double getScore() { return m_score; }
 
 	void Mutate(double rate);
 
-	vector<float> Nnet::getLastLayer();
+	vector<double> Nnet::getLastLayer();
 
 	//in seconds
 	//call after propigate and mutate
@@ -71,7 +71,7 @@ public:
 private:
 	//const int MAX_WEIGHT = 9999;
 
-	float m_score;
+	double m_score;
 
 	int age;
 
@@ -85,8 +85,8 @@ private:
 
 	unsigned int m_Nhidden;
 
-	void Normalize(float &input);
-	void AddBiases(vector<float> cur, vector<float> biases, vector<float> &out);
+	void Normalize(double &input);
+	void AddBiases(vector<double> cur, vector<double> biases, vector<double> &out);
 
-	void MutTable(float &weight);
+	void MutTable(double &weight);
 };

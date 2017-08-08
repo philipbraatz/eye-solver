@@ -11,15 +11,15 @@ class EvoNet
 {
 public:
 	EvoNet(
-		int population, float mutateRate,
-		float Ninputs, float Nhiddens, int SizeHidden, float Noutputs
+		int population, double mutateRate,
+		double Ninputs, double Nhiddens, int SizeHidden, double Noutputs
 	);
 
-	void DoEpoch(vector<float> truth,bool testing,bool max);
+	void DoEpoch(vector<double> truth,bool testing,bool max);
 
 	struct order{
 		int place;
-		float value;
+		double value;
 	};
 
 	//vector<Nnet> getPop() { return pop; }
@@ -27,7 +27,7 @@ public:
 	void Reorder(bool max);
 
 	// % of survivors to save and repopulate with
-	void repopulate(float save);
+	void repopulate(double save);
 
 	void inbreed(Nnet parent);
 
@@ -35,11 +35,21 @@ public:
 
 	unsigned int getGenCount() { return genCount; }
 
-	vector<vector<float>> getAllBestOut() { return bestout; }
-	vector<float> getCurrentBestOut() 
+	vector<double> getPreviousBestOut()
+	{ 
+		if (genCount >= 2)
+		{
+		return bestout[genCount-2];
+		}
+		else
+		{
+			return bestout.front();
+		}
+	}
+	vector<double> getCurrentBestOut() 
 	{ return bestout[genCount-1]; }
-	float getBestScore() { return best; }
-	float getAveScore() { return average; }
+	double getBestScore() { return best; }
+	double getAveScore() { return average; }
 
 	int getInputSize() { return pop.front().GetInputSize(); }
 	int getOutputSize() { return pop.front().GetOutputSize(); }
@@ -52,7 +62,7 @@ public:
 
 private:
 	int size;
-	float rate;
+	double rate;
 
 	unsigned int genCount;
 
@@ -60,8 +70,8 @@ private:
 
 	vector<Nnet> pop;
 
-	vector<vector<float>> bestin, bestout;//history of all bests
+	vector<vector<double>> bestin, bestout;//history of all bests
 	int bestNet;
 
-	float prevmed,best,average;
+	double prevmed,best,average;
 };

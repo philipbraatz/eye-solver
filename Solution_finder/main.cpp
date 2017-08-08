@@ -25,10 +25,10 @@
 using std::vector;
 using namespace cv;
 
-void Setup(vector<EvoNet> &List,Nnet *&mainNet, std::string &answer, vector<float> &input, int &sstart,int &send , Menu &mMenu, Rect &area,Graph g, RECT* &pArea, OCR &ocr, Screen &OCRScr, Screen &chartScr, state &option)
+void Setup(vector<EvoNet> &List,Nnet *&mainNet, std::string &answer, vector<double> &input, int &sstart,int &send , Menu &mMenu, Rect &area,Graph g, RECT* &pArea, OCR &ocr, Screen &OCRScr, Screen &chartScr, state &option)
 {
 	//declare answer
-	answer = "abc123EFG";
+	answer = "This is a lot harder!";
 	sstart = 32;
 	send = 126;
 
@@ -37,7 +37,7 @@ void Setup(vector<EvoNet> &List,Nnet *&mainNet, std::string &answer, vector<floa
 	if (option == NEW || option == CONTINUE)//if needs training
 	{
 		///ocr.SetFont("C:\\Users\\Philip\\Documents\\Visual Studio 2015\\Projects\\Solution_finder\\fonts\\arial.PNG", 16, 16);
-
+		
 		//setup OCR screen
 
 		OCRScr.height = area.height;
@@ -61,15 +61,15 @@ void Setup(vector<EvoNet> &List,Nnet *&mainNet, std::string &answer, vector<floa
 
 		zero.push_back({ 0,0 });
 	}
-	///pg = &g;
 	//declare all EvoNet in List
-	//vector<EvoNet> List;//EvoNet List
-
-
 
 	double size, rate, hiddens, hsize;
 	double msize = 750, mrate = .001, mhiddens = 1, mhsize = 2;
 	double xsize = 1000, xrate = .25, xhiddens = 6, xhsize = 25;
+
+	//double size, rate, hiddens, hsize;
+	//double msize = 750, mrate = .001, mhiddens = 1, mhsize = 2;
+	//double xsize = 1000, xrate = .25, xhiddens = 6, xhsize = 25;
 
 	size = xsize;
 	rate = .075;
@@ -77,10 +77,6 @@ void Setup(vector<EvoNet> &List,Nnet *&mainNet, std::string &answer, vector<floa
 	hsize = 1;
 	List.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
 	//g.AddLine(zero);
-
-	//start menu
-
-	//Menu mMenu;
 
 	pArea = new RECT();
 	option = mMenu.StartMenu(pArea, mainNet);
@@ -90,42 +86,13 @@ void Setup(vector<EvoNet> &List,Nnet *&mainNet, std::string &answer, vector<floa
 	area.width = (pArea->right - pArea->left)*1.25;
 	area.height = (pArea->bottom - pArea->top)*1.25;
 
-	//Veiwer vscreen(area);
-	//OCR ocr;
-	//Screen OCRScr;
-
-	//Screen chartScr;
-
-
-
-
-
 	if (option == NEW || option == CONTINUE)//if needs training
 	{
-		//Setup Problem
-		//int start = 32;
-		//int end = 126;
-		//std::string answer = "abc123EFG";
-		//vector<float> input, output;
 		for (size_t i = 0; i < answer.length(); i++) {
-			input.push_back(((float)answer[i] - sstart) / (send - sstart));
+			input.push_back(((double)answer[i] - sstart) / (send - sstart));
 			std::cout << (char)((input[i] - sstart) / (send - sstart));
 		}
 		std::cout << std::endl;
-
-
-		//vector<float> sbest;
-
-		//clock_t startt;
-		//int Passed;
-		//float frames;
-
-		//bool done = false;
-
-		//unsigned int count;
-		//const int STALE_MAX = 10000;
-		//int staleCount = 0;
-		//float staleScore = 0;
 	}
 }
 
@@ -136,126 +103,27 @@ int main()
 	//pre-initialization
 	srand(static_cast <unsigned> (time(0)));
 
-	/////hide console
-	////ShowWindow(GetConsoleWindow(), SW_HIDE);
-
-
-
-	////declare all EvoNet in List
-	//vector<EvoNet> List;//EvoNet List
-
-	//double size, rate, hiddens, hsize;
-	//double msize = 750, mrate = .001, mhiddens = 1, mhsize = 2;
-	//double xsize = 1000, xrate = .25, xhiddens = 6, xhsize = 25;
-
-	//size = xsize;
-	//rate = .075;
-	//hiddens = 1;
-	//hsize = 1;
-	//List.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
-	//g.AddLine(zero);
-
-	////start menu
-
-	//Menu mMenu(List);
-
-	//RECT* pArea = new RECT();
-	//state option;
-	//option = mMenu.StartMenu(pArea,loader);
-	//Rect area;
-	//area.x	= pArea->left*1.25;
-	//area.y = pArea->top;
-	//area.width =( pArea->right - pArea->left)*1.25;
-	//area.height = (pArea->bottom - pArea->top)*1.25;
-
-	//Veiwer vscreen(area);
-	//OCR ocr;
-	//Screen OCRScr;
-
-	//Screen chartScr;
-	//vector<fPoint> zero;
-
-	//if (option == NEW || option == CONTINUE)//if needs training
-	//{
-	//	ocr.SetFont("C:\\Users\\Philip\\Documents\\Visual Studio 2015\\Projects\\Solution_finder\\fonts\\arial.PNG",16,16);
-
-	//	//setup OCR screen
-
-	//	OCRScr.height =area.height;
-	//	OCRScr.width = area.width;
-	//	OCRScr.image = Mat::zeros(OCRScr.height, OCRScr.width, CV_8UC3);
-	//	OCRScr.name ="Capture";
-	//	OCRScr.x=0;
-	//	OCRScr.y=0;
-	//	ocr.SetVeiwer(OCRScr.name, OCRScr.image);
-
-	//	//Setup Graph screen
-
-	//	chartScr.height =720;
-	//	chartScr.width = 1080;
-	//	chartScr.x = 40;
-	//	chartScr.y = 10;
-	//	chartScr.name = "Chart";
-	//	chartScr.image = Mat::zeros(chartScr.width, chartScr.height, CV_8UC3);
-
-	//	//Setup Graph
-
-	//	zero.push_back({0,0});
-	//}
-
-	//Graph  g(chartScr.name, chartScr.width, chartScr.height);
-
-	//if (option == NEW || option == CONTINUE)//if needs training
-	//{
-	//	//Setup Problem
-	//	int start = 32;
-	//	int end = 126;
-	//	std::string answer = "abc123EFG";
-	//	vector<float> input, output;
-	//	for (size_t i = 0; i < answer.length(); i++) {
-	//		input.push_back(((float)answer[i] - start) / (end - start));
-	//		std::cout << (char)((input[i] - start) / (end - start));
-	//	}
-	//	std::cout << std::endl;
-
-
-	//	vector<float> sbest;
-
-	//	clock_t startt;
-	//	int Passed;
-	//	float frames;
-
-	//	bool done = false;
-
-	//	unsigned int count;
-	//	const int STALE_MAX = 10000;
-	//	int staleCount =0;
-	//	float staleScore=0;
-	//	///Learning loop
-	//	
-	//	cout << endl << endl;
-
 	clock_t startt=0;
 	int Passed=0;
-	float frames=0;
+	double frames=0;
 
 	bool done= false;
 	//TODO remove these varibles in place of dynamicly changeing ones
-	std::string answer= "abc123EFG";
-	int sstart = 32;
-	int send= 126;
+	std::string answer ="";
+	int sstart = 0;
+	int send= 0;
 
 	vector<EvoNet> List;//EvoNet List
 	Nnet* pmainNet;//main Neural net for testing and loading
-	vector<float> input, output;
+	vector<double> input, output;
 
 
 	unsigned int count =NULL;
 	const int STALE_MAX = 10000;
 	int staleCount = NULL;
-	float staleScore = NULL;
+	double staleScore = NULL;
 
-	vector<float> sbest = {};
+	vector<double> sbest = {};
 
 	Screen chartScr;
 	Screen OCRScr;
@@ -313,36 +181,38 @@ int main()
 
 				//std::cout << "\tScore: " << p.y << " | ";
 
-				if (count > 1)
+				count = List[i].getGenCount();
+				cout << "Gen: " << count;
+
+				done = true;//true intel proven false
+				string out;
+				sbest = List[i].getCurrentBestOut();
+				for (size_t j = 0; j < answer.length(); j++)//get the output as text
 				{
-					count = List[i].getGenCount();
-					cout << "Gen: " << count;
-
-					string out;
-					sbest = List[i].getCurrentBestOut();
-					for (size_t j = 0; j < answer.length(); j++)//get the output as text
-						out += (char)(sbest[j] * (send - sstart) + sstart);
-
-					if (List[i].getAllBestOut()[List[i].getGenCount() - 2] != List[i].getAllBestOut()[List[i].getGenCount() - 1])// if new output is diffrent from previous output
+					if (done && (int)answer[j] != sbest[j])
+						done = false;
+					out += (char)(sbest[j] * (send - sstart) + sstart);
+				}
+				if (count >= 2)
+				{
+					
+					if (GetTotalDif(List[i].getCurrentBestOut(), List[i].getPreviousBestOut()) != 0)// if new output is diffrent from previous output
 					{
 						cout << " | " << out << " " << endl;
 					}
-					else
+					else	//remove previous character
 					{
 						cout << "\b\b\b\b\b\b\b\b\b\b";
-						for (size_t i = 0; i < std::to_string(Passed).length(); i++)
-						{
-							cout << "\b";
-						}
-
 						cout << "\b\b\b\b\b";
-						for (size_t i = 0; i < std::to_string(count).length(); i++)
+						for (size_t i = 0; i < std::to_string(Passed).length()+std::to_string(count).length(); i++)
 							cout << "\b";
 					}
-
-					if (out == answer)
-						done = true;
 				}
+
+
+				//if (answer.compare(out))//if anwer and out are the same string
+				//	cout << "perfected Network! training done.";
+				//	done = true;
 
 				if (List[i].getBestScore() == staleScore)
 					staleCount++;
@@ -362,12 +232,9 @@ int main()
 			//DRAW
 			g.DrawGraph();
 			Mat scaled;
-			//resize(ss.image,scaled, cvSize(0,0),0.75,1);
-			//imshow(OCRScr.name, OCRScr.image);
-			waitKey(1);
 
 			//INPUT
-			if (GetKeyState('s') > 0)//if key s is down
+			if (GetKeyState(VK_NUMLOCK) > 0)//if key s is down
 			{
 				if (yesNoPromt("Do you want to save?"))
 				{

@@ -13,14 +13,14 @@ using std::string;
 
 struct fPoint
 {
-	float x, y;
+	double x, y;
 };
 
-static float RandNum() { return static_cast <float> (rand()) / static_cast <float> (RAND_MAX); }
+static double RandNum() { return static_cast <double> (rand()) / static_cast <double> (RAND_MAX); }
 
-static float GetTotalDif(std::vector<float> input, std::vector<float> output)
+static double GetTotalDif(std::vector<double> input, std::vector<double> output)
 {
-	float total = 0;
+	double total = 0;
 	for (size_t i = 0; i < input.size(); i++)
 		total += abs(input[i] - output[i]);
 	return total;

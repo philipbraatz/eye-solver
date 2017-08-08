@@ -4,8 +4,8 @@
 
 
 EvoNet::EvoNet(
-	int population, float mutateRate,
-	float Ninputs, float Nhiddens, int SizeHidden, float Noutputs
+	int population, double mutateRate,
+	double Ninputs, double Nhiddens, int SizeHidden, double Noutputs
 )
 {
 	genCount = 0;
@@ -18,7 +18,7 @@ EvoNet::EvoNet(
 	}
 }
 
-void EvoNet::DoEpoch(vector<float> input,bool testing,bool max)
+void EvoNet::DoEpoch(vector<double> input,bool testing,bool max)
 {
 	time_epoch = 0;
 
@@ -29,7 +29,7 @@ void EvoNet::DoEpoch(vector<float> input,bool testing,bool max)
 
 	bestout.resize(genCount);
 
-	vector<float> output;
+	vector<double> output;
 	for (size_t i = 0; i < size; i++)
 	{
 		//pop[i].setScore(
@@ -39,7 +39,7 @@ void EvoNet::DoEpoch(vector<float> input,bool testing,bool max)
 
 		output = pop[i].Propigate(input);
 
-		float score = 0;
+		double score = 0;
 		for (size_t j = 0; j < input.size(); j++)
 		{
 			if ((int)(output[j] * (126 - 32) + 32) == (int)(input[j] * (126 - 32) + 32))
@@ -95,7 +95,7 @@ void EvoNet::Reorder(bool max)
 	}
 }
 //saves a percent of the population to be parents and produces mutated babies
-void EvoNet::repopulate(float save)
+void EvoNet::repopulate(double save)
 {
 	time_repop = 0;
 
