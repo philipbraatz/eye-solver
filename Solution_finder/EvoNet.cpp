@@ -103,7 +103,7 @@ void EvoNet::repopulate(double save)
 	pop.resize((int)(size*save));
 	for (size_t i = 0; i < size - saved; i++)
 	{
-		int parent = (int)(RandNum()*saved);
+		int parent = (int)(RandNum()*(saved-1));
 		pop.push_back(pop[parent]);
 		pop.back().Mutate(rate);
 
@@ -160,7 +160,7 @@ void EvoNet::inbreed(Nnet parent)
 	pop.push_back(parent);
 	for (size_t i = 0; i < size - 1; i++)
 	{
-		int parent = (int)(RandNum());
+		//parent = (int)(RandNum());
 		pop.push_back(pop[i]);
 		pop.back().Mutate(rate);
 

@@ -146,8 +146,8 @@ int main()
 	//After setup
 	//do what couldn't get started in setup
 	Veiwer vscreen(area);
-	g.Setup(chartScr.name, chartScr.width, chartScr.height);
-	g.AddLine({ { 0,0 } });
+	//g.Setup(chartScr.name, chartScr.width, chartScr.height);
+	//g.AddLine({ { 0,0 } });
 
 
 	if (option == NEW || option == CONTINUE)//if needs training
@@ -177,12 +177,12 @@ int main()
 				fPoint p;
 				p.x = count;
 				p.y = List[i].getBestScore();// /List[i].getTime();
-				g.AddData(p, i);
+				//g.AddData(p, i);
 
 				//std::cout << "\tScore: " << p.y << " | ";
 
 				count = List[i].getGenCount();
-				cout << "Gen: " << count;
+				cout << "Gen: " << count << " ";
 
 				done = true;//true intel proven false
 				string out;
@@ -202,7 +202,7 @@ int main()
 					}
 					else	//remove previous character
 					{
-						cout << "\b\b\b\b\b\b\b\b\b\b";
+						cout << "\b\b\b\b\b\b\b\b\b\b\b";
 						cout << "\b\b\b\b\b";
 						for (size_t i = 0; i < std::to_string(Passed).length()+std::to_string(count).length(); i++)
 							cout << "\b";
@@ -230,8 +230,7 @@ int main()
 
 
 			//DRAW
-			g.DrawGraph();
-			Mat scaled;
+			//g.DrawGraph();
 
 			//INPUT
 			if (GetKeyState(VK_NUMLOCK) > 0)//if key s is down

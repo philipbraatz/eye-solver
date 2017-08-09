@@ -200,143 +200,23 @@ void Nnet::Mutate(double rate)
 	//TIMER first
 	startMut = clock(); //Start timer
 
-
-
-	//if (input.size > input.neurons.size())
-	//{
-	//	char a;
-	//	std::cout << "ERROR: input 1";
-	//	std::cin >> a;
-	//}
-	//if (hidden.front().size > input.neurons[0].weights.size())
-	//{
-	//	char a;
-	//	std::cout << "ERROR: input 2";
-	//	std::cin >> a;
-	//}
-	//if (m_Nhidden > hidden.size())
-	//{
-	//	char a;
-	//	std::cout << "ERROR: hidden 1";
-	//	std::cin >> a;
-	//}
-	//if (hidden[0].size > hidden[0].neurons.size())
-	//{
-	//	char a;
-	//	std::cout << "ERROR: hidden 2";
-	//	std::cin >> a;
-	//}
-	//if (hidden[0].size >hidden[0].neurons[0].weights.size())
-	//{
-	//	char a;
-	//	std::cout << "ERROR: hidden 3";
-	//	std::cin >> a;
-	//}
-	//if (hidden.back().size >hidden.back().neurons.size())
-	//{
-	//	char a;
-	//	std::cout << "ERROR: last hidden 1";
-	//	std::cin >> a;
-	//}
-	//if (output.size > hidden.back().neurons[0].weights.size())
-	//{
-	//	char a;
-	//	std::cout << "ERROR: last hidden 2";
-	//	std::cin >> a;
-	//}
-	//weights
 	for (size_t i = 0; i < input.size; i++) {//input
 		for (size_t j = 0; j < hidden.front().size; j++) {
-			//if (input.size > input.neurons.size())
-			//{
-			//	char a;
-			//	std::cout << "EROR: input 1";
-			//	std::cin >> a;
-			//}
-			//else
-			//{
-			//	std::cout << "PASS: input 1";
-			//}
-			//if (hidden.front().size > input.neurons[i].weights.size())
-			//{
-			//	char a;
-			//	std::cout << "EROR: input 2";
-			//	std::cin >> a;
-			//}
-			//else
-			//{
-			//	std::cout << "PASS: input 2";
-			//}
 			if (rate > RandNum())//if rand is less that its mutate rate
 				MutTable(input.neurons[i].weights[j]);//mutate
-
-			//std::cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b";
-			//std::cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b";
 		}
 	}
 	for (size_t i = 1; i < m_Nhidden; i++) {//hidden
 		for (size_t j = 0; j < hidden[i].size; j++) {
 			for (size_t k = 0; k < hidden[i].size; k++) {
-				//if (m_Nhidden > hidden.size())
-				//{
-				//	char a;
-				//	std::cout << "EROR: hidden 1";
-				//	std::cin >> a;
-				//}
-				//else
-				//{
-				//	std::cout << "PASS: hidden 1";
-				//}
-				//if (hidden[i].size > hidden[i-1].neurons.size())
-				//{
-				//	char a;
-				//	std::cout << "EROR: hidden 2";
-				//	std::cin >> a;
-				//}
-				//else
-				//{
-				//	std::cout << "PASS: hidden 2";
-				//}
-				//if (hidden[i].size >hidden[i-1].neurons[j].weights.size())
-				//{
-				//	char a;
-				//	std::cout << "EROR: hidden 3";
-				//	std::cin >> a;
-				//}
-				//else
-				//{
-				//	std::cout << "PASS: hidden 3";
-				//}
+
 				if (rate > RandNum())//if rand is less that its mutate rate
 					MutTable(hidden[i - 1].neurons[j].weights[k]);//mutate
-				//std::cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b\b";
-				//std::cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b\b";
-				//std::cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b\b";
 			}
 		}
 	}
 	for (size_t i = 0; i < hidden.back().size; i++) {//last hidden
 		for (size_t j = 0; j < output.size; j++) {
-			//if (hidden.back().size >hidden.back().neurons.size())
-			//{
-			//	char a;
-			//	std::cout << "EROR: last 1";
-			//	std::cin >> a;
-			//}
-			//else
-			//{
-			//	std::cout << "PASS: last 1";
-			//}
-			//if (output.size > hidden.back().neurons[i].weights.size())
-			//{
-			//	char a;
-			//	std::cout << "EROR: last 2";
-			//	std::cin >> a;
-			//}
-			//else
-			//{
-			//	std::cout << "PASS: last 2";
-			//}
 			if (rate > RandNum())//if rand is less that its mutate rate
 				MutTable(hidden.back().neurons[i].weights[j]);//mutate
 			//std::cout << "\b\b\b\b\b\b\b\b\b\b\b\b";
