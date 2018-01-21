@@ -34,9 +34,15 @@ state Menu::mainMenu(RECT * area, Nnet *&ref)
 	{
 		if (yesNoPromt("Would you like to load a Network?"))
 		{//Load Network
-
-			Nnet n("first.bin");
-			ref = &n;
+			if (yesNoPromt("Load Complete(y) or Manual(n) save?")) {
+				Nnet n("complete.bin");
+				ref = &n;
+			}
+			else {
+				Nnet n("manual.bin");
+				ref = &n;
+			}
+			
 
 			if (yesNoPromt("Do you want to train the Network?"))
 			{//Train Network

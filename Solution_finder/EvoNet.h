@@ -1,5 +1,5 @@
 #pragma once
-
+#include <thread>
 #include <vector>
 
 #include "Nnet.h"
@@ -14,7 +14,8 @@ public:
 		int population, double mutateRate,
 		double Ninputs, double Nhiddens, int SizeHidden, double Noutputs
 	);
-
+	void foo();
+	void SingleEpoc(vector<double> output, int i,vector<double> input, bool testing, bool max);
 	void DoEpoch(vector<double> truth,bool testing,bool max);
 
 	struct order{
@@ -59,6 +60,7 @@ public:
 	double getTime() { return time_epoch+time_repop; }
 
 	void SaveBest(string name);
+	Nnet EvoNet::LoadNet(string filename);
 
 private:
 	int size;

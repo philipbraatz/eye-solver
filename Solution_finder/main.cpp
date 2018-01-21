@@ -28,9 +28,9 @@ using namespace cv;
 void Setup(vector<EvoNet> &List,Nnet *&mainNet, std::string &answer, vector<double> &input, int &sstart,int &send , Menu &mMenu, Rect &area,Graph g, RECT* &pArea, OCR &ocr, Screen &OCRScr, Screen &chartScr, state &option)
 {
 	//declare answer
-	answer = "This is a lot harder!";
-	sstart = 32;
-	send = 126;
+	answer = "Load half way test";//answer
+	sstart = 32;//min value
+	send = 126;//max value
 
 	vector<fPoint> zero;
 
@@ -73,8 +73,8 @@ void Setup(vector<EvoNet> &List,Nnet *&mainNet, std::string &answer, vector<doub
 
 	size = xsize;
 	rate = .075;
-	hiddens = 1;
-	hsize = 1;
+	hiddens = 2;
+	hsize = 8;
 	List.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
 	//g.AddLine(zero);
 
@@ -138,6 +138,8 @@ int main()
 
 	state option = NEW;
 
+	bool graphOn = true;
+
 	cout << "Initialized" << endl;
 
 	Setup(List, pmainNet,  answer,input, sstart, send, mMenu, area,g, pArea, ocr, OCRScr,chartScr,option);
@@ -146,8 +148,8 @@ int main()
 	//After setup
 	//do what couldn't get started in setup
 	Veiwer vscreen(area);
-	//g.Setup(chartScr.name, chartScr.width, chartScr.height);
-	//g.AddLine({ { 0,0 } });
+	g.Setup(chartScr.name, chartScr.width, chartScr.height);
+	g.AddLine({ { 0,0 } });
 
 
 	if (option == NEW || option == CONTINUE)//if needs training
@@ -177,7 +179,7 @@ int main()
 				fPoint p;
 				p.x = count;
 				p.y = List[i].getBestScore();// /List[i].getTime();
-				//g.AddData(p, i);
+				g.AddData(p, i);
 
 				//std::cout << "\tScore: " << p.y << " | ";
 
@@ -195,7 +197,8 @@ int main()
 				}
 				if (count >= 2)
 				{
-					
+					if(count == 2)
+						cout << " | " << out << " " << endl;
 					if (GetTotalDif(List[i].getCurrentBestOut(), List[i].getPreviousBestOut()) != 0)// if new output is diffrent from previous output
 					{
 						cout << " | " << out << " " << endl;
@@ -225,25 +228,35 @@ int main()
 			if (staleCount > STALE_MAX)
 			{
 				cout << endl << "Proggress has stopped, training is done" << endl;
+				List.front().SaveBest("complete");
+				cout << endl << "Network has been saved!" << endl;
 				done = true;
 			}
 
 
 			//DRAW
-			//g.DrawGraph();
+			if (graphOn)
+				g.DrawGraph();//slows down a bit
 
 			//INPUT
-			if (GetKeyState(VK_NUMLOCK) > 0)//if key s is down
+			if (GetKeyState(VK_RIGHT) > 0)//if key right is down
 			{
 				if (yesNoPromt("Do you want to save?"))
 				{
-					List.front().SaveBest("manual save");
+					List.front().SaveBest("manual");
 
-					if (yesNoPromt("Do you want to test?"))
+					if (yesNoPromt("Exit to main menu?"))
 					{
 						done = true;
 					}
 				}
+			}
+			else if (GetKeyState(VK_LEFT) > 0)//if key left is down
+			{
+				if (graphOn)
+					graphOn = false;
+				else
+					graphOn = true;
 			}
 
 
@@ -258,7 +271,8 @@ int main()
 			{
 				Passed++;
 			}
-			std::cout << "Gen/s:" << frames << " | ";
+			;
+			std::cout << "Gen/s:" << std::setprecision(0) << frames << " | ";
 
 		}
 
@@ -267,4 +281,3 @@ int main()
 	}
 
 }
-

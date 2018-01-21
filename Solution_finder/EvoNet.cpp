@@ -18,6 +18,39 @@ EvoNet::EvoNet(
 	}
 }
 
+//should be called in thread
+void EvoNet::SingleEpoc(vector<double> output,int i,vector<double> input, bool testing, bool max)
+{
+	//pop[i].setScore(
+	//	GetTotalDif(truth,
+	//	output = pop[i].Propigate(truth))
+	//);
+	///vector<double> output, int i, vector<double> input, bool testing, bool max;//DELETE ME
+	output = pop[i].Propigate(input);
+
+	double score = 0;
+	for (size_t j = 0; j < input.size(); j++)
+	{
+		if ((int)(output[j] * (126 - 32) + 32) == (int)(input[j] * (126 - 32) + 32))
+		{
+			score++;
+		}
+		else
+		{
+			score -= pow(abs(output[j] - input[j]), 2);
+		}
+	}
+
+	//int score=0;
+	//for (size_t j = 0; j < truth.size(); j++)
+	//{
+	//	score += pow(abs(output[j] - truth[j])*truth.size(),2);
+	//}
+	pop[i].setScore(score);
+	
+	time_epoch += pop[i].GetSpeed();
+}
+
 void EvoNet::DoEpoch(vector<double> input,bool testing,bool max)
 {
 	time_epoch = 0;
@@ -27,46 +60,38 @@ void EvoNet::DoEpoch(vector<double> input,bool testing,bool max)
 		genCount++; //= pop.front().getAge();
 	}
 
+	vector<std::thread*> t;//threads
+	int maxThreads =8;
+	//t.resize(size);// number of threads
+
 	bestout.resize(genCount);
 
 	vector<double> output;
-	for (size_t i = 0; i < size; i++)
+	for (size_t i = 0; i < size; i++)//go through whole population
 	{
-		//pop[i].setScore(
-		//	GetTotalDif(truth,
-		//	output = pop[i].Propigate(truth))
-		//);
-
-		output = pop[i].Propigate(input);
-
-		double score = 0;
-		for (size_t j = 0; j < input.size(); j++)
+		if (false)
 		{
-			if ((int)(output[j] * (126 - 32) + 32) == (int)(input[j] * (126 - 32) + 32))
+			if (maxThreads >= t.size())//limit threads
 			{
-				score++;
+				for (size_t i = 0; i < t.size(); i++)//wait for all threads to finish
+				{
+					t.back()->join();
+					t.pop_back();//remove thread
+				}
 			}
-			else
-			{
-				score -= pow(abs(output[j] - input[j]), 2);
-			}
+			t.push_back(new std::thread([=] {SingleEpoc(output,i,input, testing, max); }));//add new threads
 		}
-
-		//int score=0;
-		//for (size_t j = 0; j < truth.size(); j++)
-		//{
-		//	score += pow(abs(output[j] - truth[j])*truth.size(),2);
-		//}
-		pop[i].setScore(score);
-	
-		time_epoch += pop[i].GetSpeed();
+		else
+		{
+			SingleEpoc(output, i, input, testing, max);
+		}
+		
 	}
+
 	if (!testing)
 	{
 		Reorder(max);
 	}
-
-
 
 }
 
@@ -171,5 +196,13 @@ void EvoNet::inbreed(Nnet parent)
 
 void EvoNet::SaveBest(string name)
 {
-	pop[bestNet].saveNet(name);
+	pop.front().saveNet(name);
+}
+
+Nnet EvoNet::LoadNet(string filename)
+{
+	Nnet net;
+	pop = { net.loadNet(filename) };
+	inbreed(pop.front());
+	return pop.front();
 }

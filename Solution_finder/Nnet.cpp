@@ -12,11 +12,14 @@ Nnet::Nnet(){ Setup(0, 0, 0, 0); }
 Nnet::Nnet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs) { Setup(Ninputs, Nhiddens, SizeHidden, Noutputs); }
 Nnet::Nnet(std::string filename) {
 	loadNet(filename);
-	Setup(0,0,0,0,true);
 }
 
-void Nnet::Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, bool loaded)
+int Nnet::Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, bool loaded)
 {
+	if (!Ninputs || !Nhiddens || !SizeHidden || !Noutputs)//if an input is missing
+	{
+		return 0;
+	}
 
 	//set sizes
 	input.size = Ninputs;
@@ -86,6 +89,7 @@ void Nnet::Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutput
 			hidden.back().neurons[i].bias = RandNum();
 		}
 	}
+	return 1;
 }
 
 unsigned int Nnet::GetLayerSize(type l)
@@ -116,8 +120,7 @@ std::vector<double> Nnet::Propigate(vector<double> inputs)
 	//TIMER first
 	startProp = clock(); //Start timer
 
-	std::vector<double> biases;
-	std::vector<double> out;
+	std::vector<double> biases, out;
 		
 	/* ORDER
 		prev node * weight
@@ -330,50 +333,59 @@ void Nnet::saveNet(std::string name)
 		out.close();
 	}
 }
-void Nnet::loadNet(std::string filename)
+
+Nnet Nnet::loadNet(std::string filename)
 {
 	unsigned int sizeInput;
 	unsigned int sizeOutput;
 	unsigned int sizeHidden;
-	unsigned int numHidden;
+	unsigned int m_Nhidden;
 
 	std::ifstream in(filename, std::ios_base::binary);
 	if (in.good())
 	{
 		//Get Nnet sizes
-		std::cout << "Reading sizes" << std::endl;
+		std::cout << "Reading sizes: " << std::endl;
 		in.read((char *)&sizeInput, sizeof(unsigned int));	//input layer size
 		in.read((char *)&sizeOutput, sizeof(unsigned int));	//output layer size
 		in.read((char *)&sizeHidden, sizeof(unsigned int));	//hidden layers size
-		in.read((char *)&numHidden, sizeof(unsigned int));	//number of hidden layers
+		in.read((char *)&m_Nhidden, sizeof(unsigned int));	//number of hidden layers
+		std::cout << "Done" << std::endl;
 
 		//Resize Nnet
-		Setup(sizeInput, numHidden, sizeHidden, sizeOutput, true);
+		Nnet net;
+		net.Setup(sizeInput, m_Nhidden, sizeHidden, sizeOutput,true);
 
 		//Load Biases
-		std::cout << "Reading  biases: " << std::fixed << std::endl;//biases
-		for (size_t i = 0; i < input.size; i++)
-			in.read((char *)&input.neurons[i].bias, sizeof(double));
-		for (size_t i = 0; i < output.size; i++)
-			in.read((char *)&output.neurons[i].bias, sizeof(double));
-		for (size_t i = 0; i < m_Nhidden; i++)
-			for (size_t j = 0; j < hidden[i].size; j++)
-				in.read((char *)&output.neurons[i].bias, sizeof(double));
+		std::cout << "Reading  biases: " << std::fixed;//biases
+		for (size_t i = 0; i < net.input.size; i++)
+			in.read((char *)&net.input.neurons[i].bias, sizeof(double));
+		for (size_t i = 0; i < net.output.size; i++)
+			in.read((char *)&net.output.neurons[i].bias, sizeof(double));
+		for (size_t i = 0; i < net.m_Nhidden; i++)
+			for (size_t j = 0; j < net.hidden[i].size; j++)
+				in.read((char *)&net.output.neurons[i].bias, sizeof(double));
+		std::cout << "Done" << std::endl;
 
 		//Load Weights
 		std::cout << "Reading  weights: " << std::fixed << std::endl;//weights
-		for (size_t i = 0; i < input.size; i++)
-			for (size_t j = 0; j < hidden.front().size; j++)
-				in.read((char *)&input.neurons[i].weights[j], sizeof(double));
-		for (size_t i = 0; i < output.size; i++)
-			for (size_t j = 0; j < hidden.back().size; j++)
-				in.read((char *)&output.neurons[i].weights[j], sizeof(double));
-		for (size_t i = 0; i < m_Nhidden - 1; i++)
-			for (size_t j = 0; j < hidden[i].size; ++j)
-				for (size_t k = 0; k < hidden[i + 1].size; k++)
-					in.read((char*)&hidden[i].neurons[j].weights[k], sizeof(double));
-		for (size_t i = 0; i < hidden.back().size; i++)//Last Hidden Layer
-			for (size_t j = 0; j < output.size; j++)
-				in.read((char*)&hidden.back().neurons[i].weights[j], sizeof(double));
+		for (size_t i = 0; i < net.input.size; i++)
+			for (size_t j = 0; j < net.hidden.front().size; j++)
+				in.read((char *)&net.input.neurons[i].weights[j], sizeof(double));
+		for (size_t i = 0; i < net.output.size; i++)
+			for (size_t j = 0; j < net.hidden.back().size; j++)
+				in.read((char *)&net.output.neurons[i].weights[j], sizeof(double));
+		for (size_t i = 0; i < net.m_Nhidden - 1; i++)
+			for (size_t j = 0; j < net.hidden[i].size; ++j)
+				for (size_t k = 0; k < net.hidden[i + 1].size; k++)
+					in.read((char*)&net.hidden[i].neurons[j].weights[k], sizeof(double));
+		for (size_t i = 0; i < net.hidden.back().size; i++)//Last Hidden Layer
+			for (size_t j = 0; j < net.output.size; j++)
+				in.read((char*)&net.hidden.back().neurons[i].weights[j], sizeof(double));
+		std::cout << "Done" << std::endl;
+
+		*this = net;
+		return net;
 	}
+	return Nnet();//error
 }

@@ -43,7 +43,7 @@ public:
 	Nnet(std::string filename);
 	//Nnet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, std::vector<double> goal);
 
-	void Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, bool loaded = false);
+	int Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, bool loaded = false);
 	unsigned int GetLayerSize(type l);
 
 	//set input and get output
@@ -63,7 +63,7 @@ public:
 	double GetSpeed();
 
 	void saveNet(std::string name);
-	void loadNet(std::string filename);
+	Nnet loadNet(std::string filename);
 
 	int GetInputSize() { return input.size; }
 	int GetOutputSize() { return output.size; }
