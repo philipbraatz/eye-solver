@@ -16,6 +16,7 @@
 #include "graphic.h"
 
 #include "EvoNet.h"
+	#include "EvoNet.cpp"
 #include "Nnet.h"
 #include "utility.h"
 #include "capture.h"
@@ -25,7 +26,7 @@
 using std::vector;
 using namespace cv;
 
-void Setup(vector<EvoNet> &List,Nnet *&mainNet, std::string &answer, vector<double> &input, int &sstart,int &send , Menu &mMenu, Rect &area,Graph g, RECT* &pArea, OCR &ocr, Screen &OCRScr, Screen &chartScr, state &option)
+void Setup(vector<EvoNet<Nnet>> &List,Nnet *&mainNet, std::string &answer, vector<double> &input, int &sstart,int &send , Menu &mMenu, Rect &area,Graph g, RECT* &pArea, OCR &ocr, Screen &OCRScr, Screen &chartScr, state &option)
 {
 	//declare answer
 	answer = "Load half way test";//answer
@@ -75,7 +76,7 @@ void Setup(vector<EvoNet> &List,Nnet *&mainNet, std::string &answer, vector<doub
 	rate = .075;
 	hiddens = 2;
 	hsize = 8;
-	List.push_back(EvoNet(size, rate, answer.length(), hiddens, hsize, answer.length()));
+	List.push_back(EvoNet<Nnet>(size, rate, answer.length(), hiddens, hsize, answer.length()));
 	//g.AddLine(zero);
 
 	pArea = new RECT();
@@ -88,7 +89,7 @@ void Setup(vector<EvoNet> &List,Nnet *&mainNet, std::string &answer, vector<doub
 
 	if (option == NEW || option == CONTINUE)//if needs training
 	{
-		for (size_t i = 0; i < answer.length(); i++) {
+		for (unsigned int i = 0; i < answer.length(); i++) {
 			input.push_back(((double)answer[i] - sstart) / (send - sstart));
 			std::cout << (char)((input[i] - sstart) / (send - sstart));
 		}
@@ -113,13 +114,14 @@ int main()
 	int sstart = 0;
 	int send= 0;
 
-	vector<EvoNet> List;//EvoNet List
+	vector<EvoNet<Nnet>> List;//EvoNet List
 	Nnet* pmainNet;//main Neural net for testing and loading
 	vector<double> input, output;
 
 
 	unsigned int count =NULL;
-	const int STALE_MAX = 10000;
+	int stale_max = 10000;
+	double stale_p = .02;//changed for testing , use .2
 	int staleCount = NULL;
 	double staleScore = NULL;
 
@@ -161,7 +163,7 @@ int main()
 			OCRScr.image = vscreen.Capture();
 			//ocr.textReconition(OCRScr.name, OCRScr.image);
 
-			/*for (size_t i = 0; i < answer.length(); i++) {
+			/*for (unsigned int i = 0; i < answer.length(); i++) {
 				std::cout << (char)((input[i]) * (end - start)+start);
 			}*/
 
@@ -189,7 +191,7 @@ int main()
 				done = true;//true intel proven false
 				string out;
 				sbest = List[i].getCurrentBestOut();
-				for (size_t j = 0; j < answer.length(); j++)//get the output as text
+				for (unsigned int j = 0; j < answer.length(); j++)//get the output as text
 				{
 					if (done && (int)answer[j] != sbest[j])
 						done = false;
@@ -207,7 +209,7 @@ int main()
 					{
 						cout << "\b\b\b\b\b\b\b\b\b\b\b";
 						cout << "\b\b\b\b\b";
-						for (size_t i = 0; i < std::to_string(Passed).length()+std::to_string(count).length(); i++)
+						for (unsigned int i = 0; i < std::to_string(Passed).length()+std::to_string(count).length(); i++)
 							cout << "\b";
 					}
 				}
@@ -225,12 +227,19 @@ int main()
 					staleScore = List[i].getBestScore();
 				}
 			}
-			if (staleCount > STALE_MAX)
+			if (staleCount > stale_max)
 			{
-				cout << endl << "Proggress has stopped, training is done" << endl;
-				List.front().SaveBest("complete");
-				cout << endl << "Network has been saved!" << endl;
-				done = true;
+				if (stale_max > List.front().getGenCount() * stale_p) 
+				{
+					cout << endl << "Proggress has stopped";
+					cout << ", Pruning Started";
+					cout  << "training is done" << endl;
+					List.front().SaveBest("complete");
+					cout << endl << "Network has been saved!" << endl;
+					done = true;
+				}
+				else
+					stale_max = List.front().getGenCount() * stale_p;
 			}
 
 

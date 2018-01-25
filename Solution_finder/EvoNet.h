@@ -3,10 +3,12 @@
 #include <vector>
 
 #include "Nnet.h"
+#include "lilNet.h"
 #include "utility.h"
 
 using std::vector;
 
+template<class tnet>
 class EvoNet
 {
 public:
@@ -14,7 +16,6 @@ public:
 		int population, double mutateRate,
 		double Ninputs, double Nhiddens, int SizeHidden, double Noutputs
 	);
-	void foo();
 	void SingleEpoc(vector<double> output, int i,vector<double> input, bool testing, bool max);
 	void DoEpoch(vector<double> truth,bool testing,bool max);
 
@@ -30,7 +31,7 @@ public:
 	// % of survivors to save and repopulate with
 	void repopulate(double save);
 
-	void inbreed(Nnet parent);
+	void inbreed(tnet parent);
 
 	void updateStats(bool max);
 
@@ -60,7 +61,7 @@ public:
 	double getTime() { return time_epoch+time_repop; }
 
 	void SaveBest(string name);
-	Nnet EvoNet::LoadNet(string filename);
+	void EvoNet::LoadNet(string filename);
 
 private:
 	int size;
@@ -70,7 +71,7 @@ private:
 
 	double time_epoch,time_repop;
 
-	vector<Nnet> pop;
+	vector<tnet> pop;
 
 	vector<vector<double>> bestin, bestout;//history of all bests
 	int bestNet;

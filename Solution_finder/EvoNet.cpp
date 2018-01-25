@@ -1,9 +1,8 @@
 #pragma once
 #include "EvoNet.h"
 
-
-
-EvoNet::EvoNet(
+template<class tnet>
+inline EvoNet<tnet>::EvoNet(
 	int population, double mutateRate,
 	double Ninputs, double Nhiddens, int SizeHidden, double Noutputs
 )
@@ -11,15 +10,16 @@ EvoNet::EvoNet(
 	genCount = 0;
 	size = population;
 	rate = mutateRate;
-	for (size_t i = 0; i < population; i++)
+	for (unsigned int i = 0; i < population; i++)
 	{
-		Nnet temp(Ninputs, Nhiddens, SizeHidden, Noutputs);
+		tnet temp(Ninputs, Nhiddens, SizeHidden, Noutputs);
 		pop.push_back(temp);
 	}
 }
 
 //should be called in thread
-void EvoNet::SingleEpoc(vector<double> output,int i,vector<double> input, bool testing, bool max)
+template<class tnet>
+inline void EvoNet<tnet>::SingleEpoc(vector<double> output,int i,vector<double> input, bool testing, bool max)
 {
 	//pop[i].setScore(
 	//	GetTotalDif(truth,
@@ -29,7 +29,7 @@ void EvoNet::SingleEpoc(vector<double> output,int i,vector<double> input, bool t
 	output = pop[i].Propigate(input);
 
 	double score = 0;
-	for (size_t j = 0; j < input.size(); j++)
+	for (unsigned int j = 0; j < input.size(); j++)
 	{
 		if ((int)(output[j] * (126 - 32) + 32) == (int)(input[j] * (126 - 32) + 32))
 		{
@@ -42,7 +42,7 @@ void EvoNet::SingleEpoc(vector<double> output,int i,vector<double> input, bool t
 	}
 
 	//int score=0;
-	//for (size_t j = 0; j < truth.size(); j++)
+	//for (unsigned int j = 0; j < truth.size(); j++)
 	//{
 	//	score += pow(abs(output[j] - truth[j])*truth.size(),2);
 	//}
@@ -51,7 +51,8 @@ void EvoNet::SingleEpoc(vector<double> output,int i,vector<double> input, bool t
 	time_epoch += pop[i].GetSpeed();
 }
 
-void EvoNet::DoEpoch(vector<double> input,bool testing,bool max)
+template<class tnet>
+inline void EvoNet<tnet>::DoEpoch(vector<double> input,bool testing,bool max)
 {
 	time_epoch = 0;
 
@@ -67,13 +68,13 @@ void EvoNet::DoEpoch(vector<double> input,bool testing,bool max)
 	bestout.resize(genCount);
 
 	vector<double> output;
-	for (size_t i = 0; i < size; i++)//go through whole population
+	for (unsigned int i = 0; i < size; i++)//go through whole population
 	{
 		if (false)
 		{
 			if (maxThreads >= t.size())//limit threads
 			{
-				for (size_t i = 0; i < t.size(); i++)//wait for all threads to finish
+				for (unsigned int i = 0; i < t.size(); i++)//wait for all threads to finish
 				{
 					t.back()->join();
 					t.pop_back();//remove thread
@@ -83,7 +84,7 @@ void EvoNet::DoEpoch(vector<double> input,bool testing,bool max)
 		}
 		else
 		{
-			SingleEpoc(output, i, input, testing, max);
+			SingleEpoc(output, i, input, testing, max);//works better IDK why
 		}
 		
 	}
@@ -95,13 +96,14 @@ void EvoNet::DoEpoch(vector<double> input,bool testing,bool max)
 
 }
 
-void EvoNet::Reorder(bool max)
+template<class tnet>
+inline void EvoNet<tnet>::Reorder(bool max)
 {
 
-	for (size_t i = 0; i < size; i++)
+	for (unsigned int i = 0; i < size; i++)
 	{
 		int spot=-1;
-		for (size_t j = 0; j < i; j++)
+		for (unsigned int j = 0; j < i; j++)
 		{
 			if (max)
 			{
@@ -120,13 +122,14 @@ void EvoNet::Reorder(bool max)
 	}
 }
 //saves a percent of the population to be parents and produces mutated babies
-void EvoNet::repopulate(double save)
+template<class tnet>
+inline void EvoNet<tnet>::repopulate(double save)
 {
 	time_repop = 0;
 
 	int saved = save*size;
 	pop.resize((int)(size*save));
-	for (size_t i = 0; i < size - saved; i++)
+	for (unsigned int i = 0; i < size - saved; i++)
 	{
 		int parent = (int)(RandNum()*(saved-1));
 		pop.push_back(pop[parent]);
@@ -136,7 +139,8 @@ void EvoNet::repopulate(double save)
 	}
 }
 //maximize or minimize
-void EvoNet::updateStats(bool max)
+template<class tnet>
+inline void EvoNet<tnet>::updateStats(bool max)
 {
 	prevmed = average;
 	//reset max to get new best
@@ -147,7 +151,7 @@ void EvoNet::updateStats(bool max)
 	average = 0;
 
 	bestout[genCount-1] = pop.front().getLastLayer();//set an output as a fall back in case of error
-	for (size_t i = 0; i < size; i++)
+	for (unsigned int i = 0; i < size; i++)
 	{
 		average += pop[i].getScore();
 		if (max)
@@ -174,7 +178,8 @@ void EvoNet::updateStats(bool max)
 }
 
 //repopulate optimized to save only one chosen parent
-void EvoNet::inbreed(Nnet parent)
+template<class tnet>
+inline void EvoNet<tnet>::inbreed(tnet parent)
 {
 	time_repop = 0;
 	double mult = 2.5;
@@ -183,7 +188,7 @@ void EvoNet::inbreed(Nnet parent)
 	//int saved = 1;
 	pop.clear();
 	pop.push_back(parent);
-	for (size_t i = 0; i < size - 1; i++)
+	for (unsigned int i = 0; i < size - 1; i++)
 	{
 		//parent = (int)(RandNum());
 		pop.push_back(pop[i]);
@@ -194,15 +199,16 @@ void EvoNet::inbreed(Nnet parent)
 	rate /= mult;//reset mutation for normal repop
 }
 
-void EvoNet::SaveBest(string name)
+template<class tnet>
+inline void EvoNet<tnet>::SaveBest(string name)
 {
 	pop.front().saveNet(name);
 }
 
-Nnet EvoNet::LoadNet(string filename)
+template<class tnet>
+inline void EvoNet<tnet>::LoadNet(string filename)
 {
-	Nnet net;
+	tnet net;
 	pop = { net.loadNet(filename) };
 	inbreed(pop.front());
-	return pop.front();
 }

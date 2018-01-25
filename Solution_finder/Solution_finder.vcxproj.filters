@@ -53,6 +53,9 @@
     <ClCompile Include="..\..\..\..\Documents\Visual Studio 2015\Projects\practice\practice\backNet.cpp">
       <Filter>Source Files\Neural Network</Filter>
     </ClCompile>
+    <ClCompile Include="lilNet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -81,6 +84,7 @@
     <ClInclude Include="..\..\..\..\Documents\Visual Studio 2015\Projects\practice\practice\backNet.h">
       <Filter>Source Files\Neural Network</Filter>
     </ClInclude>
+    <ClInclude Include="lilNet.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Solution_finder.rc">

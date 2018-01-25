@@ -154,6 +154,7 @@
     <ClCompile Include="controller.cpp" />
     <ClCompile Include="EvoNet.cpp" />
     <ClCompile Include="graphic.cpp" />
+    <ClCompile Include="lilNet.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="mouse.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="controller.h" />
     <ClInclude Include="EvoNet.h" />
     <ClInclude Include="graphic.h" />
+    <ClInclude Include="lilNet.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="Nnet.h" />

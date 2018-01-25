@@ -49,10 +49,10 @@ vector<vector<fPoint>> Graph::GetGraph()
 	ScaleData();
 
 	outData.clear();
-	for (size_t i = 0; i < lines.size(); i++)
+	for (unsigned int i = 0; i < lines.size(); i++)
 	{
 		vector<fPoint> line;
-		for (size_t j = 0; j < lines[i].scaleData.size(); j++)
+		for (unsigned int j = 0; j < lines[i].scaleData.size(); j++)
 			line.push_back(lines[i].scaleData[j]);
 		outData.push_back(line);
 	}
@@ -90,9 +90,9 @@ void Graph::DrawGraph()
 
 void Graph::CompactData()//Broken
 {
-	for (size_t i = 0; i < lines.size(); i++)
+	for (unsigned int i = 0; i < lines.size(); i++)
 		if (lines[i].rawData.size() > COMPACT_SIZE)
-			for (size_t i = 0; i < lines[i].rawData.size()/2-1; i++)
+			for (unsigned int i = 0; i < lines[i].rawData.size()/2-1; i++)
 				lines[i].rawData.erase(lines[i].rawData.begin() + i*2);//delete every other
 }
 
@@ -104,9 +104,9 @@ void Graph::ScaleData()
 	ymax = -RAND_MAX;
 	xmin = RAND_MAX;
 	ymin = RAND_MAX;
-	for (size_t i = 0; i < lines.size(); i++)
+	for (unsigned int i = 0; i < lines.size(); i++)
 	{
-		for (size_t j = 0; j < lines[i].scaleData.size(); j++)
+		for (unsigned int j = 0; j < lines[i].scaleData.size(); j++)
 		{
 			if (xmax < lines[i].rawData[j].x)
 				xmax = lines[i].rawData[j].x;
@@ -129,10 +129,10 @@ void Graph::ScaleData()
 	//yscale= m_height / ymax * 1.5;
 
 	//scale data
-	for (size_t i = 0; i < lines.size(); i++)
+	for (unsigned int i = 0; i < lines.size(); i++)
 	{
 		lines[i].scaleData.resize(lines[i].rawData.size());
-		for (size_t j = 0; j < lines[i].rawData.size(); j++)
+		for (unsigned int j = 0; j < lines[i].rawData.size(); j++)
 		{
 			fPoint scaled;
 			scaled.x = (lines[i].rawData[j].x - xmin)*xscale + space;

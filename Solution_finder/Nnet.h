@@ -68,8 +68,10 @@ public:
 	int GetInputSize() { return input.size; }
 	int GetOutputSize() { return output.size; }
 
-private:
+protected:
 	//const int MAX_WEIGHT = 9999;
+
+	double trate;
 
 	double m_score;
 
