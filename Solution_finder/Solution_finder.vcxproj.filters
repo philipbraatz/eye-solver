@@ -56,6 +56,9 @@
     <ClCompile Include="lilNet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Trainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -85,6 +88,7 @@
       <Filter>Source Files\Neural Network</Filter>
     </ClInclude>
     <ClInclude Include="lilNet.h" />
+    <ClInclude Include="Trainer.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Solution_finder.rc">

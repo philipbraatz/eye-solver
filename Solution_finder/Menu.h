@@ -26,11 +26,11 @@ public:
 	//	m_net = net;
 	//}
 
-	void SizeWindow(RECT * area);
+	RECT* SizeWindow(RECT * area);
+
+	state mainMenu(RECT * area, Nnet *& ref);
 
 	state StartMenu(RECT * area, Nnet *&ref);
-
-	state mainMenu(RECT * area, Nnet *&ref);
 
 	state FinishTrainMenu(RECT* area, Nnet *&ref);
 

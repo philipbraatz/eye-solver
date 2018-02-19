@@ -8,7 +8,7 @@
 using std::cout;
 using namespace cv;
 
-void Menu::SizeWindow(RECT * area)
+RECT* Menu::SizeWindow(RECT * area)
 {
 	HWND handle;
 	Mat blank = Mat::zeros({100,200},1 );
@@ -22,7 +22,8 @@ void Menu::SizeWindow(RECT * area)
 		GetWindowRect(handle, area);
 		DestroyWindow(handle);
 	}
-	//else {std::cout << "not found";}
+	else {std::cout << "not found";}
+	return area;
 }
 
 state Menu::mainMenu(RECT * area, Nnet *&ref)
@@ -63,7 +64,7 @@ state Menu::mainMenu(RECT * area, Nnet *&ref)
 state Menu::StartMenu(RECT * area,Nnet *&ref)
 {
 	cout << "--------------------Start----------------------------" << endl;
-	string version = "0.6.1";
+	string version = "0.6.2";
 	cout << "Solution Finder " << version << ":" << std::endl;
 
 	return mainMenu(area,ref);

@@ -33,6 +33,10 @@ void Graph::Setup(char name[], int width, int height)
 
 		SetWindow(m_name, image, 0, 0);
 	}
+	else
+	{
+		cout << "ERROR setup invalid";
+	}
 }
 
 int Graph::AddLine(vector<fPoint> alldata) {
@@ -84,7 +88,16 @@ void Graph::DrawGraph()
 			);
 		}
 	}
-	imshow(m_name, image);
+	try
+	{
+		//cout << m_name;
+		imshow(m_name, image);
+	}
+	catch (const std::exception&)
+	{
+		cout << "ERROR: Image Invalid" << endl;
+	}
+
 	waitKey(1);
 }
 
