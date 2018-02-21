@@ -49,7 +49,7 @@ int Graph::AddLine(vector<fPoint> alldata) {
 
 vector<vector<fPoint>> Graph::GetGraph()
 {
-	//CompactData();
+	//CompactData();//uncommented
 	ScaleData();
 
 	outData.clear();
@@ -103,10 +103,12 @@ void Graph::DrawGraph()
 
 void Graph::CompactData()//Broken
 {
+	vector<linedata> nlines;
 	for (unsigned int i = 0; i < lines.size(); i++)
 		if (lines[i].rawData.size() > COMPACT_SIZE)
-			for (unsigned int i = 0; i < lines[i].rawData.size()/2-1; i++)
-				lines[i].rawData.erase(lines[i].rawData.begin() + i*2);//delete every other
+			for (unsigned int j = 0; j < lines[j].rawData.size() - 2; j += 2)
+				nlines[i].rawData.push_back(lines[i].rawData[j]);
+	//return nlines;
 }
 
 void Graph::ScaleData()

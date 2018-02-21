@@ -10,12 +10,14 @@ class lilNet :
 	public Nnet
 {
 public:
-	lilNet(Nnet old)
-	{
-		getSmalls();
-	}
+	lilNet(){ Setup(0, 0, 0, 0); }
+	lilNet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs){ Setup(Ninputs, Nhiddens, SizeHidden, Noutputs); }
+	lilNet(std::string filename) { loadNet(filename); }
 
-	vector<double> Propigate(vector<double> inputs)
+	//call before pruning
+	void StartPrune() { getSmalls(); }
+
+	vector<double> PropPrune(vector<double> inputs)
 	{
 		//TIMER first
 		startProp = clock(); //Start timer

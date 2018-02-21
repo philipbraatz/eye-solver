@@ -17,16 +17,28 @@ inline EvoNet<tnet>::EvoNet(
 	}
 }
 
+//lilNet ONLY
+template<class tnet>
+inline void EvoNet<tnet>::PruneAll()
+{
+	for (size_t i = 0; i < size; i++)
+	{
+		pop[i].StartPrune();
+	}
+}
+
 //should be called in thread
 template<class tnet>
-inline void EvoNet<tnet>::SingleEpoc(vector<double> output,int i,vector<double> input, bool testing, bool max)
+inline void EvoNet<tnet>::SingleEpoc(vector<double> output,int i,vector<double> input, bool testing, bool max,bool prune)
 {
 	//pop[i].setScore(
 	//	GetTotalDif(truth,
 	//	output = pop[i].Propigate(truth))
 	//);
-	///vector<double> output, int i, vector<double> input, bool testing, bool max;//DELETE ME
-	output = pop[i].Propigate(input);
+	if (!prune)
+		output = pop[i].Propigate(input);
+	else
+		output = pop[i].PropPrune(input);
 
 	double score = 0;
 	for (unsigned int j = 0; j < input.size(); j++)
@@ -52,7 +64,7 @@ inline void EvoNet<tnet>::SingleEpoc(vector<double> output,int i,vector<double> 
 }
 
 template<class tnet>
-inline void EvoNet<tnet>::DoEpoch(vector<double> input,bool testing,bool max)
+inline void EvoNet<tnet>::DoEpoch(vector<double> input,bool testing,bool max,bool prune)
 {
 	time_epoch = 0;
 
@@ -63,7 +75,7 @@ inline void EvoNet<tnet>::DoEpoch(vector<double> input,bool testing,bool max)
 
 	vector<std::thread*> t;//threads
 	int maxThreads =8;
-	//t.resize(size);// number of threads
+	t.resize(size);// number of threads
 
 	bestout.resize(genCount);
 
@@ -80,11 +92,11 @@ inline void EvoNet<tnet>::DoEpoch(vector<double> input,bool testing,bool max)
 					t.pop_back();//remove thread
 				}
 			}
-			t.push_back(new std::thread([=] {SingleEpoc(output,i,input, testing, max); }));//add new threads
+			t.push_back(new std::thread([=] {SingleEpoc(output,i,input, testing, max,prune); }));//add new threads
 		}
 		else
 		{
-			SingleEpoc(output, i, input, testing, max);//works better IDK why
+			SingleEpoc(output, i, input, testing, max,prune);//works better IDK why
 		}
 		
 	}
@@ -175,6 +187,13 @@ inline void EvoNet<tnet>::updateStats(bool max)
 		best = 0;
 	}
 	average /= size;
+
+	if (max)
+		if (average < premed)
+			cout << "No Improvement"
+		else
+			if (average > premed)
+				cout << "No Improvement"
 }
 
 //repopulate optimized to save only one chosen parent

@@ -16,8 +16,10 @@ public:
 		int population, double mutateRate,
 		double Ninputs, double Nhiddens, int SizeHidden, double Noutputs
 	);
-	void SingleEpoc(vector<double> output, int i,vector<double> input, bool testing, bool max);
-	void DoEpoch(vector<double> truth,bool testing,bool max);
+	void SingleEpoc(vector<double> output, int i,vector<double> input, bool testing, bool max,bool prune);
+	void DoEpoch(vector<double> truth,bool testing,bool max,bool prune);
+
+	void EvoNet<tnet>::PruneAll();
 
 	struct order{
 		int place;

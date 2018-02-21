@@ -13,7 +13,7 @@
 using namespace cv;
 using namespace std;
 
-const int COMPACT_SIZE = 10000;
+const int COMPACT_SIZE = 10000;//CRASHES
 
 struct linedata
 {

@@ -37,10 +37,10 @@ class Trainer
 	int frames = 0;
 	int passed = 0;
 
-	vector<EvoNet<Nnet>> List;//EvoNet List
-	Nnet* pmainNet;//main Neural net for testing and loading
-	vector<EvoNet<lilNet>> lList;//lilNet List
-	lilNet* plmainNet;//main little Neural net for testing and loading
+	//vector<EvoNet<Nnet>> List;//EvoNet List
+	//Nnet* pmainNet;//main Neural net for testing and loading
+	vector<EvoNet<lilNet>> List;//lilNet List
+	lilNet* pmainNet;//main little Neural net for testing and loading
 	vector<double> output;
 
 
@@ -119,12 +119,12 @@ public:
 		//double size, rate, hiddens, hsize;
 		//double msize = 750, mrate = .001, mhiddens = 1, mhsize = 2;
 		//double xsize = 1000, xrate = .25, xhiddens = 6, xhsize = 25;
-
+		
 		size = msize;
 		rate = .075;
 		hiddens = 2;
 		hsize = 6;
-		List.push_back(EvoNet<Nnet>(size, rate, answer.length(), hiddens, hsize, answer.length()));
+		List.push_back(EvoNet<lilNet>(size, rate, answer.length(), hiddens, hsize, answer.length()));
 		//g.AddLine(zero);
 	}
 
@@ -136,6 +136,9 @@ public:
 		//input = i_input;
 		//answer = i_answer;
 		//graphOn = i_graphOn;
+
+
+		bool prune = false;
 
 		//TIMER first
 		this->sstart = clock();//Start timer
@@ -153,7 +156,7 @@ public:
 
 			for (int i = 0; i < List.size(); i++)
 			{
-				List[i].DoEpoch(input, false, true);//set goal max =
+				List[i].DoEpoch(input, false, true,prune);//set goal max =
 				List[i].repopulate(0.5);
 				List[i].updateStats(false);
 
@@ -213,13 +216,28 @@ public:
 			{
 				if (stale_max > List.front().getGenCount() * stale_p)
 				{
-					cout << endl << "Proggress has stopped";
-					cout << ", Pruning Started";
-					//TODO add pruning
-					cout << "training is done" << endl;
-					List.front().SaveBest("complete");
-					cout << endl << "Network has been saved!" << endl;
-					done = true;
+					if (prune)
+					{
+						cout << "pruning is done" << endl;
+						List.front().SaveBest("complete");
+						cout << endl << "Network has been saved!" << endl;
+						done = true;
+					}
+					else
+					{
+						cout << endl << "Proggress has stopped";
+						cout << ", Pruning Started" << endl;
+						//TODO add pruning
+						prune = true;
+						for (size_t i = 0; i < List.size(); i++)
+						{
+							List[i].PruneAll();
+						}
+					}
+
+
+
+					
 				}
 				else
 					stale_max = List.front().getGenCount() * stale_p;
