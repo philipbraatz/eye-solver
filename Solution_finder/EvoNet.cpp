@@ -189,11 +189,12 @@ inline void EvoNet<tnet>::updateStats(bool max)
 	average /= size;
 
 	if (max)
-		if (average < premed)
-			cout << "No Improvement"
-		else
-			if (average > premed)
-				cout << "No Improvement"
+	{
+		if (average < prevmed)
+			cout << "No Improvement";
+		if (average > prevmed)
+			cout << "No Improvement";
+	}
 }
 
 //repopulate optimized to save only one chosen parent

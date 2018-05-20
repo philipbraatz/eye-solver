@@ -119,4 +119,5 @@ int main()
 			mMenu.FinishTrainMenu(pArea, pmainNet);
 		}
 	}
+	return 1;
 }

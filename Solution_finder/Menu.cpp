@@ -87,7 +87,7 @@ void Menu::MenuSizeWindow(RECT * area)
 		GetWindowRect(handle, area);
 		DestroyWindow(handle);
 	}
-	//else {std::cout << "not found";}
+	else {std::cout << "not found";}
 }
 
 state Menu::FinishTrainMenu(RECT* area,Nnet *&ref)
