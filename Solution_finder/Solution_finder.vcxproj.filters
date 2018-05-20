@@ -50,9 +50,6 @@
     <ClCompile Include="Menu.cpp">
       <Filter>Source Files\Menu</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Documents\Visual Studio 2015\Projects\practice\practice\backNet.cpp">
-      <Filter>Source Files\Neural Network</Filter>
-    </ClCompile>
     <ClCompile Include="lilNet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -83,9 +80,6 @@
     <ClInclude Include="controller.h" />
     <ClInclude Include="Menu.h">
       <Filter>Source Files\Menu</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Documents\Visual Studio 2015\Projects\practice\practice\backNet.h">
-      <Filter>Source Files\Neural Network</Filter>
     </ClInclude>
     <ClInclude Include="lilNet.h" />
     <ClInclude Include="Trainer.h" />

@@ -150,7 +150,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Documents\Visual Studio 2015\Projects\practice\practice\backNet.cpp" />
     <ClCompile Include="controller.cpp" />
     <ClCompile Include="EvoNet.cpp" />
     <ClCompile Include="graphic.cpp" />
@@ -164,7 +163,6 @@
     <ClCompile Include="Trainer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Documents\Visual Studio 2015\Projects\practice\practice\backNet.h" />
     <ClInclude Include="capture.h" />
     <ClInclude Include="controller.h" />
     <ClInclude Include="EvoNet.h" />
