@@ -64,13 +64,19 @@ class Trainer
 	//state option = NEW;
 
 public:
-	Trainer(std::string &answer, vector<double> &input, state &option, Rect area, Screen &chartScr)//(vector<EvoNet<Nnet>> &List, Nnet *&mainNet, std::string &answer,
-																		 //vector<double> &input, int &sstart, int &send, Menu &mMenu,
-																		 //Rect &area, Graph g, RECT* &pArea, OCR &ocr, Screen &OCRScr, Screen &chartScr, state &option)
+	Trainer(problem_type pt,Mat &imgAnswer,std::string &txtAnswer, vector<double> &input, state &option, Rect area, Screen &chartScr,Screen &outputScr)
 	{
-
-		sstart = 32;//answer min value
-		send = 126;//answer max value
+		if (NEW_TEXT)
+		{
+			sstart = 32;//ascii start
+			send = 126;//ascii end
+		}
+		else if (NEW_IMAGE)
+		{
+			sstart = 0;//color white
+			send = 128;//color black
+		}
+			
 
 				   //declare answer
 		//answer = i_answer;
@@ -79,7 +85,9 @@ public:
 
 		vector<fPoint> zero;
 
-		if (option == NEW || option == CONTINUE)//if needs training
+		if (option == NEW_TEXT || option == CONTINUE_TEXT ||
+			option == NEW_IMAGE || option == CONTINUE_IMAGE
+			)//if needs training
 		{
 			///ocr.SetFont("C:\\Users\\Philip\\Documents\\Visual Studio 2015\\Projects\\Solution_finder\\fonts\\arial.PNG", 16, 16);
 
@@ -101,10 +109,17 @@ public:
 
 			chartScr.height = 720;
 			chartScr.width = 1080;
-			chartScr.x = 40;
+			chartScr.x = 70;
 			chartScr.y = 10;
 			chartScr.name = "Chart";
 			chartScr.image = Mat::zeros(chartScr.width, chartScr.height, CV_8UC3);
+
+			outputScr.height = 200;
+			outputScr.width = 350;
+			outputScr.x = 40;
+			outputScr.y = 200;
+			outputScr.name = "Network Output";
+			outputScr.image = Mat::zeros(outputScr.width, outputScr.height, CV_8UC3);
 
 			//Setup Graph
 
@@ -113,7 +128,7 @@ public:
 		//declare all EvoNet in List
 
 		double size, rate, hiddens, hsize;
-		double msize = 750, mrate = .001, mhiddens = 1, mhsize = 2;
+		double msize = 350, mrate = .001, mhiddens = 1, mhsize = 2;
 		double xsize = 1000, xrate = .25, xhiddens = 6, xhsize = 25;
 
 		//double size, rate, hiddens, hsize;
@@ -122,26 +137,27 @@ public:
 		
 		size = msize;
 		rate = .075;
-		hiddens = 2;
-		hsize = 6;
-		List.push_back(EvoNet<lilNet>(size, rate, answer.length(), hiddens, hsize, answer.length()));
+		hiddens = 4;
+		hsize = 10;
+		if(option == NEW_TEXT)
+			List.push_back(EvoNet<lilNet>(size, rate, txtAnswer.length(),
+				hiddens, hsize, txtAnswer.length(),pt));
+		else if (option == NEW_IMAGE)
+		{
+			List.push_back(EvoNet<lilNet>(size, rate, imgAnswer.cols*imgAnswer.rows*imgAnswer.channels(),
+				hiddens, hsize, imgAnswer.cols*imgAnswer.rows*imgAnswer.channels(),pt));
+		}
 		//g.AddLine(zero);
 	}
 
 	void train(Screen &OCRScr, Veiwer &vscreen, Graph &g,
 		vector<double> &input, unsigned int &i_count,
-		std::string &answer, bool &graphOn)
+		std::string &txtAnswer, Mat &imgAnswer, bool &graphOn)
 	{
-		//OCRScr = i_OCRScr;
-		//input = i_input;
-		//answer = i_answer;
-		//graphOn = i_graphOn;
-
-
 		bool prune = false;
 
 		//TIMER first
-		this->sstart = clock();//Start timer
+		this->startt = clock();//Start timer
 		bool done = false;
 		while (!done)
 		{
@@ -173,14 +189,38 @@ public:
 				count = List[i].getGenCount();
 				cout << "Gen: " << count << " ";
 
-				done = true;//true intel proven false
+				done = true;
 				string out;
 				sbest = List[i].getCurrentBestOut();
-				for (unsigned int j = 0; j < answer.length(); j++)//get the output as text
+				if(txtAnswer !="")
+					for (unsigned int j = 0; j < txtAnswer.length(); j++)//get the output as text
+					{
+						if (done && (int)txtAnswer[j] != sbest[j])
+							done = false;
+						out += (char)(sbest[j] * (send - sstart) + sstart);
+					}
+				if (imgAnswer.data)
 				{
-					if (done && (int)answer[j] != sbest[j])
-						done = false;
-					out += (char)(sbest[j] * (send - sstart) + sstart);
+					Mat outputImg(imgAnswer.cols, imgAnswer.rows,CV_8UC3,Scalar(0,0,0));
+					for (size_t i = 0; i < imgAnswer.cols; i++)
+					{
+						for (size_t j = 0; j < imgAnswer.rows; j++)
+						{
+							Vec3b color;
+							for (size_t k = 0; k < imgAnswer.channels(); k++)
+							{
+								done = false;
+								//({0,0}[0,0][0,1][0,2]),({1,0}[0,4][0,5][0,6]),({2,0}[0,7][0,8][0,9])			=C(R*cl+r)+c
+								//({0,1}[0,10][0,11][0,12]),({1,1}[0,13][0,14][0,15]),({2,1}[0,16][0,17][0,18]) [rows]*[channels]*col+row*[channels]+channel
+								//({0,2}[0,19][0,20][0,21]),({1,2}[0,22][0,23][0,24]),({2,2}[0,25][0,26][0,27]) = R*C*cl+r*C+c
+								outputImg.at<Vec3b>(Point(i, j))[k] = sbest[imgAnswer.channels()*(imgAnswer.rows*i + j) + k];
+							}
+						}
+					}
+					out +=  to_string((int)(List[i].getAveScore()));
+
+					imshow("Network Output", outputImg);
+					waitKey(1);
 				}
 				if (count >= 2)
 				{
@@ -194,11 +234,10 @@ public:
 					{
 						cout << "\b\b\b\b\b\b\b\b\b\b\b";
 						cout << "\b\b\b\b\b";
-						for (unsigned int i = 0; i < std::to_string(passed).length() + std::to_string(count).length(); i++)
+						for (unsigned int i = 0; i < std::to_string(passed).length() + std::to_string(count).length() + out.length(); i++)
 							cout << "\b";
 					}
 				}
-
 
 				//if (answer.compare(out))//if anwer and out are the same string
 				//	cout << "perfected Network! training done.";

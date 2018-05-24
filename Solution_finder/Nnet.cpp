@@ -8,18 +8,20 @@ using std::vector;
 
 //initialize
 
-Nnet::Nnet(){ Setup(0, 0, 0, 0); }
-Nnet::Nnet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs) { Setup(Ninputs, Nhiddens, SizeHidden, Noutputs); }
+Nnet::Nnet(){ Setup(0, 0, 0, 0,TEXT); }
+Nnet::Nnet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs,problem_type mt) { Setup(Ninputs, Nhiddens, SizeHidden, Noutputs,mt); }
 Nnet::Nnet(std::string filename) {
 	loadNet(filename);
 }
 
-int Nnet::Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, bool loaded)
+int Nnet::Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs,problem_type mt, bool loaded)
 {
 	if (!Ninputs || !Nhiddens || !SizeHidden || !Noutputs)//if an input is missing
 	{
-		return 0;
+		return -1;
 	}
+
+	pt = mt;
 
 	//set sizes
 	input.size = Ninputs;
@@ -37,11 +39,7 @@ int Nnet::Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs
 	}
 
 	if (loaded)
-	{
 		age = 0;
-
-	}
-
 
 	//resize weights
 	//randomize weights
@@ -92,7 +90,7 @@ int Nnet::Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs
 	return 1;
 }
 
-unsigned int Nnet::GetLayerSize(type l)
+unsigned int Nnet::GetLayerSize(layer_type l)
 {
 	switch (l)
 	{
@@ -300,8 +298,11 @@ void Nnet::saveNet(std::string name)
 	std::ofstream out(name, std::ios_base::binary);
 	if (out.good())
 	{
+		std::cout << "Version: "<<version<<".0" << std::endl;
+		out.write((char *)&version, sizeof(unsigned int));				//save version
 		//save sizes
 		std::cout << "Writing Sizes of file" << std::endl;				//ORDER
+		out.write((char *)&pt, sizeof(problem_type));					//problem type
 		out.write((char *)&input.size, sizeof(unsigned int));			//input layer size
 		out.write((char *)&output.size, sizeof(unsigned int));			//output layer size
 		out.write((char *)&hidden.front().size, sizeof(unsigned int));	//hidden layers size
@@ -342,12 +343,26 @@ Nnet Nnet::loadNet(std::string filename)
 	unsigned int sizeOutput;
 	unsigned int sizeHidden;
 	unsigned int m_Nhidden;
+	unsigned int lversion;
 
 	std::ifstream in(filename, std::ios_base::binary);
 	if (in.good())
 	{
+		in.read((char *)&lversion, sizeof(unsigned int));	//save version
+		std::cout << "Current Version: "<<version << ".0";
+		if (lversion == version)
+			std::cout << "Valid... loading" << std::endl;
+		else
+		{
+			std::cout << "This file is an older version " << lversion << ".0" << std::endl;
+			std::cout << "UNABLE to load file";
+			return NULL;
+		}
+
 		//Get Nnet sizes
 		std::cout << "Reading sizes: " << std::endl;
+
+		in.read((char *)&pt, sizeof(problem_type));	//problem type
 		in.read((char *)&sizeInput, sizeof(unsigned int));	//input layer size
 		in.read((char *)&sizeOutput, sizeof(unsigned int));	//output layer size
 		in.read((char *)&sizeHidden, sizeof(unsigned int));	//hidden layers size
@@ -356,7 +371,7 @@ Nnet Nnet::loadNet(std::string filename)
 
 		//Resize Nnet
 		Nnet net;
-		net.Setup(sizeInput, m_Nhidden, sizeHidden, sizeOutput,true);
+		net.Setup(sizeInput, m_Nhidden, sizeHidden, sizeOutput,pt,true);
 
 		//Load Biases
 		std::cout << "Reading  biases: " << std::fixed;//biases

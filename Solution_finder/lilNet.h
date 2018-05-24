@@ -10,8 +10,8 @@ class lilNet :
 	public Nnet
 {
 public:
-	lilNet(){ Setup(0, 0, 0, 0); }
-	lilNet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs){ Setup(Ninputs, Nhiddens, SizeHidden, Noutputs); }
+	lilNet(){ Setup(0, 0, 0, 0,problem_type::TEXT); }
+	lilNet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs,problem_type pt){ Setup(Ninputs, Nhiddens, SizeHidden, Noutputs,pt); }
 	lilNet(std::string filename) { loadNet(filename); }
 
 	//call before pruning

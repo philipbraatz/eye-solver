@@ -14,9 +14,11 @@ class EvoNet
 public:
 	EvoNet(
 		int population, double mutateRate,
-		double Ninputs, double Nhiddens, int SizeHidden, double Noutputs
+		double Ninputs, double Nhiddens, int SizeHidden, double Noutputs,
+		problem_type pt
 	);
-	void SingleEpoc(vector<double> output, int i,vector<double> input, bool testing, bool max,bool prune);
+	void SingleEpocTxt(vector<double> output, int i,vector<double> input, bool testing, bool max,bool prune);
+	void SingleEpocImg(vector<double> output, int i, vector<double> input, bool testing, bool max, bool prune);
 	void DoEpoch(vector<double> truth,bool testing,bool max,bool prune);
 
 	void EvoNet<tnet>::PruneAll();
@@ -65,13 +67,17 @@ public:
 	void SaveBest(string name);
 	void EvoNet::LoadNet(string filename);
 
-private:
+
+
+protected:
 	int size;
 	double rate;
 
 	unsigned int genCount;
 
-	double time_epoch,time_repop;
+	double time_epoch, time_repop;
+
+	problem_type pt =IMAGE;
 
 	vector<tnet> pop;
 

@@ -21,19 +21,19 @@
     <Filter Include="Source Files\Menu">
       <UniqueIdentifier>{1dac90d5-9d7b-4bd2-b62f-1d4a2972f919}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\utilities">
+      <UniqueIdentifier>{368f579e-54f1-4dd8-85a8-a6cfe43cdc0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Neural Network\Evolution">
+      <UniqueIdentifier>{cada691d-7c51-4f21-a6d9-3aff2d6a1a8c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EvoNet.cpp">
-      <Filter>Source Files\Neural Network</Filter>
-    </ClCompile>
     <ClCompile Include="Nnet.cpp">
       <Filter>Source Files\Neural Network</Filter>
-    </ClCompile>
-    <ClCompile Include="controller.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="mouse.cpp">
       <Filter>Source Files\Controls</Filter>
@@ -50,21 +50,20 @@
     <ClCompile Include="Menu.cpp">
       <Filter>Source Files\Menu</Filter>
     </ClCompile>
-    <ClCompile Include="lilNet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Trainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="controller.cpp">
+      <Filter>Source Files\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="lilNet.cpp">
+      <Filter>Source Files\Neural Network</Filter>
+    </ClCompile>
+    <ClCompile Include="EvoNet.cpp">
+      <Filter>Source Files\Neural Network\Evolution</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="utility.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EvoNet.h">
-      <Filter>Source Files\Neural Network</Filter>
-    </ClInclude>
     <ClInclude Include="Nnet.h">
       <Filter>Source Files\Neural Network</Filter>
     </ClInclude>
@@ -77,12 +76,27 @@
     <ClInclude Include="mouse.h">
       <Filter>Source Files\Controls</Filter>
     </ClInclude>
-    <ClInclude Include="controller.h" />
     <ClInclude Include="Menu.h">
       <Filter>Source Files\Menu</Filter>
     </ClInclude>
-    <ClInclude Include="lilNet.h" />
-    <ClInclude Include="Trainer.h" />
+    <ClInclude Include="controller.h">
+      <Filter>Source Files\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="utility.h">
+      <Filter>Source Files\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Source Files\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="lilNet.h">
+      <Filter>Source Files\Neural Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Trainer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EvoNet.h">
+      <Filter>Source Files\Neural Network\Evolution</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Solution_finder.rc">

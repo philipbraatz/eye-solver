@@ -1,11 +1,10 @@
 #pragma once
 #include "Menu.h"
-#include "graphic.h"
-#include <opencv2/core.hpp>
-//#include <opencv2/imgproc.hpp>
-#include <opencv2/highgui.hpp>
+
+
 
 using std::cout;
+using std::cin;
 using namespace cv;
 
 RECT* Menu::SizeWindow(RECT * area)
@@ -22,11 +21,57 @@ RECT* Menu::SizeWindow(RECT * area)
 		GetWindowRect(handle, area);
 		DestroyWindow(handle);
 	}
-	else {std::cout << "not found";}
+	else {cout << "not found";}
 	return area;
 }
 
-state Menu::mainMenu(RECT * area, Nnet *&ref)
+void Menu::LoadFile(Mat &image, string &text)
+{
+	string file;
+	string type;
+	cout << "Enter a file name you want to train on within the train_data folder\n";
+	cin >> file;
+	if (file.length() > 3)
+		type = file.substr(file.length() - 3, 3);
+	else
+	{
+		cout << "file type not supported";
+		type = "txt";
+		text = file.append(" abc");
+	}
+	if (type == "txt")
+	{
+		image = NULL;
+		text = file;
+	}
+	else if (
+		type == "png"||
+		type == "peg"||
+		type == "jpg"||
+		type == "jpe"||
+		type == "bmp"
+		)
+	{
+		text = "";
+		image = imread("train_data//"+file, CV_LOAD_IMAGE_COLOR);
+		if (!image.data)
+		{
+			cout << "ERROR: Could not open image from "+("train_data/"+file);
+			waitKey();
+		}
+		SetWindow("load image test",image,50,50);
+		waitKey();
+
+	}
+	else
+	{
+		cout << "File type " << type << " not supported, will be treated as text\n";
+		type = "txt";
+		text = file.append(" abc");
+	}
+}
+
+state Menu::mainMenu(RECT * area, Nnet *&ref, problem_type pt,Mat &image,string &text)
 {
 	cout << "--------------------MAIN----------------------------" << endl;
 
@@ -48,26 +93,33 @@ state Menu::mainMenu(RECT * area, Nnet *&ref)
 			if (yesNoPromt("Do you want to train the Network?"))
 			{//Train Network
 				SizeWindow(area);
-				return CONTINUE;
+				return CONTINUE_TEXT;
 			}
 			else//Test Network
-				return LOAD;
+				return LOAD_NET;
 		}
 		else//New Network
 		{
+			LoadFile(image,text);
+
 			SizeWindow(area);
-			return NEW;
+			if (text != "")
+				return NEW_TEXT;
+			else if(image.data)
+				return NEW_IMAGE;
+			else
+				return NEW_DATA;
 		}
 	}
 }
 
-state Menu::StartMenu(RECT * area,Nnet *&ref)
+state Menu::StartMenu(RECT * area,Nnet *&ref,problem_type pt,Mat &image,string &text)
 {
 	cout << "--------------------Start----------------------------" << endl;
-	string version = "0.6.2";
+	string version = "0.7.0";
 	cout << "Solution Finder " << version << ":" << std::endl;
 
-	return mainMenu(area,ref);
+	return mainMenu(area,ref,pt,image,text);
 }
 
 void Menu::MenuSizeWindow(RECT * area)
@@ -90,9 +142,9 @@ void Menu::MenuSizeWindow(RECT * area)
 	else {std::cout << "not found";}
 }
 
-state Menu::FinishTrainMenu(RECT* area,Nnet *&ref)
+state Menu::FinishTrainMenu(RECT* area,Nnet *&ref,problem_type pt,Mat &image,string &text)
 {
 	cout << "--------------------END----------------------------" << endl;
 	cout << "Done Generating Network" << std::endl;
-	return mainMenu(area,ref);
+	return mainMenu(area,ref,pt,image,text);
 }

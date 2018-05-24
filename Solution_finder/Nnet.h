@@ -13,8 +13,14 @@ using std::vector;
 
 const double e = 2.71828182845904523536;
 
-enum type {
+enum layer_type {
 	Ninputs, Nhiddens, Noutputs, SizeHidden
+};
+enum problem_type {
+	TEXT,
+	IMAGE,
+	VIDEO,
+	OTHER
 };
 
 struct neuron
@@ -39,12 +45,12 @@ public:
 	vector<double> m_goal;
 
 	Nnet();
-	Nnet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs);
+	Nnet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs,problem_type mt);
 	Nnet(std::string filename);
 	//Nnet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, std::vector<double> goal);
 
-	int Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, bool loaded = false);
-	unsigned int GetLayerSize(type l);
+	int Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs,problem_type mt, bool loaded = false);
+	unsigned int GetLayerSize(layer_type l);
 
 	//set input and get output
 	vector<double> Propigate(vector<double> inputs);
@@ -70,6 +76,7 @@ public:
 
 protected:
 	//const int MAX_WEIGHT = 9999;
+	unsigned int version = 2;// increment when save files change MANUALLY
 
 	double trate;
 
@@ -86,6 +93,8 @@ protected:
 	vector<layer> hidden;
 
 	unsigned int m_Nhidden;
+
+	problem_type pt;
 
 	void Normalize(double &input);
 	void AddBiases(vector<double> cur, vector<double> biases, vector<double> &out);

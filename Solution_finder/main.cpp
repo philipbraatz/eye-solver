@@ -38,14 +38,15 @@ int main()
 	clock_t startt=0;
 	double frames=0;
 
-	
+	Mat trImage;
+	string trText;
 
 	//bool done= false;
 	bool exit = false;
-	////TODO remove these varibles in place of dynamicly changeing ones
-	std::string answer = "easy!";
-	int sstart = 32;//min value
-	int send = 126;//max value
+	///TODO remove these varibles in place of dynamicly changeing ones
+	//std::string answer = "easy!";
+	int sstart = 0;//min value
+	int send = 1;//max value
 
 	Nnet* pmainNet;//main Neural net for testing and loading
 	//vector<EvoNet<lilNet>> lList;//lilNet List
@@ -62,6 +63,7 @@ int main()
 
 	Screen chartScr;
 	Screen OCRScr;
+	Screen imgTrScr;
 	//OCR ocr;
 
 	Rect area;
@@ -71,11 +73,12 @@ int main()
 
 	Graph g;
 
+	problem_type pt=IMAGE;
 	//bool graphOn = true;
 
 	pArea = new RECT();
-	state option = NEW;
-	option = mMenu.StartMenu(pArea, pmainNet);
+	state option = NEW_DATA;
+	option = mMenu.StartMenu(pArea, pmainNet,pt,trImage,trText);
 	vector<double> input, output;
 	//Rect area;
 	area.x = pArea->left*1.25;
@@ -86,38 +89,46 @@ int main()
 	cout << "Initialized" << endl;
 
 	Veiwer vscreen(area);
-	Trainer t(answer,input, option,area,chartScr);
+	Trainer t(pt,trImage,trText,input, option,area,chartScr,imgTrScr);
 	bool graphOn = true;
 
 	cout << "Setup Up Done" << endl;
 
-	if (option == NEW || option == CONTINUE)//if needs training
-	{
-		for (size_t i = 0; i < answer.length(); i++) {
-			input.push_back(((double)answer[i] - sstart) / (send - sstart));
-			std::cout << (char)((input[i] - sstart) / (send - sstart));
+	if (option == NEW_TEXT || option == CONTINUE_TEXT)//text training
+		for (size_t i = 0; i < trText.length(); i++) {
+			input.push_back(((double)trText[i] - 32) / (126 - 32));
+			std::cout << (char)((input[i] - 32) / (126 - 32));
 		}
-		std::cout << std::endl;
-	}
+	else if (option == NEW_IMAGE || option == CONTINUE_IMAGE)//image training
+		for (size_t i = 0; i < trImage.cols; i++)
+			for (size_t j = 0; j < trImage.rows; j++)		
+				for (size_t k = 0; k < trImage.channels(); k++)				
+					input.push_back(((double)trImage.at<Vec3b>(i,j).val[k]) / 128);
+
+	std::cout << std::endl;
+
 	//do what couldn't get started in setup
 	g.Setup(chartScr.name, chartScr.width, chartScr.height);
 	g.AddLine({ { 0,0 } });
 
-
-	if (option == NEW || option == CONTINUE)//if needs training
+	while (!exit)//main loop
 	{
-		while (!exit)
+		Mat blankM;
+		string blankS;
+		//train.train(OCRScr,vscreen,g,input, count,answer,graphOn);
+		if(option == NEW_TEXT)
+			t.train((Screen)imgTrScr,(Veiwer)vscreen, (Graph)g, (vector<double>)input,(unsigned int)count,trText,blankM,(bool)graphOn);
+		else if(option == NEW_IMAGE)
+ 			t.train((Screen)imgTrScr, (Veiwer)vscreen, (Graph)g, (vector<double>)input, (unsigned int)count, blankS,(Mat)trImage, (bool)graphOn);
+		
+		if (yesNoPromt("Do you want to prune network?"))
 		{
-			//train.train(OCRScr,vscreen,g,input, count,answer,graphOn);
-			t.train((Screen)OCRScr,(Veiwer)vscreen, (Graph)g, (vector<double>)input,(unsigned int)count,(string)answer,(bool)graphOn);
-
-			if (yesNoPromt("Do you want to prune network?"))
-			{
-				cout << "starting pruning" << endl;
-			}
-			cout << "Done Generating Network" << endl;
-			mMenu.FinishTrainMenu(pArea, pmainNet);
+			cout << "starting pruning" << endl;
+			cout << "NOT IMPLIMENTED...skipping" << endl;
 		}
+		cout << "Done Generating Network" << endl;
+		mMenu.FinishTrainMenu(pArea, pmainNet,pt,trImage,trText);
 	}
+
 	return 1;
 }

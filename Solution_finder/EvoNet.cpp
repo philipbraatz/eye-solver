@@ -4,7 +4,8 @@
 template<class tnet>
 inline EvoNet<tnet>::EvoNet(
 	int population, double mutateRate,
-	double Ninputs, double Nhiddens, int SizeHidden, double Noutputs
+	double Ninputs, double Nhiddens, int SizeHidden, double Noutputs,
+	problem_type pt
 )
 {
 	genCount = 0;
@@ -12,7 +13,7 @@ inline EvoNet<tnet>::EvoNet(
 	rate = mutateRate;
 	for (unsigned int i = 0; i < population; i++)
 	{
-		tnet temp(Ninputs, Nhiddens, SizeHidden, Noutputs);
+		tnet temp(Ninputs, Nhiddens, SizeHidden, Noutputs,pt);
 		pop.push_back(temp);
 	}
 }
@@ -25,42 +26,6 @@ inline void EvoNet<tnet>::PruneAll()
 	{
 		pop[i].StartPrune();
 	}
-}
-
-//should be called in thread
-template<class tnet>
-inline void EvoNet<tnet>::SingleEpoc(vector<double> output,int i,vector<double> input, bool testing, bool max,bool prune)
-{
-	//pop[i].setScore(
-	//	GetTotalDif(truth,
-	//	output = pop[i].Propigate(truth))
-	//);
-	if (!prune)
-		output = pop[i].Propigate(input);
-	else
-		output = pop[i].PropPrune(input);
-
-	double score = 0;
-	for (unsigned int j = 0; j < input.size(); j++)
-	{
-		if ((int)(output[j] * (126 - 32) + 32) == (int)(input[j] * (126 - 32) + 32))
-		{
-			score++;
-		}
-		else
-		{
-			score -= pow(abs(output[j] - input[j]), 2);
-		}
-	}
-
-	//int score=0;
-	//for (unsigned int j = 0; j < truth.size(); j++)
-	//{
-	//	score += pow(abs(output[j] - truth[j])*truth.size(),2);
-	//}
-	pop[i].setScore(score);
-	
-	time_epoch += pop[i].GetSpeed();
 }
 
 template<class tnet>
@@ -80,10 +45,11 @@ inline void EvoNet<tnet>::DoEpoch(vector<double> input,bool testing,bool max,boo
 	bestout.resize(genCount);
 
 	vector<double> output;
+	//#pragma loop(hint_parallel(8)) 
 	for (unsigned int i = 0; i < size; i++)//go through whole population
 	{
 		if (false)
-		{
+		{//TODO better thread implentation
 			if (maxThreads >= t.size())//limit threads
 			{
 				for (unsigned int i = 0; i < t.size(); i++)//wait for all threads to finish
@@ -92,11 +58,20 @@ inline void EvoNet<tnet>::DoEpoch(vector<double> input,bool testing,bool max,boo
 					t.pop_back();//remove thread
 				}
 			}
-			t.push_back(new std::thread([=] {SingleEpoc(output,i,input, testing, max,prune); }));//add new threads
+			//add new threads
+			if(pt == TEXT)
+				t.push_back(new std::thread([=] {SingleEpocTxt(output,i,input, testing, max,prune); }));
+			else if (pt == IMAGE)
+				t.push_back(new std::thread([=] {SingleEpocImg(output, i, input, testing, max, prune); }));
 		}
-		else
+		else//works better IDK why
 		{
-			SingleEpoc(output, i, input, testing, max,prune);//works better IDK why
+			if (pt == TEXT)
+				SingleEpocTxt(output, i, input, testing, max, prune);
+			else if (pt == IMAGE)
+				SingleEpocImg(output, i, input, testing, max, prune);
+			else
+				std::cout << "Problem Type NOT specified";
 		}
 		
 	}
@@ -118,15 +93,11 @@ inline void EvoNet<tnet>::Reorder(bool max)
 		for (unsigned int j = 0; j < i; j++)
 		{
 			if (max)
-			{
 				if (pop[i].getScore() > pop[j].getScore())//if i is greater than j
 								spot = j;//make it the best spot to be
-			}
 			else
-			{
 				if (pop[i].getScore() < pop[j].getScore())//if i is smaller than j
 					spot = j;//make it the best spot to be
-			}
 			
 		}
 		if(spot != -1)//if better spot
@@ -150,6 +121,73 @@ inline void EvoNet<tnet>::repopulate(double save)
 		time_repop += pop.back().GetSpeed();
 	}
 }
+
+template<class tnet>
+void EvoNet<tnet>::SingleEpocTxt(vector<double> output, int i, vector<double> input, bool testing, bool max, bool prune)
+{
+	{
+		i = i;
+		//pop[i].setScore(
+		//	GetTotalDif(truth,
+		//	output = pop[i].Propigate(truth))
+		//);
+		if (!prune)
+			output = pop[i].Propigate(input);
+		else
+			output = pop[i].PropPrune(input);
+
+		double score = 0;
+		for (unsigned int j = 0; j < input.size(); j++)
+		{
+			if ((int)(output[j] * (126 - 32) + 32) == (int)(input[j] * (126 - 32) + 32))
+			{
+				score++;
+			}
+			else
+			{
+				score -= pow(abs(output[j] - input[j]), 2);
+			}
+		}
+
+		//int score=0;
+		//for (unsigned int j = 0; j < truth.size(); j++)
+		//{
+		//	score += pow(abs(output[j] - truth[j])*truth.size(),2);
+		//}
+		pop[i].setScore(score);
+
+		time_epoch += pop[i].GetSpeed();
+	}
+}
+template<class tnet>
+void EvoNet<tnet>::SingleEpocImg(vector<double> output, int i, vector<double> input, bool testing, bool max, bool prune)
+{
+	//pop[i].setScore(
+	//	GetTotalDif(truth,
+	//	output = pop[i].Propigate(truth))
+	//);
+	if (!prune)
+		output = pop[i].Propigate(input);
+	else
+		output = pop[i].PropPrune(input);
+
+	double score = 0;
+	for (unsigned int j = 0; j < input.size(); j++)
+	{
+		if ((int)(output[j] * 128) == (int)(input[j] * 128))
+		{
+			score++;
+		}
+		else
+		{
+			score -= pow(abs(output[j] - input[j]), 2);
+		}
+	}
+	pop[i].setScore(score);
+
+	time_epoch += pop[i].GetSpeed();
+}
+
 //maximize or minimize
 template<class tnet>
 inline void EvoNet<tnet>::updateStats(bool max)
@@ -162,7 +200,7 @@ inline void EvoNet<tnet>::updateStats(bool max)
 		best = -RAND_MAX;
 	average = 0;
 
-	bestout[genCount-1] = pop.front().getLastLayer();//set an output as a fall back in case of error
+	bestout[genCount-1] = pop.front().getLastLayer();//start with last network as best
 	for (unsigned int i = 0; i < size; i++)
 	{
 		average += pop[i].getScore();
