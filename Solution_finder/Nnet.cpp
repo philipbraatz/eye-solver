@@ -172,9 +172,9 @@ vector<double> Nnet::Propigate(vector<double> inputs)
 		for (unsigned int j = 0; j < m_Nhidden; j++)
 			adder += hidden.back().neurons[j].value * output.neurons[i].weights[j];//node*weight
 		adder += output.neurons[i].bias;
-		//Normalize(adder);//normalize
+		Normalize(adder);//normalize
 		output.neurons[i].value = adder;
-		out[i] = adder;
+		out[i] =adder;
 	}
 
 	PassedProp = (clock() - startProp);// / CLOCKS_PER_SEC;
