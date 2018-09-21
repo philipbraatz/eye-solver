@@ -164,6 +164,7 @@
     <ClCompile Include="Nnet.cpp" />
     <ClCompile Include="OCR.cpp" />
     <ClCompile Include="OCR.h" />
+    <ClCompile Include="Tracker.cpp" />
     <ClCompile Include="Trainer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +177,7 @@
     <ClInclude Include="mouse.h" />
     <ClInclude Include="Nnet.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Tracker.h" />
     <ClInclude Include="Trainer.h" />
     <ClInclude Include="utility.h" />
   </ItemGroup>

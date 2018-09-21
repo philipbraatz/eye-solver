@@ -30,7 +30,7 @@ using namespace cv;
 
 int main()
 {
-	cout << "Start"<< endl;
+	cout << "Start"<< endl;//debug
 
 	//pre-initialization
 	srand(static_cast <unsigned> (time(0)));
@@ -41,25 +41,14 @@ int main()
 	Mat trImage;
 	string trText;
 
-	//bool done= false;
 	bool exit = false;
-	///TODO remove these varibles in place of dynamicly changeing ones
-	//std::string answer = "easy!";
 	int sstart = 0;//min value
 	int send = 1;//max value
 
 	Nnet* pmainNet;//main Neural net for testing and loading
-	//vector<EvoNet<lilNet>> lList;//lilNet List
-	//lilNet* plmainNet;//main little Neural net for testing and loading
 
 
 	unsigned int count =NULL;
-	//int stale_max = 10000;
-	//double stale_p = .2;//changed for testing , use .2
-	//int staleCount = NULL;
-	//double staleScore = NULL;
-
-	//vector<double> sbest = {};
 
 	Screen chartScr;
 	Screen OCRScr;
@@ -117,9 +106,22 @@ int main()
 		string blankS;
 		//train.train(OCRScr,vscreen,g,input, count,answer,graphOn);
 		if(option == NEW_TEXT)
-			t.train((Screen)imgTrScr,(Veiwer)vscreen, (Graph)g, (vector<double>)input,(unsigned int)count,trText,blankM,(bool)graphOn);
+			t.train(
+				(Screen)imgTrScr,
+				(Veiwer)vscreen, 
+				(Graph)g, 
+				(vector<double>)input,
+				(unsigned int)count,trText,blankM,
+				(bool)graphOn);
 		else if(option == NEW_IMAGE)
- 			t.train((Screen)imgTrScr, (Veiwer)vscreen, (Graph)g, (vector<double>)input, (unsigned int)count, blankS,(Mat)trImage, (bool)graphOn);
+ 			t.train(
+				(Screen)imgTrScr, 
+				(Veiwer)vscreen, 
+				(Graph)g, 
+				(vector<double>)input, 
+				(unsigned int)count, blankS,
+				(Mat)trImage, 
+				(bool)graphOn);
 		
 		if (yesNoPromt("Do you want to prune network?"))
 		{

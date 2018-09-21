@@ -15,9 +15,6 @@
     <Filter Include="Source Files\Graphics">
       <UniqueIdentifier>{9a2f6824-ad73-412f-bcc3-773abc322169}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Controls">
-      <UniqueIdentifier>{6011a597-0ee5-4556-a3a6-92a387dbd1df}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Menu">
       <UniqueIdentifier>{1dac90d5-9d7b-4bd2-b62f-1d4a2972f919}</UniqueIdentifier>
     </Filter>
@@ -26,6 +23,9 @@
     </Filter>
     <Filter Include="Source Files\Neural Network\Evolution">
       <UniqueIdentifier>{cada691d-7c51-4f21-a6d9-3aff2d6a1a8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UserControls">
+      <UniqueIdentifier>{6011a597-0ee5-4556-a3a6-92a387dbd1df}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -36,7 +36,7 @@
       <Filter>Source Files\Neural Network</Filter>
     </ClCompile>
     <ClCompile Include="mouse.cpp">
-      <Filter>Source Files\Controls</Filter>
+      <Filter>Source Files\UserControls</Filter>
     </ClCompile>
     <ClCompile Include="OCR.h">
       <Filter>Source Files\Graphics</Filter>
@@ -54,13 +54,16 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="controller.cpp">
-      <Filter>Source Files\Controls</Filter>
+      <Filter>Source Files\UserControls</Filter>
     </ClCompile>
     <ClCompile Include="lilNet.cpp">
       <Filter>Source Files\Neural Network</Filter>
     </ClCompile>
     <ClCompile Include="EvoNet.cpp">
       <Filter>Source Files\Neural Network\Evolution</Filter>
+    </ClCompile>
+    <ClCompile Include="Tracker.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -74,13 +77,13 @@
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="mouse.h">
-      <Filter>Source Files\Controls</Filter>
+      <Filter>Source Files\UserControls</Filter>
     </ClInclude>
     <ClInclude Include="Menu.h">
       <Filter>Source Files\Menu</Filter>
     </ClInclude>
     <ClInclude Include="controller.h">
-      <Filter>Source Files\Controls</Filter>
+      <Filter>Source Files\UserControls</Filter>
     </ClInclude>
     <ClInclude Include="utility.h">
       <Filter>Source Files\utilities</Filter>
@@ -96,6 +99,9 @@
     </ClInclude>
     <ClInclude Include="EvoNet.h">
       <Filter>Source Files\Neural Network\Evolution</Filter>
+    </ClInclude>
+    <ClInclude Include="Tracker.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

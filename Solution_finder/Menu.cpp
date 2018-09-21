@@ -37,12 +37,12 @@ void Menu::LoadFile(Mat &image, string &text)
 	{
 		cout << "file type not supported";
 		type = "txt";
-		text = file.append(" abc");
+		text = file.append("0");//signed with 0 for short error
 	}
 	if (type == "txt")
 	{
 		image = NULL;
-		text = file;
+		text = file.substr(0,file.length()-4);
 	}
 	else if (
 		type == "png"||
@@ -67,7 +67,7 @@ void Menu::LoadFile(Mat &image, string &text)
 	{
 		cout << "File type " << type << " not supported, will be treated as text\n";
 		type = "txt";
-		text = file.append(" abc");
+		//text = file.append("");
 	}
 }
 

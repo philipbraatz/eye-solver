@@ -21,6 +21,7 @@
 #include "utility.h"
 #include "capture.h"
 //#include "Menu.h"
+#include "Tracker.h"
 #include "OCR.h"
 
 class Trainer
@@ -54,6 +55,7 @@ class Trainer
 
 	Screen chartScr;
 	Screen OCRScr;
+	Tracker track1;
 	OCR ocr;
 
 	Rect area;
@@ -64,7 +66,14 @@ class Trainer
 	//state option = NEW;
 
 public:
-	Trainer(problem_type pt,Mat &imgAnswer,std::string &txtAnswer, vector<double> &input, state &option, Rect area, Screen &chartScr,Screen &outputScr)
+	Trainer(problem_type pt,
+		Mat &imgAnswer,
+		std::string &txtAnswer,
+		vector<double> &input,
+		state &option,
+		Rect area,
+		Screen &chartScr,
+		Screen &outputScr)
 	{
 		if (NEW_TEXT)
 		{
@@ -164,10 +173,6 @@ public:
 			OCRScr.image = vscreen.Capture();
 			//ocr.textReconition(OCRScr.name, OCRScr.image);
 
-			/*for (unsigned int i = 0; i < answer.length(); i++) {
-			std::cout << (char)((input[i]) * (end - start)+start);
-			}*/
-
 			//LOGIC
 
 			for (int i = 0; i < List.size(); i++)
@@ -184,10 +189,11 @@ public:
 				p.y = List[i].getBestScore();// /List[i].getTime();
 				g.AddData(p, i);
 
-				//std::cout << "\tScore: " << p.y << " | ";
+				//std::cout << "\tScore: " << p.y << " | ";// old
 
 				count = List[i].getGenCount();
-				cout << "Gen: " << count << " ";
+				//cout << "Gen: " << count << " ";//old
+				track1.display();
 
 				done = true;
 				string out;
@@ -197,7 +203,8 @@ public:
 					{
 						if (done && (int)txtAnswer[j] != sbest[j])
 							done = false;
-						out += (char)(sbest[j] * (send - sstart) + sstart);
+						int numDebug = abs(sbest[j] * (send - sstart) + sstart);
+						out += (char)(abs(sbest[j] * (send - sstart) + sstart));
 					}
 				if (imgAnswer.data)
 				{
@@ -222,26 +229,27 @@ public:
 					imshow("Network Output", outputImg);
 					waitKey(1);
 				}
-				if (count >= 2)
-				{
-					if (count == 2)
-						cout << " | " << out << " " << endl;
-					if (GetTotalDif(List[i].getCurrentBestOut(), List[i].getPreviousBestOut()) != 0)// if new output is diffrent from previous output
-					{
-						cout << " | " << out << " " << endl;
-					}
-					else	//remove previous character
-					{
-						cout << "\b\b\b\b\b\b\b\b\b\b\b";
-						cout << "\b\b\b\b\b";
-						for (unsigned int i = 0; i < std::to_string(passed).length() + std::to_string(count).length() + out.length(); i++)
-							cout << "\b";
-					}
-				}
+				//if (count >= 2)
+				//{
+				//	if (count == 2)
+				//		cout << " | " << out << " " << endl;
+				//	if (GetTotalDif(List[i].getCurrentBestOut(), List[i].getPreviousBestOut()) != 0)// if new output is diffrent from previous output
+				//	{
+				//		cout << " | " << out << " " << endl;
+				//	}
+				//	else	//remove previous character
+				//	{
+				//		cout << "\b\b\b\b\b\b\b\b\b\b\b";
+				//		cout << "\b\b\b\b\b";
+				//		for (unsigned int i = 0; i < std::to_string(passed).length() + std::to_string(count).length() + out.length(); i++)
+				//			cout << "\b";
+				//	}
+				//}
 
 				//if (answer.compare(out))//if anwer and out are the same string
 				//	cout << "perfected Network! training done.";
 				//	done = true;
+				track1.update(frames,count,p.y,out);
 
 				if (List[i].getBestScore() == staleScore)
 					staleCount++;
@@ -250,6 +258,7 @@ public:
 					staleCount = 0;
 					staleScore = List[i].getBestScore();
 				}
+				
 			}
 			if (staleCount > stale_max)
 			{
@@ -319,9 +328,8 @@ public:
 			else
 			{
 				passed++;
-			}
-			;
-			std::cout << "Gen/s:" << std::setprecision(0) << frames << " | ";
+			};
+			//std::cout << "Gen/s:" << std::setprecision(0) << frames << " | ";//old
 
 		}
 	}
