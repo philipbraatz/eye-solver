@@ -165,13 +165,13 @@
     <ClCompile Include="OCR.cpp" />
     <ClCompile Include="OCR.h" />
     <ClCompile Include="Tracker.cpp" />
-    <ClCompile Include="Trainer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="capture.h" />
     <ClInclude Include="controller.h" />
     <ClInclude Include="EvoNet.h" />
     <ClInclude Include="graphic.h" />
+    <ClInclude Include="helper.h" />
     <ClInclude Include="lilNet.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="mouse.h" />

@@ -30,8 +30,6 @@ class Trainer
 
 	bool done = false;
 	bool exit = false;
-	//TODO remove these varibles in place of dynamicly changeing ones
-	//std::string answer = "";
 	int sstart = 0;
 	clock_t startt = 0;
 	int send = 0;
@@ -46,8 +44,8 @@ class Trainer
 
 
 	unsigned int count = NULL;
-	int stale_max = 10000;
-	double stale_p = .2;//changed for testing , use .2
+	int stale_Max = 10000;
+	double STALE_P = .2;//changed for testing , use .2
 	int staleCount = NULL;
 	double staleScore = NULL;
 
@@ -66,7 +64,7 @@ class Trainer
 	//state option = NEW;
 
 public:
-	Trainer(problem_type pt,
+	Trainer( NetFrame netf,
 		Mat &imgAnswer,
 		std::string &txtAnswer,
 		vector<double> &input,
@@ -145,16 +143,16 @@ public:
 		//double xsize = 1000, xrate = .25, xhiddens = 6, xhsize = 25;
 		
 		size = msize;
-		rate = .075;
-		hiddens = 4;
-		hsize = 10;
+		rate = .1;
+		hiddens = 2;
+		hsize = 4;
 		if(option == NEW_TEXT)
 			List.push_back(EvoNet<lilNet>(size, rate, txtAnswer.length(),
-				hiddens, hsize, txtAnswer.length(),pt));
+				hiddens, hsize, txtAnswer.length(),netf.type));
 		else if (option == NEW_IMAGE)
 		{
 			List.push_back(EvoNet<lilNet>(size, rate, imgAnswer.cols*imgAnswer.rows*imgAnswer.channels(),
-				hiddens, hsize, imgAnswer.cols*imgAnswer.rows*imgAnswer.channels(),pt));
+				hiddens, hsize, imgAnswer.cols*imgAnswer.rows*imgAnswer.channels(), netf.type));
 		}
 		//g.AddLine(zero);
 	}
@@ -260,9 +258,9 @@ public:
 				}
 				
 			}
-			if (staleCount > stale_max)
+			if (staleCount > stale_Max)
 			{
-				if (stale_max > List.front().getGenCount() * stale_p)
+				if (stale_Max > List.front().getGenCount() * STALE_P)
 				{
 					if (prune)
 					{
@@ -288,7 +286,7 @@ public:
 					
 				}
 				else
-					stale_max = List.front().getGenCount() * stale_p;
+					stale_Max = List.front().getGenCount() * STALE_P;
 			}
 
 
@@ -317,7 +315,6 @@ public:
 					graphOn = true;
 			}
 
-
 			//CLOCK
 			if ((clock() - startt) / CLOCKS_PER_SEC >= 1)
 			{
@@ -329,11 +326,7 @@ public:
 			{
 				passed++;
 			};
-			//std::cout << "Gen/s:" << std::setprecision(0) << frames << " | ";//old
-
 		}
 	}
-
-
 };
 

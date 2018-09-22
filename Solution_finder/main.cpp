@@ -46,7 +46,7 @@ int main()
 	int send = 1;//max value
 
 	Nnet* pmainNet;//main Neural net for testing and loading
-
+	NetFrame netF;//framework for neural network, used in loading
 
 	unsigned int count =NULL;
 
@@ -62,12 +62,12 @@ int main()
 
 	Graph g;
 
-	problem_type pt=IMAGE;
+	netF.type = IMAGE;
 	//bool graphOn = true;
 
 	pArea = new RECT();
 	state option = NEW_DATA;
-	option = mMenu.StartMenu(pArea, pmainNet,pt,trImage,trText);
+	option = mMenu.StartMenu(pArea, pmainNet,netF,trImage,trText);//start menu
 	vector<double> input, output;
 	//Rect area;
 	area.x = pArea->left*1.25;
@@ -78,7 +78,7 @@ int main()
 	cout << "Initialized" << endl;
 
 	Veiwer vscreen(area);
-	Trainer t(pt,trImage,trText,input, option,area,chartScr,imgTrScr);
+	Trainer t(netF,trImage,trText,input, option,area,chartScr,imgTrScr);//create trainer
 	bool graphOn = true;
 
 	cout << "Setup Up Done" << endl;
@@ -129,7 +129,7 @@ int main()
 			cout << "NOT IMPLIMENTED...skipping" << endl;
 		}
 		cout << "Done Generating Network" << endl;
-		mMenu.FinishTrainMenu(pArea, pmainNet,pt,trImage,trText);
+		mMenu.FinishTrainMenu(pArea, pmainNet,netF,trImage,trText);
 	}
 
 	return 1;

@@ -23,6 +23,16 @@ enum problem_type {
 	OTHER
 };
 
+//FOR MENU move elsewhere if able
+struct NetFrame
+{
+	int input, output, size, hiddens, hsize;
+	double rate;
+	/*string textAnswer;
+	Mat imgAnswer;*/
+	problem_type type;
+};
+
 struct neuron
 {
 	double value;

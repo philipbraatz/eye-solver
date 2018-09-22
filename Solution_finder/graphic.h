@@ -15,6 +15,13 @@ using namespace std;
 
 const int COMPACT_SIZE = 10000;//CRASHES
 
+struct Slider
+{
+	double value;
+	int slider_value;
+	int max;
+};
+
 struct linedata
 {
 	vector<fPoint> rawData;

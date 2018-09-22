@@ -1,3 +1,4 @@
+#pragma once
 #include "graphic.h"
 
 //shows image under name at x,y. resized to fit the image

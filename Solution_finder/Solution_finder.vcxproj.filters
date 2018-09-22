@@ -24,8 +24,11 @@
     <Filter Include="Source Files\Neural Network\Evolution">
       <UniqueIdentifier>{cada691d-7c51-4f21-a6d9-3aff2d6a1a8c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\UserControls">
+    <Filter Include="Source Files\AIControls">
       <UniqueIdentifier>{6011a597-0ee5-4556-a3a6-92a387dbd1df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Training">
+      <UniqueIdentifier>{22d51d00-b9d1-4c40-8228-c86d81ff4fba}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -36,7 +39,7 @@
       <Filter>Source Files\Neural Network</Filter>
     </ClCompile>
     <ClCompile Include="mouse.cpp">
-      <Filter>Source Files\UserControls</Filter>
+      <Filter>Source Files\AIControls</Filter>
     </ClCompile>
     <ClCompile Include="OCR.h">
       <Filter>Source Files\Graphics</Filter>
@@ -50,11 +53,8 @@
     <ClCompile Include="Menu.cpp">
       <Filter>Source Files\Menu</Filter>
     </ClCompile>
-    <ClCompile Include="Trainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="controller.cpp">
-      <Filter>Source Files\UserControls</Filter>
+      <Filter>Source Files\AIControls</Filter>
     </ClCompile>
     <ClCompile Include="lilNet.cpp">
       <Filter>Source Files\Neural Network</Filter>
@@ -77,13 +77,13 @@
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="mouse.h">
-      <Filter>Source Files\UserControls</Filter>
+      <Filter>Source Files\AIControls</Filter>
     </ClInclude>
     <ClInclude Include="Menu.h">
       <Filter>Source Files\Menu</Filter>
     </ClInclude>
     <ClInclude Include="controller.h">
-      <Filter>Source Files\UserControls</Filter>
+      <Filter>Source Files\AIControls</Filter>
     </ClInclude>
     <ClInclude Include="utility.h">
       <Filter>Source Files\utilities</Filter>
@@ -94,14 +94,17 @@
     <ClInclude Include="lilNet.h">
       <Filter>Source Files\Neural Network</Filter>
     </ClInclude>
-    <ClInclude Include="Trainer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="EvoNet.h">
       <Filter>Source Files\Neural Network\Evolution</Filter>
     </ClInclude>
     <ClInclude Include="Tracker.h">
       <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Trainer.h">
+      <Filter>Source Files\Training</Filter>
+    </ClInclude>
+    <ClInclude Include="helper.h">
+      <Filter>Source Files\Training</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

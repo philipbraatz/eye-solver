@@ -2,17 +2,49 @@
 #include "Menu.h"
 
 
-
 using std::cout;
 using std::cin;
 using namespace cv;
+
+//Sliders
+NetFrame netF;
+
+Slider hiddenSize;//# hidden layers
+Slider hiddenLayers;//size of a hidden layer
+Slider psize;//population size
+Slider rate;//mutation rate
+
+void on_trackbar(int, void *)
+{
+	netF.type = OTHER;
+	netF.hiddens = hiddenSize.slider_value;
+	netF.hsize = hiddenLayers.slider_value;
+	netF.size= psize.slider_value;
+	netF.rate = rate.slider_value/1000;
+}
 
 RECT* Menu::SizeWindow(RECT * area)
 {
 	HWND handle;
 	Mat blank = Mat::zeros({100,200},1 );
+	//defaul Settings
+	hiddenSize.slider_value = 4;
+	hiddenSize.max = 45;
+	hiddenLayers.value = 16;
+	hiddenLayers.max = 128;
+	psize.slider_value = 512;
+	psize.max = 20480;
+	rate.slider_value = 075;
+	rate.max = 125;
+	
+	blank = Mat::zeros(720, 480, CV_8UC3);//set default size
 	SetWindow("Size Me", blank, 100, 100);
 	cout << "Set the size of the \"Size Me\" window and press enter";
+	//Nnet settings
+	createTrackbar("Hidden Size", "Size Me", &hiddenSize.slider_value, hiddenSize.max, on_trackbar);
+	createTrackbar("Hidden Layer Size", "Size Me", &hiddenLayers.slider_value, hiddenLayers.max, on_trackbar);
+	createTrackbar("Population Size", "Size Me", &psize.slider_value, psize.max, on_trackbar);
+	createTrackbar("Mutation Rate (/1000):", "Size Me", &rate.slider_value, rate.max, on_trackbar);
 	imshow("Size Me", blank);
 	waitKey();
 
@@ -31,6 +63,7 @@ void Menu::LoadFile(Mat &image, string &text)
 	string type;
 	cout << "Enter a file name you want to train on within the train_data folder\n";
 	cin >> file;
+	//read file
 	if (file.length() > 3)
 		type = file.substr(file.length() - 3, 3);
 	else
@@ -42,7 +75,7 @@ void Menu::LoadFile(Mat &image, string &text)
 	if (type == "txt")
 	{
 		image = NULL;
-		text = file.substr(0,file.length()-4);
+		text = file.substr(0,file.length()-4);//TODO: make it read the file
 	}
 	else if (
 		type == "png"||
@@ -71,7 +104,7 @@ void Menu::LoadFile(Mat &image, string &text)
 	}
 }
 
-state Menu::mainMenu(RECT * area, Nnet *&ref, problem_type pt,Mat &image,string &text)
+state Menu::mainMenu(RECT * area, Nnet *&ref,NetFrame &netF_,Mat &image,string &text)
 {
 	cout << "--------------------MAIN----------------------------" << endl;
 
@@ -93,6 +126,7 @@ state Menu::mainMenu(RECT * area, Nnet *&ref, problem_type pt,Mat &image,string 
 			if (yesNoPromt("Do you want to train the Network?"))
 			{//Train Network
 				SizeWindow(area);
+				 netF_= netF;
 				return CONTINUE_TEXT;
 			}
 			else//Test Network
@@ -113,13 +147,13 @@ state Menu::mainMenu(RECT * area, Nnet *&ref, problem_type pt,Mat &image,string 
 	}
 }
 
-state Menu::StartMenu(RECT * area,Nnet *&ref,problem_type pt,Mat &image,string &text)
+state Menu::StartMenu(RECT * area,Nnet *&ref,NetFrame &netf,Mat &image,string &text)
 {
-	cout << "--------------------Start----------------------------" << endl;
-	string version = "0.7.0";
-	cout << "Solution Finder " << version << ":" << std::endl;
+	cout << "--------------------Start----------------------------" << endl;//DEBUG
+	string VERSION = "0.7.1";
+	cout << "Solution Finder " << VERSION << ":" << std::endl;
 
-	return mainMenu(area,ref,pt,image,text);
+	return mainMenu(area,ref,netf,image,text);
 }
 
 void Menu::MenuSizeWindow(RECT * area)
@@ -128,9 +162,11 @@ void Menu::MenuSizeWindow(RECT * area)
 	//string window;
 	//cout << "Select name of window to watch: ";
 	//cin >> window;
-	Mat blank;
-	namedWindow("Size Me", WINDOW_FREERATIO);
-	//imshow("Size Me",blank);
+	Mat blank= imread("images\\shell.jpg");
+	string sizeWindow = "Size Me";
+	namedWindow(sizeWindow, WINDOW_FREERATIO);
+
+	imshow("Size Me",blank);//Add Trackbars
 	cout << "Set the size of the \"Size Me\" window and press enter";
 	waitKey();
 
@@ -142,9 +178,10 @@ void Menu::MenuSizeWindow(RECT * area)
 	else {std::cout << "not found";}
 }
 
-state Menu::FinishTrainMenu(RECT* area,Nnet *&ref,problem_type pt,Mat &image,string &text)
+state Menu::FinishTrainMenu(RECT* area,Nnet *&ref, NetFrame &netf,Mat &image,string &text)
 {
 	cout << "--------------------END----------------------------" << endl;
 	cout << "Done Generating Network" << std::endl;
-	return mainMenu(area,ref,pt,image,text);
+	return mainMenu(area,ref,netf,image,text);
 }
+
