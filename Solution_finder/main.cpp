@@ -48,7 +48,7 @@ int main()
 	Nnet* pmainNet;//main Neural net for testing and loading
 	NetFrame netF;//framework for neural network, used in loading
 
-	unsigned int count =NULL;
+	auto count =NULL;
 
 	Screen chartScr;
 	Screen OCRScr;
@@ -78,7 +78,7 @@ int main()
 	cout << "Initialized" << endl;
 
 	Veiwer vscreen(area);
-	Trainer t(netF,trImage,trText,input, option,area,chartScr,imgTrScr);//create trainer
+	Trainer<Nnet> t(netF,trImage,trText,input, option,area,chartScr,imgTrScr);//create trainer
 	bool graphOn = true;
 
 	cout << "Setup Up Done" << endl;
@@ -111,7 +111,7 @@ int main()
 				(Veiwer)vscreen, 
 				(Graph)g, 
 				(vector<double>)input,
-				(unsigned int)count,trText,blankM,
+				(int)count,trText,blankM,
 				(bool)graphOn);
 		else if(option == NEW_IMAGE)
  			t.train(
@@ -119,7 +119,7 @@ int main()
 				(Veiwer)vscreen, 
 				(Graph)g, 
 				(vector<double>)input, 
-				(unsigned int)count, blankS,
+				(int)count, blankS,
 				(Mat)trImage, 
 				(bool)graphOn);
 		

@@ -34,25 +34,25 @@ public:
 		//Input layer
 		biases.resize(input.size);
 		bool test = input.size == input.neurons.size();
-		for (unsigned int b = 0; b < input.size; b++)
+		for (auto b = 0; b < input.size; b++)
 		{
 			biases[b] = input.neurons[b].bias;
 		}
 		AddBiases(inputs, biases, out);
-		for (unsigned int i = 0; i < input.size; i++)
+		for (auto i = 0; i < input.size; i++)
 		{
 			Normalize(out[i]);
 			input.neurons[i].value = out[i];
 		}
 
 		//First Hidden Layer
-		for (unsigned int i = 0; i < hidden.front().size; i++)
+		for (auto i = 0; i < hidden.front().size; i++)
 		{
 			double adder = 0;
-			for (unsigned int j = 0; j < input.size; j++) 
+			for (auto j = 0; j < input.size; j++) 
 			{
 				bool pruned = false;
-				for (unsigned int p = 0; p < prunes.size(); p++)
+				for (auto p = 0; p < prunes.size(); p++)
 					if ((i == prunes[p].x && j == prunes[p].y))
 					{
 						pruned = true;
@@ -67,14 +67,14 @@ public:
 		}
 
 		//Hidden Layers
-		for (unsigned int i = 1; i < m_Nhidden; i++) {
-			for (unsigned int j = 0; j < hidden[i].size; j++) 
+		for (auto i = 1; i < m_Nhidden; i++) {
+			for (auto j = 0; j < hidden[i].size; j++) 
 			{
 				double adder = 0;
-				for (unsigned int k = 0; k < hidden[i].size; k++)
+				for (auto k = 0; k < hidden[i].size; k++)
 				{
 					bool pruned = false;
-					for (unsigned int p = 0; p < prunes.size(); p++)
+					for (auto p = 0; p < prunes.size(); p++)
 						if ((i == prunes[p].x && j == prunes[p].y))
 						{
 							pruned = true;
@@ -92,13 +92,13 @@ public:
 
 		//Output Layer
 		out.resize(output.size);
-		for (unsigned int i = 0; i < output.size; i++)
+		for (auto i = 0; i < output.size; i++)
 		{
 			double adder = 0;
-			for (unsigned int j = 0; j < m_Nhidden; j++)
+			for (auto j = 0; j < m_Nhidden; j++)
 			{
 				bool pruned = false;
-				for (unsigned int p = 0; p < prunes.size(); p++)
+				for (auto p = 0; p < prunes.size(); p++)
 					if ((SizeHidden-1 == prunes[p].x && j == prunes[p].y))
 					{
 						pruned = true;

@@ -45,7 +45,7 @@ struct neuron
 struct layer
 {
 	vector<neuron> neurons;
-	unsigned int size;
+	int size;
 };
 
 class Nnet
@@ -60,12 +60,12 @@ public:
 	//Nnet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, std::vector<double> goal);
 
 	int Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs,problem_type mt, bool loaded = false);
-	unsigned int GetLayerSize(layer_type l);
+	int GetLayerSize(layer_type l);
 
 	//set input and get output
 	vector<double> Propigate(vector<double> inputs);
 
-	unsigned int getAge() { return age; }
+	int getAge() { return age; }
 
 	void setScore(double score) { m_score = score; }
 	double getScore() { return m_score; }
@@ -86,7 +86,7 @@ public:
 
 protected:
 	//const int MAX_WEIGHT = 9999;
-	unsigned int version = 2;// increment when save files change MANUALLY
+	int version = 2;// increment when save files change MANUALLY
 
 	double trate;
 
@@ -102,7 +102,7 @@ protected:
 	layer output;
 	vector<layer> hidden;
 
-	unsigned int m_Nhidden;
+	int m_Nhidden;
 
 	problem_type pt;
 

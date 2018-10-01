@@ -103,9 +103,6 @@
     <ClInclude Include="Trainer.h">
       <Filter>Source Files\Training</Filter>
     </ClInclude>
-    <ClInclude Include="helper.h">
-      <Filter>Source Files\Training</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Solution_finder.rc">

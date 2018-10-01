@@ -150,7 +150,7 @@ state Menu::mainMenu(RECT * area, Nnet *&ref,NetFrame &netF_,Mat &image,string &
 state Menu::StartMenu(RECT * area,Nnet *&ref,NetFrame &netf,Mat &image,string &text)
 {
 	cout << "--------------------Start----------------------------" << endl;//DEBUG
-	string VERSION = "0.7.1";
+	string VERSION = "0.7.2";
 	cout << "Solution Finder " << VERSION << ":" << std::endl;
 
 	return mainMenu(area,ref,netf,image,text);

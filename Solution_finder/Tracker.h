@@ -10,8 +10,8 @@ class Tracker
 public:
 	Tracker()
 	{
-		prevScore.y = -RAND_MAX;
-		prevScore.x = 0;
+		score.y = -RAND_MAX;
+		score.x = 0;
 		topScore.y = -RAND_MAX;
 		topScore.x = 0;
 		increases.resize(10);
@@ -26,7 +26,10 @@ public:
 		if (output != "")
 			cout << "\"" << output << "\"";
 		if (testString != output)
-			cout << endl;	
+		{
+			cout << endl;
+			prevScore = score;
+		}
 		else
 			cout << "\r";
 
@@ -37,10 +40,10 @@ public:
 	{
 		output = out_;
 		gps = gps_;
-		prevScore.x = Gen;
-		prevScore.y = best;
-		if (topScore.y < prevScore.y)
-			topScore = prevScore;
+		score.x = Gen;
+		score.y = best;
+		if (topScore.y < score.y)
+			topScore = score;
 
 	}
 	void getSpeed()
@@ -49,7 +52,12 @@ public:
 	}
 	void getPrevGenScore()
 	{
-		cout << "Gen: " << to_string(prevScore.x) << "\tScore: " << to_string(prevScore.y) << "\t";
+		char p;
+		if (score.y >prevScore.y)
+			p = '+';
+		else
+			p = '-';
+		cout << "Gen: " << to_string(score.x) << "\tScore: "<<p<<" " << to_string(score.y) << "\t";
 	}
 	void getTopScore()
 	{
@@ -61,11 +69,10 @@ public:
 	}
 private:
 
-	//previous score->previous gen# + score
-	//top Nnet->gen# +score
-	//10 last increases->gen#
+	//	//10 last increases->gen#
 	int gps;//generations per second
-	ifPoint prevScore;//previous score->previous gen# + score
+	ifPoint score;//score-> gen# + score
+	ifPoint prevScore;//prevscore->previous new gen# + score
 	string testString;
 	ifPoint topScore;//top Nnet->gen# +score
 	vector<int> increases;// increases every gen

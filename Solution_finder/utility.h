@@ -28,7 +28,7 @@ static double RandNum() { return static_cast <double> (rand()) / static_cast <do
 static double GetTotalDif(std::vector<double> input, std::vector<double> output)
 {
 	double total = 0;
-	for (unsigned int i = 0; i < input.size(); i++)
+	for (auto i = 0; i < input.size(); i++)
 		total += abs(input[i] - output[i]);
 	return total;
 }

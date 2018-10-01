@@ -77,18 +77,18 @@ private:
 	Mat image;
 
 	//void SortData() {
-	//	for (unsigned int i = 0; i < lines.size(); i++)//TODO sort data
+	//	for (auto i = 0; i < lines.size(); i++)//TODO sort data
 	//		lines[i].sortData = lines[i].rawData;
 	//}
 
 	//{
-	//	for (unsigned int i = 0; i < lines.size(); i++)
+	//	for (auto i = 0; i < lines.size(); i++)
 	//	{
-	//		for (unsigned int j = 0; j < lines[i].rawData.size(); j++)
+	//		for (auto j = 0; j < lines[i].rawData.size(); j++)
 	//		{
 	//			double a = lines[i].rawData[j].x;
 	//
-	//			for (unsigned int k = 0; k < lines[i].rawData.size(); k++)
+	//			for (auto k = 0; k < lines[i].rawData.size(); k++)
 	//			{
 	//				double b = lines[i].rawData[k].x;
 	//				if (a<b && j!=k)

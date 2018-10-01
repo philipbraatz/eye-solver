@@ -90,7 +90,7 @@ int Nnet::Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs
 	return 1;
 }
 
-unsigned int Nnet::GetLayerSize(layer_type l)
+int Nnet::GetLayerSize(layer_type l)
 {
 	switch (l)
 	{

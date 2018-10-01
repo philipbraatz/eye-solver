@@ -24,6 +24,7 @@
 #include "Tracker.h"
 #include "OCR.h"
 
+template<class tNet>
 class Trainer
 {
 //protected:
@@ -38,14 +39,14 @@ class Trainer
 
 	//vector<EvoNet<Nnet>> List;//EvoNet List
 	//Nnet* pmainNet;//main Neural net for testing and loading
-	vector<EvoNet<lilNet>> List;//lilNet List
+	vector<EvoNet<tNet>> List;//lilNet List
 	lilNet* pmainNet;//main little Neural net for testing and loading
 	vector<double> output;
 
 
-	unsigned int count = NULL;
-	int stale_Max = 10000;
-	double STALE_P = .2;//changed for testing , use .2
+	int count = NULL;
+	int stale_Max = 500;
+	double STALE_P = .35;//changed for testing , use .2
 	int staleCount = NULL;
 	double staleScore = NULL;
 
@@ -147,18 +148,18 @@ public:
 		hiddens = 2;
 		hsize = 4;
 		if(option == NEW_TEXT)
-			List.push_back(EvoNet<lilNet>(size, rate, txtAnswer.length(),
+			List.push_back(EvoNet<tNet>(size, rate, txtAnswer.length(),
 				hiddens, hsize, txtAnswer.length(),netf.type));
 		else if (option == NEW_IMAGE)
 		{
-			List.push_back(EvoNet<lilNet>(size, rate, imgAnswer.cols*imgAnswer.rows*imgAnswer.channels(),
+			List.push_back(EvoNet<tNet>(size, rate, imgAnswer.cols*imgAnswer.rows*imgAnswer.channels(),
 				hiddens, hsize, imgAnswer.cols*imgAnswer.rows*imgAnswer.channels(), netf.type));
 		}
 		//g.AddLine(zero);
 	}
 
 	void train(Screen &OCRScr, Veiwer &vscreen, Graph &g,
-		vector<double> &input, unsigned int &i_count,
+		vector<double> &input, int &i_count,
 		std::string &txtAnswer, Mat &imgAnswer, bool &graphOn)
 	{
 		bool prune = false;
@@ -197,7 +198,7 @@ public:
 				string out;
 				sbest = List[i].getCurrentBestOut();
 				if(txtAnswer !="")
-					for (unsigned int j = 0; j < txtAnswer.length(); j++)//get the output as text
+					for (auto j = 0; j < txtAnswer.length(); j++)//get the output as text
 					{
 						if (done && (int)txtAnswer[j] != sbest[j])
 							done = false;
@@ -239,7 +240,7 @@ public:
 				//	{
 				//		cout << "\b\b\b\b\b\b\b\b\b\b\b";
 				//		cout << "\b\b\b\b\b";
-				//		for (unsigned int i = 0; i < std::to_string(passed).length() + std::to_string(count).length() + out.length(); i++)
+				//		for (auto i = 0; i < std::to_string(passed).length() + std::to_string(count).length() + out.length(); i++)
 				//			cout << "\b";
 				//	}
 				//}
@@ -260,7 +261,7 @@ public:
 			}
 			if (staleCount > stale_Max)
 			{
-				if (stale_Max > List.front().getGenCount() * STALE_P)
+				if (staleCount > List.front().getGenCount() * STALE_P)
 				{
 					if (prune)
 					{

@@ -18,6 +18,9 @@ public:
 		problem_type pt
 	);
 	void SingleEpocTxt(vector<double> output, int i,vector<double> input, bool testing, bool max,bool prune);
+
+	//void SingleEpocTxt(lilNet net_pop,vector<double> output, int i, vector<double> input, bool testing, bool max, bool prune);
+	
 	void SingleEpocImg(vector<double> output, int i, vector<double> input, bool testing, bool max, bool prune);
 	void DoEpoch(vector<double> truth,bool testing,bool max,bool prune);
 
@@ -39,7 +42,7 @@ public:
 
 	void updateStats(bool max);
 
-	unsigned int getGenCount() { return genCount; }
+	int getGenCount() { return genCount; }
 
 	vector<double> getPreviousBestOut()
 	{ 
@@ -73,7 +76,7 @@ protected:
 	int size;
 	double rate;
 
-	unsigned int genCount;
+	int genCount;
 
 	double time_epoch, time_repop;
 

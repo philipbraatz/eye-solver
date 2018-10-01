@@ -11,7 +11,7 @@ inline EvoNet<tnet>::EvoNet(
 	genCount = 0;
 	size = population;
 	rate = mutateRate;
-	for (unsigned int i = 0; i < population; i++)
+	for (auto i = 0; i < population; i++)
 	{
 		tnet temp(Ninputs, Nhiddens, SizeHidden, Noutputs,pt);
 		pop.push_back(temp);
@@ -24,7 +24,7 @@ inline void EvoNet<tnet>::PruneAll()
 {
 	for (size_t i = 0; i < size; i++)
 	{
-		pop[i].StartPrune();
+		//pop[i].StartPrune();//tempDisabled
 	}
 }
 
@@ -46,13 +46,13 @@ inline void EvoNet<tnet>::DoEpoch(vector<double> input,bool testing,bool max,boo
 
 	vector<double> output;
 	//#pragma loop(hint_parallel(8)) 
-	for (unsigned int i = 0; i < size; i++)//go through whole population
+	for (auto i = 0; i < size; i++)//go through whole population
 	{
 		if (false)
 		{//TODO better thread implentation
 			if (maxThreads >= t.size())//limit threads
 			{
-				for (unsigned int i = 0; i < t.size(); i++)//wait for all threads to finish
+				for (auto i = 0; i < t.size(); i++)//wait for all threads to finish
 				{
 					t.back()->join();
 					t.pop_back();//remove thread
@@ -87,10 +87,10 @@ template<class tnet>
 inline void EvoNet<tnet>::Reorder(bool max)
 {
 
-	for (unsigned int i = 0; i < size; i++)
+	for (auto i = 0; i < size; i++)
 	{
 		int spot=-1;
-		for (unsigned int j = 0; j < i; j++)
+		for (auto j = 0; j < i; j++)
 		{
 			if (max)
 				if (pop[i].getScore() > pop[j].getScore())//if i is greater than j
@@ -112,7 +112,7 @@ inline void EvoNet<tnet>::repopulate(double save)
 
 	int saved = save*size;
 	pop.resize((int)(size*save));
-	for (unsigned int i = 0; i < size - saved; i++)
+	for (auto i = 0; i < size - saved; i++)
 	{
 		int parent = (int)(RandNum()*(saved-1));
 		pop.push_back(pop[parent]);
@@ -122,22 +122,22 @@ inline void EvoNet<tnet>::repopulate(double save)
 	}
 }
 
+
+
+
 template<class tnet>
 void EvoNet<tnet>::SingleEpocTxt(vector<double> output, int i, vector<double> input, bool testing, bool max, bool prune)
 {
 	{
-		i = i;
-		//pop[i].setScore(
-		//	GetTotalDif(truth,
-		//	output = pop[i].Propigate(truth))
-		//);
 		if (!prune)
 			output = pop[i].Propigate(input);
 		else
-			output = pop[i].PropPrune(input);
+		{
+			//output = pop[i].PropPrune(input);//temp dissabled
+		}
 
 		double score = 0;
-		for (unsigned int j = 0; j < input.size(); j++)
+		for (auto j = 0; j < input.size(); j++)
 		{
 			if ((int)(output[j] * (126 - 32) + 32) == (int)(input[j] * (126 - 32) + 32))
 			{
@@ -150,7 +150,7 @@ void EvoNet<tnet>::SingleEpocTxt(vector<double> output, int i, vector<double> in
 		}
 
 		//int score=0;
-		//for (unsigned int j = 0; j < truth.size(); j++)
+		//for (auto j = 0; j < truth.size(); j++)
 		//{
 		//	score += pow(abs(output[j] - truth[j])*truth.size(),2);
 		//}
@@ -168,8 +168,10 @@ void EvoNet<tnet>::SingleEpocImg(vector<double> output, int i, vector<double> in
 	//);
 	if (!prune)
 		output = pop[i].Propigate(input);
-	else
+	/*else
+	{
 		output = pop[i].PropPrune(input);
+	}*/
 
 	double score = 0;
 	for (unsigned int j = 0; j < input.size(); j++)
@@ -187,7 +189,6 @@ void EvoNet<tnet>::SingleEpocImg(vector<double> output, int i, vector<double> in
 
 	time_epoch += pop[i].GetSpeed();
 }
-
 //maximize or minimize
 template<class tnet>
 inline void EvoNet<tnet>::updateStats(bool max)
@@ -201,7 +202,7 @@ inline void EvoNet<tnet>::updateStats(bool max)
 	average = 0;
 
 	bestout[genCount-1] = pop.front().getLastLayer();//start with last network as best
-	for (unsigned int i = 0; i < size; i++)
+	for (auto i = 0; i < size; i++)
 	{
 		average += pop[i].getScore();
 		if (max)
@@ -229,9 +230,9 @@ inline void EvoNet<tnet>::updateStats(bool max)
 	if (max)
 	{
 		if (average < prevmed)
-			cout << "No Improvement";
+			std::cout << "No Improvement";
 		if (average > prevmed)
-			cout << "No Improvement";
+			std::cout << "No Improvement";
 	}
 }
 
@@ -246,7 +247,7 @@ inline void EvoNet<tnet>::inbreed(tnet parent)
 	//int saved = 1;
 	pop.clear();
 	pop.push_back(parent);
-	for (unsigned int i = 0; i < size - 1; i++)
+	for (auto i = 0; i < size - 1; i++)
 	{
 		//parent = (int)(RandNum());
 		pop.push_back(pop[i]);
