@@ -63,6 +63,8 @@ public:
 	int GetLayerSize(layer_type l);
 
 	//set input and get output
+	vector<double> Nnet::Initial_Propigation(vector<double> input);//for inheritience
+	vector<double> Nnet::Final_Propigation(vector<double> input);//for inheritience
 	vector<double> Propigate(vector<double> inputs);
 
 	int getAge() { return age; }
