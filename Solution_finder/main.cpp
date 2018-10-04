@@ -16,14 +16,14 @@
 #include "graphic.h"
 
 #include "EvoNet.h"
-	#include "EvoNet.cpp"
+#include "EvoNet.cpp"
 #include "Nnet.h"
 #include "utility.h"
 #include "capture.h"
 #include "Menu.h"
 #include "OCR.h"
 #include "Trainer.h"
-	#include "Trainer.cpp"
+#include "Trainer.cpp"
 
 using std::vector;
 using namespace cv;

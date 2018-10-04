@@ -35,9 +35,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Nnet.cpp">
-      <Filter>Source Files\Neural Network</Filter>
-    </ClCompile>
     <ClCompile Include="mouse.cpp">
       <Filter>Source Files\AIControls</Filter>
     </ClCompile>
@@ -56,20 +53,20 @@
     <ClCompile Include="controller.cpp">
       <Filter>Source Files\AIControls</Filter>
     </ClCompile>
-    <ClCompile Include="lilNet.cpp">
-      <Filter>Source Files\Neural Network</Filter>
-    </ClCompile>
     <ClCompile Include="EvoNet.cpp">
       <Filter>Source Files\Neural Network\Evolution</Filter>
     </ClCompile>
     <ClCompile Include="Tracker.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="lilNet.cpp">
+      <Filter>Source Files\Neural Network\Evolution</Filter>
+    </ClCompile>
+    <ClCompile Include="Nnet.cpp">
+      <Filter>Source Files\Neural Network\Evolution</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Nnet.h">
-      <Filter>Source Files\Neural Network</Filter>
-    </ClInclude>
     <ClInclude Include="graphic.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
@@ -91,9 +88,6 @@
     <ClInclude Include="resource.h">
       <Filter>Source Files\utilities</Filter>
     </ClInclude>
-    <ClInclude Include="lilNet.h">
-      <Filter>Source Files\Neural Network</Filter>
-    </ClInclude>
     <ClInclude Include="EvoNet.h">
       <Filter>Source Files\Neural Network\Evolution</Filter>
     </ClInclude>
@@ -102,6 +96,12 @@
     </ClInclude>
     <ClInclude Include="Trainer.h">
       <Filter>Source Files\Training</Filter>
+    </ClInclude>
+    <ClInclude Include="lilNet.h">
+      <Filter>Source Files\Neural Network\Evolution</Filter>
+    </ClInclude>
+    <ClInclude Include="Nnet.h">
+      <Filter>Source Files\Neural Network\Evolution</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -12,6 +12,7 @@
 #include "EvoNet.h"
 #include "utility.h"
 
+
 enum state
 {
 	NEW_DATA,
@@ -26,11 +27,10 @@ enum state
 class Menu
 {
 public:
+	
+	Menu();
 
-	//Menu(Nnet* net)
-	//{
-	//	m_net = net;
-	//}
+
 
 	RECT* SizeWindow(RECT * area);
 
@@ -40,12 +40,19 @@ public:
 
 	state FinishTrainMenu(RECT* area, Nnet *&ref, NetFrame &netf,Mat &image,string &text);
 
-	
+	void _on_trackbar();//called by trackbar
 
 private:
-
 	void MenuSizeWindow(RECT * area);
 	void LoadFile(Mat &image, string &text);
-	//void on_trackbarHidden(int,void*);
-};
+protected:
+	string VERSION = "0.8";
 
+	//Sliders
+	NetFrame SliderFrame;
+
+	Slider hiddenSize;//# hidden layers
+	Slider hiddenLayers;//size of a hidden layer
+	Slider psize;//population size
+	Slider rate;//mutation rate
+};

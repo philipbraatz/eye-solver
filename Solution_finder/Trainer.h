@@ -27,7 +27,7 @@
 template<class tNet>
 class Trainer
 {
-//protected:
+protected:
 
 	bool done = false;
 	bool exit = false;
@@ -65,14 +65,16 @@ class Trainer
 	//state option = NEW;
 
 public:
-	Trainer( NetFrame netf,
+	Trainer( 
+		NetFrame netf,
 		Mat &imgAnswer,
 		std::string &txtAnswer,
 		vector<double> &input,
 		state &option,
 		Rect area,
 		Screen &chartScr,
-		Screen &outputScr)
+		Screen &outputScr
+	)
 	{
 		if (NEW_TEXT)
 		{

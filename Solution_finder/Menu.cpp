@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Menu.h"
 
 
@@ -6,21 +7,25 @@ using std::cout;
 using std::cin;
 using namespace cv;
 
-//Sliders
-NetFrame netF;
+Menu* thisTrackbar;//newest Menu only
 
-Slider hiddenSize;//# hidden layers
-Slider hiddenLayers;//size of a hidden layer
-Slider psize;//population size
-Slider rate;//mutation rate
-
-void on_trackbar(int, void *)
+Menu::Menu()
 {
-	netF.type = OTHER;
-	netF.hiddens = hiddenSize.slider_value;
-	netF.hsize = hiddenLayers.slider_value;
-	netF.size= psize.slider_value;
-	netF.rate = rate.slider_value/1000;
+	thisTrackbar = this;
+}
+//Trackbar code here
+void Menu::_on_trackbar()
+{
+	SliderFrame.type = OTHER;
+	SliderFrame.hiddens = hiddenSize.slider_value;
+	SliderFrame.hsize = hiddenLayers.slider_value;
+	SliderFrame.size = psize.slider_value;
+	SliderFrame.rate = rate.slider_value / 1000;
+}
+//trackbars calls gobal trackbar
+void on_trackbar(int , void *)
+{
+	thisTrackbar->_on_trackbar();//send to Current Menu
 }
 
 RECT* Menu::SizeWindow(RECT * area)
@@ -106,8 +111,6 @@ void Menu::LoadFile(Mat &image, string &text)
 
 state Menu::mainMenu(RECT * area, Nnet *&ref,NetFrame &netF_,Mat &image,string &text)
 {
-	cout << "--------------------MAIN----------------------------" << endl;
-
 	int chose = 0;//SAFTY not working
 	while (true)//LOAD / NEW
 	{
@@ -126,7 +129,7 @@ state Menu::mainMenu(RECT * area, Nnet *&ref,NetFrame &netF_,Mat &image,string &
 			if (yesNoPromt("Do you want to train the Network?"))
 			{//Train Network
 				SizeWindow(area);
-				 netF_= netF;
+				 netF_= SliderFrame;
 				return CONTINUE_TEXT;
 			}
 			else//Test Network
@@ -149,10 +152,7 @@ state Menu::mainMenu(RECT * area, Nnet *&ref,NetFrame &netF_,Mat &image,string &
 
 state Menu::StartMenu(RECT * area,Nnet *&ref,NetFrame &netf,Mat &image,string &text)
 {
-	cout << "--------------------Start----------------------------" << endl;//DEBUG
-	string VERSION = "0.7.2";
 	cout << "Solution Finder " << VERSION << ":" << std::endl;
-
 	return mainMenu(area,ref,netf,image,text);
 }
 
@@ -180,8 +180,6 @@ void Menu::MenuSizeWindow(RECT * area)
 
 state Menu::FinishTrainMenu(RECT* area,Nnet *&ref, NetFrame &netf,Mat &image,string &text)
 {
-	cout << "--------------------END----------------------------" << endl;
 	cout << "Done Generating Network" << std::endl;
 	return mainMenu(area,ref,netf,image,text);
 }
-
