@@ -100,8 +100,9 @@ inline void EvoNet<tnet>::Reorder(bool max)
 					spot = j;//make it the best spot to be
 			
 		}
-		if(spot != -1)//if better spot
+		if (spot != -1)//if better spot
 			std::swap(pop[i], pop[spot]);//they trade places with best spot
+			
 	}
 }
 //saves a percent of the population to be parents and produces mutated babies
@@ -270,4 +271,68 @@ inline void EvoNet<tnet>::LoadNet(string filename)
 	tnet net;
 	pop = { net.loadNet(filename) };
 	inbreed(pop.front());
+}
+
+template<class tnet>
+void EvoNet<tnet>::clearNetworks()
+{
+	m_score = 0;
+	age = 0;
+
+	startProp = 0;
+	startMut = 0;
+	PassedProp = 0;
+	PassedMut = 0;
+
+	genCount = 0;
+	size = population;
+	rate = mutateRate;
+	for (auto i = 0; i < population; i++)
+	{
+		tnet temp(Ninputs, Nhiddens, SizeHidden, Noutputs, pt);
+		pop.push_back(temp);
+	}
+}
+
+//higher diversity the better
+//first and last layer only
+//TODO: add hidden layer
+template<class tnet>
+double EvoNet<tnet>::getGeneticDiversity()
+{
+	double diversity = 0;
+	vector<vector<double>> dnaPop;//[nNet][neuron]
+	vector<double> dnaDiff = {};
+	vector<layer> slice;
+
+	//colect information
+	for (int i = 0; i < pop.size(); i++)
+	{
+		slice.push_back(
+			(layer)pop[i].getLayer(
+				layer_type::Ninputs).front()
+		);//input
+		slice.push_back(
+			(layer)pop[i].getLayer(
+				layer_type::Noutputs).front()
+		);//output
+
+		for (int j = 0; j < slice.front().size; j++)
+			for (int k = 0; k < slice.front().neurons.size(); k++)
+				for (int l = 0; l < slice.front().neurons.front().weights.size(); l++)
+				dnaPop[i][
+					j*slice.front().neurons.size()*slice.front().neurons.front().weights.size() +
+					k* slice.front().neurons.front().weights.size() +l] 
+					=slice[0].neurons[k].weights[l];
+	}
+
+	for (int i = 0; i < dnaPop.size()-1; i+=2)//groups of 2
+	{
+		for (int j = 0; j < dnaPop.front().size(); j++)
+		{
+			dnaDiff[j] =std::abs(dnaPop[i][j] - dnaPop[i + 1][j]);//TODO posibibly a Diversity heatmap...
+			diversity += dnaDiff[j];
+		}
+	}
+	return diversity;
 }

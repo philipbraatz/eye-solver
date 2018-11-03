@@ -10,6 +10,7 @@ class Tracker
 public:
 	Tracker()
 	{
+		dnaDiff = 0;
 		score.y = -RAND_MAX;
 		score.x = 0;
 		topScore.y = -RAND_MAX;
@@ -23,6 +24,8 @@ public:
 		getSpeed();
 		getPrevGenScore();
 		getTopScore();
+		getDiversity();
+
 		if (output != "")
 			cout << "\"" << output << "\"";
 		if (testString != output)
@@ -36,15 +39,20 @@ public:
 		testString = output;
 	}
 
-	void update(double gps_,int Gen,double best, string out_ ="")
+	void update(double gps_,int Gen,double best,double diversity, string out_ ="")
 	{
 		output = out_;
 		gps = gps_;
+		dnaDiff = diversity;
 		score.x = Gen;
 		score.y = best;
 		if (topScore.y < score.y)
 			topScore = score;
 
+	}
+	void getDiversity()
+	{
+		cout << "diff: " << to_string(dnaDiff) << "\t";
 	}
 	void getSpeed()
 	{
@@ -71,6 +79,7 @@ private:
 
 	//	//10 last increases->gen#
 	int gps;//generations per second
+	double dnaDiff;
 	ifPoint score;//score-> gen# + score
 	ifPoint prevScore;//prevscore->previous new gen# + score
 	string testString;

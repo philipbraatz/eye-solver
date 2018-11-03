@@ -70,7 +70,9 @@ public:
 	void SaveBest(string name);
 	void EvoNet::LoadNet(string filename);
 
+	void clearNetworks();
 
+	double EvoNet<tnet>::getGeneticDiversity();
 
 protected:
 	int size;

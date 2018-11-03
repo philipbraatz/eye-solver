@@ -112,6 +112,21 @@ int Nnet::GetLayerSize(layer_type l)
 	}
 }
 
+vector<layer> Nnet::getLayer(layer_type l)
+{
+	switch (l)
+	{
+	case Ninputs:
+		return { input };
+	case Nhiddens:
+		return hidden;
+	case Noutputs:
+		return { output };
+	default:
+		return vector<layer>();
+	}
+}
+
 vector<double> Nnet::Initial_Propigation(vector<double> inputs)
 {
 	//TIMER first
@@ -433,8 +448,8 @@ void Nnet::saveNet(std::string name)
 	std::ofstream out(name, std::ios_base::binary);
 	if (out.good())
 	{
-		std::cout << "Version: "<<version<<".0" << std::endl;
-		out.write((char *)&version, sizeof(unsigned int));				//save version
+		std::cout << "Version: "<< VERSION <<".0" << std::endl;
+		out.write((char *)&VERSION, sizeof(unsigned int));				//save version
 		//save sizes
 		std::cout << "Writing Sizes of file" << std::endl;				//ORDER
 		out.write((char *)&pt, sizeof(problem_type));					//problem type
@@ -484,8 +499,8 @@ Nnet Nnet::loadNet(std::string filename)
 	if (in.good())
 	{
 		in.read((char *)&lversion, sizeof(unsigned int));	//save version
-		std::cout << "Current Version: "<<version << ".0";
-		if (lversion == version)
+		std::cout << "Current Version: "<<VERSION << ".0";
+		if (lversion == VERSION)
 			std::cout << "Valid... loading" << std::endl;
 		else
 		{
@@ -536,7 +551,7 @@ Nnet Nnet::loadNet(std::string filename)
 				in.read((char*)&net.hidden.back().neurons[i].weights[j], sizeof(double));
 		std::cout << "Done" << std::endl;
 
-		*this = net;
+		//*this = net;
 		return net;
 	}
 	return Nnet();//error

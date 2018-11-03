@@ -103,6 +103,7 @@
     <ClInclude Include="Nnet.h">
       <Filter>Source Files\Neural Network\Evolution</Filter>
     </ClInclude>
+    <ClInclude Include="mainIncludes.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Solution_finder.rc">

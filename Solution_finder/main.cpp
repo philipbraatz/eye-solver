@@ -1,29 +1,5 @@
 #pragma once
-#include <ctime>
-
-#include <iomanip>
-
-#include <string>
-#include <iostream>
-#include <conio.h>
-
-#include <vector>
-#include <algorithm>
-
-#include <Windows.h>
-#include <Winuser.h>
-
-#include "graphic.h"
-
-#include "EvoNet.h"
-#include "EvoNet.cpp"
-#include "Nnet.h"
-#include "utility.h"
-#include "capture.h"
-#include "Menu.h"
-#include "OCR.h"
-#include "Trainer.h"
-#include "Trainer.cpp"
+#include "mainIncludes.h"
 
 using std::vector;
 using namespace cv;
@@ -48,7 +24,7 @@ int main()
 	Nnet* pmainNet;//main Neural net for testing and loading
 	NetFrame netF;//framework for neural network, used in loading
 
-	auto count =NULL;
+	int count =NULL;
 
 	Screen chartScr;
 	Screen OCRScr;
@@ -129,7 +105,8 @@ int main()
 			cout << "NOT IMPLIMENTED...skipping" << endl;
 		}
 		cout << "Done Generating Network" << endl;
-		mMenu.FinishTrainMenu(pArea, pmainNet,netF,trImage,trText);
+		if (mMenu.FinishTrainMenu(pArea, pmainNet, netF, trImage, trText) == state::NEW_TEXT)
+			;//nothing yet
 	}
 
 	return 1;

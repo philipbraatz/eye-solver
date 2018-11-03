@@ -65,7 +65,7 @@ protected:
 	//state option = NEW;
 
 public:
-	Trainer( 
+	void Restart(
 		NetFrame netf,
 		Mat &imgAnswer,
 		std::string &txtAnswer,
@@ -86,12 +86,12 @@ public:
 			sstart = 0;//color white
 			send = 128;//color black
 		}
-			
 
-				   //declare answer
-		//answer = i_answer;
-		//input = i_input;
-		//option = i_option;
+
+		//declare answer
+//answer = i_answer;
+//input = i_input;
+//option = i_option;
 
 		vector<fPoint> zero;
 
@@ -101,8 +101,8 @@ public:
 		{
 			///ocr.SetFont("C:\\Users\\Philip\\Documents\\Visual Studio 2015\\Projects\\Solution_finder\\fonts\\arial.PNG", 16, 16);
 
-			
-			
+
+
 			if (area.height == 0)//error handle
 				cout << "ERROR area too small";
 
@@ -144,20 +144,42 @@ public:
 		//double size, rate, hiddens, hsize;
 		//double msize = 750, mrate = .001, mhiddens = 1, mhsize = 2;
 		//double xsize = 1000, xrate = .25, xhiddens = 6, xhsize = 25;
-		
+
 		size = msize;
 		rate = .1;
 		hiddens = 2;
 		hsize = 4;
-		if(option == NEW_TEXT)
+		if (option == NEW_TEXT)
 			List.push_back(EvoNet<tNet>(size, rate, txtAnswer.length(),
-				hiddens, hsize, txtAnswer.length(),netf.type));
+				hiddens, hsize, txtAnswer.length(), netf.type));
 		else if (option == NEW_IMAGE)
 		{
 			List.push_back(EvoNet<tNet>(size, rate, imgAnswer.cols*imgAnswer.rows*imgAnswer.channels(),
 				hiddens, hsize, imgAnswer.cols*imgAnswer.rows*imgAnswer.channels(), netf.type));
 		}
 		//g.AddLine(zero);
+	}
+
+
+	Trainer( 
+		NetFrame netf,
+		Mat &imgAnswer,
+		std::string &txtAnswer,
+		vector<double> &input,
+		state &option,
+		Rect area,
+		Screen &chartScr,
+		Screen &outputScr
+	)
+	{
+		Restart(netf,
+			imgAnswer,
+			txtAnswer,
+			input,
+			option,
+			area,
+			chartScr,
+			outputScr);
 	}
 
 	void train(Screen &OCRScr, Veiwer &vscreen, Graph &g,
@@ -250,7 +272,7 @@ public:
 				//if (answer.compare(out))//if anwer and out are the same string
 				//	cout << "perfected Network! training done.";
 				//	done = true;
-				track1.update(frames,count,p.y,out);
+				track1.update(frames,count, List.front().getGeneticDiversity(),p.y,out);
 
 				if (List[i].getBestScore() == staleScore)
 					staleCount++;
