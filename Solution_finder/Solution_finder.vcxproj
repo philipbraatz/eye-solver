@@ -172,7 +172,6 @@
     <ClInclude Include="EvoNet.h" />
     <ClInclude Include="graphic.h" />
     <ClInclude Include="lilNet.h" />
-    <ClInclude Include="mainIncludes.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="Nnet.h" />

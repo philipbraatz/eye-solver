@@ -17,16 +17,16 @@ public:
 		double Ninputs, double Nhiddens, int SizeHidden, double Noutputs,
 		problem_type pt
 	);
-	void SingleEpocTxt(vector<double> output, int i,vector<double> input, bool testing, bool max,bool prune);
+	void SingleEpocTxt(vector<double> output, int i, vector<double> input, bool testing, bool max, bool prune);
 
 	//void SingleEpocTxt(lilNet net_pop,vector<double> output, int i, vector<double> input, bool testing, bool max, bool prune);
-	
+
 	void SingleEpocImg(vector<double> output, int i, vector<double> input, bool testing, bool max, bool prune);
-	void DoEpoch(vector<double> truth,bool testing,bool max,bool prune);
+	void DoEpoch(vector<double> truth, bool testing, bool max, bool prune);
 
 	void EvoNet<tnet>::PruneAll();
 
-	struct order{
+	struct order {
 		int place;
 		double value;
 	};
@@ -45,18 +45,20 @@ public:
 	int getGenCount() { return genCount; }
 
 	vector<double> getPreviousBestOut()
-	{ 
+	{
 		if (genCount >= 2)
 		{
-		return bestout[genCount-2];
+			return bestout[genCount - 2];
 		}
 		else
 		{
 			return bestout.front();
 		}
 	}
-	vector<double> getCurrentBestOut() 
-	{ return bestout[genCount-1]; }
+	vector<double> getCurrentBestOut()
+	{
+		return bestout[genCount - 1];
+	}
 	double getBestScore() { return best; }
 	double getAveScore() { return average; }
 
@@ -65,7 +67,7 @@ public:
 
 	//in seconds
 	//call after epoch and repopulation
-	double getTime() { return time_epoch+time_repop; }
+	double getTime() { return time_epoch + time_repop; }
 
 	void SaveBest(string name);
 	void EvoNet::LoadNet(string filename);
@@ -82,12 +84,12 @@ protected:
 
 	double time_epoch, time_repop;
 
-	problem_type pt =IMAGE;
+	problem_type pt = IMAGE;
 
 	vector<tnet> pop;
 
 	vector<vector<double>> bestin, bestout;//history of all bests
 	int bestNet;
 
-	double prevmed,best,average;
+	double prevmed, best, average;
 };

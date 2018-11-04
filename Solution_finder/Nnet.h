@@ -55,13 +55,12 @@ public:
 	vector<double> m_goal;
 
 	Nnet();
-	Nnet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs,problem_type mt);
+	Nnet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, problem_type mt);
 	Nnet(std::string filename);
 	//Nnet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, std::vector<double> goal);
 
-	int Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs,problem_type mt, bool loaded = false);
+	int Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, problem_type mt, bool loaded = false);
 	int GetLayerSize(layer_type l);
-	vector<layer> Nnet::getLayer(layer_type l);//DNA
 
 	//set input and get output
 	vector<double> Nnet::Initial_Propigation(vector<double> input);//for inheritience
@@ -89,7 +88,7 @@ public:
 
 protected:
 	//const int MAX_WEIGHT = 9999;
-	const int VERSION = 2;// increment when save files change MANUALLY
+	int version = 2;// increment when save files change MANUALLY
 
 	double trate;
 
@@ -97,8 +96,8 @@ protected:
 
 	int age;
 
-	clock_t startProp,startMut;
-	double PassedProp,PassedMut;
+	clock_t startProp, startMut;
+	double PassedProp, PassedMut;
 
 	//layers
 	layer input;

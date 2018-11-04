@@ -13,7 +13,7 @@ inline EvoNet<tnet>::EvoNet(
 	rate = mutateRate;
 	for (auto i = 0; i < population; i++)
 	{
-		tnet temp(Ninputs, Nhiddens, SizeHidden, Noutputs,pt);
+		tnet temp(Ninputs, Nhiddens, SizeHidden, Noutputs, pt);
 		pop.push_back(temp);
 	}
 }
@@ -29,7 +29,7 @@ inline void EvoNet<tnet>::PruneAll()
 }
 
 template<class tnet>
-inline void EvoNet<tnet>::DoEpoch(vector<double> input,bool testing,bool max,bool prune)
+inline void EvoNet<tnet>::DoEpoch(vector<double> input, bool testing, bool max, bool prune)
 {
 	time_epoch = 0;
 
@@ -39,7 +39,7 @@ inline void EvoNet<tnet>::DoEpoch(vector<double> input,bool testing,bool max,boo
 	}
 
 	vector<std::thread*> t;//threads
-	int maxThreads =8;
+	int maxThreads = 8;
 	t.resize(size);// number of threads
 
 	bestout.resize(genCount);
@@ -59,8 +59,8 @@ inline void EvoNet<tnet>::DoEpoch(vector<double> input,bool testing,bool max,boo
 				}
 			}
 			//add new threads
-			if(pt == TEXT)
-				t.push_back(new std::thread([=] {SingleEpocTxt(output,i,input, testing, max,prune); }));
+			if (pt == TEXT)
+				t.push_back(new std::thread([=] {SingleEpocTxt(output, i, input, testing, max, prune); }));
 			else if (pt == IMAGE)
 				t.push_back(new std::thread([=] {SingleEpocImg(output, i, input, testing, max, prune); }));
 		}
@@ -73,7 +73,7 @@ inline void EvoNet<tnet>::DoEpoch(vector<double> input,bool testing,bool max,boo
 			else
 				std::cout << "Problem Type NOT specified";
 		}
-		
+
 	}
 
 	if (!testing)
@@ -89,20 +89,20 @@ inline void EvoNet<tnet>::Reorder(bool max)
 
 	for (auto i = 0; i < size; i++)
 	{
-		int spot=-1;
+		int spot = -1;
 		for (auto j = 0; j < i; j++)
 		{
 			if (max)
 				if (pop[i].getScore() > pop[j].getScore())//if i is greater than j
-								spot = j;//make it the best spot to be
-			else
-				if (pop[i].getScore() < pop[j].getScore())//if i is smaller than j
 					spot = j;//make it the best spot to be
-			
+				else
+					if (pop[i].getScore() < pop[j].getScore())//if i is smaller than j
+						spot = j;//make it the best spot to be
+
 		}
 		if (spot != -1)//if better spot
 			std::swap(pop[i], pop[spot]);//they trade places with best spot
-			
+
 	}
 }
 //saves a percent of the population to be parents and produces mutated babies
@@ -111,11 +111,11 @@ inline void EvoNet<tnet>::repopulate(double save)
 {
 	time_repop = 0;
 
-	int saved = save*size;
+	int saved = save * size;
 	pop.resize((int)(size*save));
 	for (auto i = 0; i < size - saved; i++)
 	{
-		int parent = (int)(RandNum()*(saved-1));
+		int parent = (int)(RandNum()*(saved - 1));
 		pop.push_back(pop[parent]);
 		pop.back().Mutate(rate);
 
@@ -202,7 +202,7 @@ inline void EvoNet<tnet>::updateStats(bool max)
 		best = -RAND_MAX;
 	average = 0;
 
-	bestout[genCount-1] = pop.front().getLastLayer();//start with last network as best
+	bestout[genCount - 1] = pop.front().getLastLayer();//start with last network as best
 	for (auto i = 0; i < size; i++)
 	{
 		average += pop[i].getScore();
@@ -211,15 +211,15 @@ inline void EvoNet<tnet>::updateStats(bool max)
 			if (best > pop[i].getScore())
 			{
 				best = pop[i].getScore();
-				bestout[genCount-1] = pop[i].getLastLayer();
+				bestout[genCount - 1] = pop[i].getLastLayer();
 			}
 		}
 		else
-		if (best < pop[i].getScore())
-		{
-			best = pop[i].getScore();
-			bestout[genCount-1] = pop[i].getLastLayer();
-		}
+			if (best < pop[i].getScore())
+			{
+				best = pop[i].getScore();
+				bestout[genCount - 1] = pop[i].getLastLayer();
+			}
 
 	}
 	if (best == abs(RAND_MAX))
@@ -320,17 +320,17 @@ double EvoNet<tnet>::getGeneticDiversity()
 		for (int j = 0; j < slice.front().size; j++)
 			for (int k = 0; k < slice.front().neurons.size(); k++)
 				for (int l = 0; l < slice.front().neurons.front().weights.size(); l++)
-				dnaPop[i][
-					j*slice.front().neurons.size()*slice.front().neurons.front().weights.size() +
-					k* slice.front().neurons.front().weights.size() +l] 
-					=slice[0].neurons[k].weights[l];
+					dnaPop[i][
+						j*slice.front().neurons.size()*slice.front().neurons.front().weights.size() +
+							k * slice.front().neurons.front().weights.size() + l]
+					= slice[0].neurons[k].weights[l];
 	}
 
-	for (int i = 0; i < dnaPop.size()-1; i+=2)//groups of 2
+	for (int i = 0; i < dnaPop.size() - 1; i += 2)//groups of 2
 	{
 		for (int j = 0; j < dnaPop.front().size(); j++)
 		{
-			dnaDiff[j] =std::abs(dnaPop[i][j] - dnaPop[i + 1][j]);//TODO posibibly a Diversity heatmap...
+			dnaDiff[j] = std::abs(dnaPop[i][j] - dnaPop[i + 1][j]);//TODO posibibly a Diversity heatmap...
 			diversity += dnaDiff[j];
 		}
 	}

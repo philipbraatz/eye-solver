@@ -25,7 +25,6 @@ public:
 		getPrevGenScore();
 		getTopScore();
 		getDiversity();
-
 		if (output != "")
 			cout << "\"" << output << "\"";
 		if (testString != output)
@@ -38,21 +37,19 @@ public:
 
 		testString = output;
 	}
-
-	void update(double gps_,int Gen,double best,double diversity, string out_ ="")
+	void getDiversity()
+	{
+		//cout << "diff: " << to_string(dnaDiff) << "\t";
+	}
+	void update(double gps_, int Gen, double best, string out_ = "")
 	{
 		output = out_;
 		gps = gps_;
-		dnaDiff = diversity;
 		score.x = Gen;
 		score.y = best;
 		if (topScore.y < score.y)
 			topScore = score;
 
-	}
-	void getDiversity()
-	{
-		cout << "diff: " << to_string(dnaDiff) << "\t";
 	}
 	void getSpeed()
 	{
@@ -61,15 +58,15 @@ public:
 	void getPrevGenScore()
 	{
 		char p;
-		if (score.y >prevScore.y)
+		if (score.y > prevScore.y)
 			p = '+';
 		else
 			p = '-';
-		cout << "Gen: " << to_string(score.x) << "\tScore: "<<p<<" " << to_string(score.y) << "\t";
+		cout << "Gen: " << to_string(score.x) << "\tScore: " << p << " " << to_string(score.y) << "\t";
 	}
 	void getTopScore()
 	{
-		cout << "Top Gen: " << topScore.x << "\tTop Score: " << topScore.y <<"\t";
+		cout << "Top Gen: " << topScore.x << "\tTop Score: " << topScore.y << "\t";
 	}
 	int getIncrease(int number)
 	{
@@ -87,4 +84,3 @@ private:
 	vector<int> increases;// increases every gen
 	string output;
 };
-

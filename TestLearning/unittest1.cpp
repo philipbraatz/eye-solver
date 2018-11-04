@@ -16,22 +16,22 @@ namespace TestLearning
 			std::cout << "Start" << std::endl;//debug
 
 	//pre-initialization
-			srand(static_cast <unsigned> (time(0)));
+			//srand(static_cast <unsigned> (time(0)));
 
-			clock_t startt = 0;
-			double frames = 0;
+			//clock_t startt = 0;
+			//double frames = 0;
 
-			///Mat trImage;
-			string trText;
+			//Mat trImage;
+			//string trText;
 
-			bool exit = false;
-			int sstart = 0;//min value
-			int send = 1;//max value
+			//bool exit = false;
+			//int sstart = 0;//min value
+			//int send = 1;//max value
 
-			Nnet* pmainNet;//main Neural net for testing and loading
-			NetFrame netF;//framework for neural network, used in loading
+			//Nnet* pmainNet;//main Neural net for testing and loading
+			//NetFrame netF;//framework for neural network, used in loading
 
-			int count = NULL;
+			//auto count = NULL;
 
 			//Screen chartScr;
 			//Screen OCRScr;

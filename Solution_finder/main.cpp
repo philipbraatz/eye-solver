@@ -1,5 +1,29 @@
 #pragma once
-#include "mainIncludes.h"
+#include <ctime>
+
+#include <iomanip>
+
+#include <string>
+#include <iostream>
+#include <conio.h>
+
+#include <vector>
+#include <algorithm>
+
+#include <Windows.h>
+#include <Winuser.h>
+
+#include "graphic.h"
+
+#include "EvoNet.h"
+#include "EvoNet.cpp"
+#include "Nnet.h"
+#include "utility.h"
+#include "capture.h"
+#include "Menu.h"
+#include "OCR.h"
+#include "Trainer.h"
+#include "Trainer.cpp"
 
 using std::vector;
 using namespace cv;
@@ -105,8 +129,7 @@ int main()
 			cout << "NOT IMPLIMENTED...skipping" << endl;
 		}
 		cout << "Done Generating Network" << endl;
-		if (mMenu.FinishTrainMenu(pArea, pmainNet, netF, trImage, trText) == state::NEW_TEXT)
-			;//nothing yet
+		mMenu.FinishTrainMenu(pArea, pmainNet,netF,trImage,trText);
 	}
 
 	return 1;

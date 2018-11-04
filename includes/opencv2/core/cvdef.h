@@ -64,7 +64,7 @@
 #endif
 
 #include <limits.h>
-#include "opencv2/core/hal/interface.h"
+#include "../includes/opencv2/core/hal/interface.h"
 
 #if defined __ICL
 #  define CV_ICC   __ICL

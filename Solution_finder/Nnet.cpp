@@ -8,13 +8,13 @@ using std::vector;
 
 //initialize
 
-Nnet::Nnet(){ Setup(0, 0, 0, 0,TEXT); }
-Nnet::Nnet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs,problem_type mt) { Setup(Ninputs, Nhiddens, SizeHidden, Noutputs,mt); }
+Nnet::Nnet() { Setup(0, 0, 0, 0, TEXT); }
+Nnet::Nnet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, problem_type mt) { Setup(Ninputs, Nhiddens, SizeHidden, Noutputs, mt); }
 Nnet::Nnet(std::string filename) {
 	loadNet(filename);
 }
 
-int Nnet::Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs,problem_type mt, bool loaded)
+int Nnet::Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, problem_type mt, bool loaded)
 {
 	if (!Ninputs || !Nhiddens || !SizeHidden || !Noutputs)//if an input is missing
 	{
@@ -64,7 +64,7 @@ int Nnet::Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs
 			output.neurons[i].bias = RandNum();
 		}
 	}
-	for (unsigned int i = 0; i < m_Nhidden-1; i++)
+	for (unsigned int i = 0; i < m_Nhidden - 1; i++)
 	{//HIDDEN
 		for (unsigned int j = 0; j < hidden[i].size; j++)
 		{
@@ -109,21 +109,6 @@ int Nnet::GetLayerSize(layer_type l)
 	default:
 		return -1;
 		break;
-	}
-}
-
-vector<layer> Nnet::getLayer(layer_type l)
-{
-	switch (l)
-	{
-	case Ninputs:
-		return { input };
-	case Nhiddens:
-		return hidden;
-	case Noutputs:
-		return { output };
-	default:
-		return vector<layer>();
 	}
 }
 
@@ -269,7 +254,7 @@ vector<double> Nnet::Propigate(vector<double> inputs)
 	startProp = clock(); //Start timer
 
 	std::vector<double> biases, out;
-		
+
 	/* ORDER
 		prev node * weight
 		bias
@@ -282,7 +267,7 @@ vector<double> Nnet::Propigate(vector<double> inputs)
 	bool test = input.size == input.neurons.size();
 	for (unsigned int b = 0; b < input.size; b++)
 	{
-		biases[b] = input.neurons[b].bias; 
+		biases[b] = input.neurons[b].bias;
 	}
 	AddBiases(inputs, biases, out);
 	for (unsigned int i = 0; i < input.size; i++)
@@ -294,9 +279,9 @@ vector<double> Nnet::Propigate(vector<double> inputs)
 	//First Hidden Layer
 	for (unsigned int i = 0; i < hidden.front().size; i++)
 	{
-		double adder =0 ;
+		double adder = 0;
 		for (unsigned int j = 0; j < input.size; j++)
-				adder += input.neurons[j].value * input.neurons[j].weights[i];//node*weight
+			adder += input.neurons[j].value * input.neurons[j].weights[i];//node*weight
 		adder += hidden.front().neurons[i].bias;
 		Normalize(adder);
 		hidden.front().neurons[i].value = adder;
@@ -305,9 +290,9 @@ vector<double> Nnet::Propigate(vector<double> inputs)
 	//Hidden Layers
 	for (unsigned int i = 1; i < m_Nhidden; i++) {
 		for (unsigned int j = 0; j < hidden[i].size; j++) {
-			double adder=0;
+			double adder = 0;
 			for (unsigned int k = 0; k < hidden[i].size; k++)
-					adder += hidden[i - 1].neurons[j].value * hidden[i - 1].neurons[j].weights[k];
+				adder += hidden[i - 1].neurons[j].value * hidden[i - 1].neurons[j].weights[k];
 			adder += hidden[i].neurons[j].bias;
 			Normalize(adder);
 			hidden[i].neurons[j].value = adder;
@@ -318,29 +303,29 @@ vector<double> Nnet::Propigate(vector<double> inputs)
 	out.resize(output.size);
 	for (unsigned int i = 0; i < output.size; i++)
 	{
-		double adder=0;
+		double adder = 0;
 		for (unsigned int j = 0; j < m_Nhidden; j++)
 			adder += hidden.back().neurons[j].value * output.neurons[i].weights[j];//node*weight
 		adder += output.neurons[i].bias;
 		Normalize(adder);//normalize
 		output.neurons[i].value = adder;
-		out[i] =adder;
+		out[i] = adder;
 	}
 
 	PassedProp = (clock() - startProp);// / CLOCKS_PER_SEC;
 	return out;
 }
 
-void Nnet::Normalize(double &input){
+void Nnet::Normalize(double &input) {
 	input = 1 / (1 + pow(e, -input));
 }
 
-void Nnet::AddBiases(vector<double> cur,vector<double> biases, vector<double> &out)
+void Nnet::AddBiases(vector<double> cur, vector<double> biases, vector<double> &out)
 {
 	if (cur.size() == biases.size())
 	{
 		for (unsigned int i = 0; i < cur.size(); i++)
-			out.push_back(cur[i]+biases[i]);
+			out.push_back(cur[i] + biases[i]);
 	}
 	else
 		std::cout << "ERROR: Invalid vector size";
@@ -412,11 +397,11 @@ void Nnet::MutTable(double &weight)
 	switch (choice)
 	{
 	case 0://change weight by percent
-		weight *= r*1.5;
+		weight *= r * 1.5;
 		break;
 	case 1://invert weight
 		weight *= -1;
-			break;
+		break;
 	case 2://aproach a round number
 		weight = (int)weight * r;
 		break;
@@ -448,8 +433,8 @@ void Nnet::saveNet(std::string name)
 	std::ofstream out(name, std::ios_base::binary);
 	if (out.good())
 	{
-		std::cout << "Version: "<< VERSION <<".0" << std::endl;
-		out.write((char *)&VERSION, sizeof(unsigned int));				//save version
+		std::cout << "Version: " << version << ".0" << std::endl;
+		out.write((char *)&version, sizeof(unsigned int));				//save version
 		//save sizes
 		std::cout << "Writing Sizes of file" << std::endl;				//ORDER
 		out.write((char *)&pt, sizeof(problem_type));					//problem type
@@ -477,11 +462,11 @@ void Nnet::saveNet(std::string name)
 		for (unsigned int i = 0; i < m_Nhidden - 1; i++)
 			for (unsigned int j = 0; j < hidden[i].size; ++j)
 				for (unsigned int k = 0; k < hidden[i + 1].size; k++)
-					out.write((char*)&hidden[i].neurons[j].weights[k],sizeof(double));
+					out.write((char*)&hidden[i].neurons[j].weights[k], sizeof(double));
 		for (unsigned int i = 0; i < hidden.back().size; i++)//Last Hidden Layer
 			for (unsigned int j = 0; j < output.size; j++)
 				out.write((char*)&hidden.back().neurons[i].weights[j], sizeof(double));
-				
+
 
 		out.close();
 	}
@@ -499,8 +484,8 @@ Nnet Nnet::loadNet(std::string filename)
 	if (in.good())
 	{
 		in.read((char *)&lversion, sizeof(unsigned int));	//save version
-		std::cout << "Current Version: "<<VERSION << ".0";
-		if (lversion == VERSION)
+		std::cout << "Current Version: " << version << ".0";
+		if (lversion == version)
 			std::cout << "Valid... loading" << std::endl;
 		else
 		{
@@ -521,7 +506,7 @@ Nnet Nnet::loadNet(std::string filename)
 
 		//Resize Nnet
 		Nnet net;
-		net.Setup(sizeInput, m_Nhidden, sizeHidden, sizeOutput,pt,true);
+		net.Setup(sizeInput, m_Nhidden, sizeHidden, sizeOutput, pt, true);
 
 		//Load Biases
 		std::cout << "Reading  biases: " << std::fixed;//biases
@@ -551,7 +536,7 @@ Nnet Nnet::loadNet(std::string filename)
 				in.read((char*)&net.hidden.back().neurons[i].weights[j], sizeof(double));
 		std::cout << "Done" << std::endl;
 
-		//*this = net;
+		*this = net;
 		return net;
 	}
 	return Nnet();//error
