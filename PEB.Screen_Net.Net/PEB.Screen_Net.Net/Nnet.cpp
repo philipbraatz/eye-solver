@@ -5,7 +5,6 @@
 #include <vector>
 #include <algorithm>
 using std::vector;
-
 //initialize
 
 Nnet::Nnet() { Setup(0, 0, 0, 0, TEXT); }
@@ -331,6 +330,33 @@ void Nnet::AddBiases(vector<double> cur, vector<double> biases, vector<double> &
 		std::cout << "ERROR: Invalid vector size";
 }
 
+inline void Nnet::MutTable(double & weight)
+{
+	const int MAX_WEIGHT = 9999;
+
+	int choice = (int)(RandNum() * 3);
+	double r = RandNum();
+
+	//limit min/max
+	if (weight > MAX_WEIGHT)
+		weight = MAX_WEIGHT;
+	else if (weight < -MAX_WEIGHT)
+		weight = -MAX_WEIGHT;
+
+	switch (choice)
+	{
+	case 0://change weight by percent
+		weight *= r * 1.5;
+		break;
+	case 1://invert weight
+		weight *= -1;
+		break;
+	case 2://aproach a round number
+		weight = (int)weight * r;
+		break;
+	}
+}
+
 void Nnet::Mutate(double rate)
 {
 	//TIMER first
@@ -379,33 +405,6 @@ void Nnet::Mutate(double rate)
 	}
 
 	PassedMut = (clock() - startMut);// / CLOCKS_PER_SEC;
-}
-
-void Nnet::MutTable(double &weight)
-{
-	const int MAX_WEIGHT = 9999;
-
-	int choice = (int)(RandNum() * 3);
-	double r = RandNum();
-
-	//limit min/max
-	if (weight > MAX_WEIGHT)
-		weight = MAX_WEIGHT;
-	else if (weight < -MAX_WEIGHT)
-		weight = -MAX_WEIGHT;
-
-	switch (choice)
-	{
-	case 0://change weight by percent
-		weight *= r * 1.5;
-		break;
-	case 1://invert weight
-		weight *= -1;
-		break;
-	case 2://aproach a round number
-		weight = (int)weight * r;
-		break;
-	}
 }
 
 vector<double> Nnet::getLastLayer()
@@ -491,7 +490,7 @@ Nnet Nnet::loadNet(std::string filename)
 		{
 			std::cout << "This file is an older version " << lversion << ".0" << std::endl;
 			std::cout << "UNABLE to load file";
-			return NULL;
+			return Nnet();
 		}
 
 		//Get Nnet sizes

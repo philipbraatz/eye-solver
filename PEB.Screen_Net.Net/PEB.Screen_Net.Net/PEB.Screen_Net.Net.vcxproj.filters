@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Evolution">
+      <UniqueIdentifier>{d342a6b8-ec99-44c2-9689-e1c2bc9e6703}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utilities">
+      <UniqueIdentifier>{b3be791b-d998-4385-b441-74bd03e86b74}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Nnet.h">
+      <Filter>Source Files\Evolution</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="EvoNet.h">
+      <Filter>Source Files\Evolution</Filter>
+    </ClInclude>
+    <ClInclude Include="LilNet.h">
+      <Filter>Source Files\Evolution</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Nnet.cpp">
+      <Filter>Source Files\Evolution</Filter>
+    </ClCompile>
+    <ClCompile Include="EvoNet.cpp">
+      <Filter>Source Files\Evolution</Filter>
+    </ClCompile>
+    <ClCompile Include="LilNet.cpp">
+      <Filter>Source Files\Evolution</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

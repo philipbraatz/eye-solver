@@ -63,8 +63,8 @@ public:
 	int GetLayerSize(layer_type l);
 
 	//set input and get output
-	vector<double> Nnet::Initial_Propigation(vector<double> input);//for inheritience
-	vector<double> Nnet::Final_Propigation(vector<double> input);//for inheritience
+	vector<double> Initial_Propigation(vector<double> input);//for inheritience
+	vector<double> Final_Propigation(vector<double> input);//for inheritience
 	vector<double> Propigate(vector<double> inputs);
 
 	int getAge() { return age; }
@@ -74,7 +74,7 @@ public:
 
 	void Mutate(double rate);
 
-	vector<double> Nnet::getLastLayer();
+	vector<double> getLastLayer();
 
 	//in seconds
 	//call after propigate and mutate

@@ -10,8 +10,8 @@ class lilNet :
 	public Nnet
 {
 public:
-	lilNet(){ Setup(0, 0, 0, 0,problem_type::TEXT); }
-	lilNet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs,problem_type pt){ Setup(Ninputs, Nhiddens, SizeHidden, Noutputs,pt); }
+	lilNet() { Setup(0, 0, 0, 0, problem_type::TEXT); }
+	lilNet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, problem_type pt) { Setup(Ninputs, Nhiddens, SizeHidden, Noutputs, pt); }
 	lilNet(std::string filename) { loadNet(filename); }
 
 	//call before pruning
@@ -49,7 +49,7 @@ public:
 		for (auto i = 0; i < hidden.front().size; i++)
 		{
 			double adder = 0;
-			for (auto j = 0; j < input.size; j++) 
+			for (auto j = 0; j < input.size; j++)
 			{
 				bool pruned = false;
 				for (auto p = 0; p < prunes.size(); p++)
@@ -68,7 +68,7 @@ public:
 
 		//Hidden Layers
 		for (auto i = 1; i < m_Nhidden; i++) {
-			for (auto j = 0; j < hidden[i].size; j++) 
+			for (auto j = 0; j < hidden[i].size; j++)
 			{
 				double adder = 0;
 				for (auto k = 0; k < hidden[i].size; k++)
@@ -83,7 +83,7 @@ public:
 					if (!pruned)
 						adder += hidden[i - 1].neurons[j].value * hidden[i - 1].neurons[j].weights[k];
 				}
-					
+
 				adder += hidden[i].neurons[j].bias;
 				Normalize(adder);
 				hidden[i].neurons[j].value = adder;
@@ -99,7 +99,7 @@ public:
 			{
 				bool pruned = false;
 				for (auto p = 0; p < prunes.size(); p++)
-					if ((SizeHidden-1 == prunes[p].x && j == prunes[p].y))
+					if ((SizeHidden - 1 == prunes[p].x && j == prunes[p].y))
 					{
 						pruned = true;
 						p = prunes.size();
@@ -107,7 +107,7 @@ public:
 				if (!pruned)
 					adder += hidden.back().neurons[j].value * output.neurons[i].weights[j];//node*weight
 			}
-				
+
 			adder += output.neurons[i].bias;
 			//Normalize(adder);//normalize
 			output.neurons[i].value = adder;

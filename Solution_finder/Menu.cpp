@@ -152,7 +152,7 @@ state Menu::mainMenu(RECT * area, Nnet *&ref,NetFrame &netF_,Mat &image,string &
 
 state Menu::StartMenu(RECT * area,Nnet *&ref,NetFrame &netf,Mat &image,string &text)
 {
-	cout << "Solution Finder " << VERSION << ":" << std::endl;
+	cout << NAME << " v" << VERSION << std::endl << "By: " << AUTHOR << std::endl << std::endl;
 	return mainMenu(area,ref,netf,image,text);
 }
 

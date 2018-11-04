@@ -46,7 +46,9 @@ private:
 	void MenuSizeWindow(RECT * area);
 	void LoadFile(Mat &image, string &text);
 protected:
-	string VERSION = "0.8";
+	string VERSION = "0.8.2";
+	string NAME = "Screen Net";
+	string AUTHOR = "Philip Braatz";
 
 	//Sliders
 	NetFrame SliderFrame;

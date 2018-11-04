@@ -276,18 +276,18 @@ inline void EvoNet<tnet>::LoadNet(string filename)
 template<class tnet>
 void EvoNet<tnet>::clearNetworks()
 {
-	m_score = 0;
-	age = 0;
+	EvoNet::m_score = 0;
+	EvoNet::age = 0;
 
-	startProp = 0;
-	startMut = 0;
-	PassedProp = 0;
-	PassedMut = 0;
+	EvoNet::startProp = 0;
+	EvoNet::startMut = 0;
+	EvoNet::PassedProp = 0;
+	EvoNet::PassedMut = 0;
 
 	genCount = 0;
-	size = population;
-	rate = mutateRate;
-	for (auto i = 0; i < population; i++)
+	size = EvoNet::population;
+	rate = EvoNet::mutateRate;
+	for (auto i = 0; i < EvoNet::population; i++)
 	{
 		tnet temp(Ninputs, Nhiddens, SizeHidden, Noutputs, pt);
 		pop.push_back(temp);

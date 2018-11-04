@@ -17,7 +17,7 @@
 
 #include "EvoNet.h"
 #include "EvoNet.cpp"
-#include "Nnet.h"
+#include <Nnet.h>
 #include "utility.h"
 #include "capture.h"
 //#include "Menu.h"

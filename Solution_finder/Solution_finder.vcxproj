@@ -22,6 +22,7 @@
     <ProjectGuid>{04AF0080-DC4A-4C41-8737-A735DDA3030E}</ProjectGuid>
     <RootNamespace>Solution_finder</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <ProjectName>PEB.Screen_Net.UI</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -102,7 +103,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)PEB.Screen_Net.Net\PEB.Screen_Net.Net;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
     </ClCompile>
     <Link />
@@ -137,7 +138,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)PEB.Screen_Net.Net\PEB.Screen_Net.Net;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <DebugInformationFormat>None</DebugInformationFormat>
@@ -155,13 +156,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="controller.cpp" />
-    <ClCompile Include="EvoNet.cpp" />
     <ClCompile Include="graphic.cpp" />
-    <ClCompile Include="lilNet.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="mouse.cpp" />
-    <ClCompile Include="Nnet.cpp" />
     <ClCompile Include="OCR.cpp" />
     <ClCompile Include="OCR.h" />
     <ClCompile Include="Tracker.cpp" />
@@ -169,19 +167,20 @@
   <ItemGroup>
     <ClInclude Include="capture.h" />
     <ClInclude Include="controller.h" />
-    <ClInclude Include="EvoNet.h" />
     <ClInclude Include="graphic.h" />
-    <ClInclude Include="lilNet.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="mouse.h" />
-    <ClInclude Include="Nnet.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Tracker.h" />
     <ClInclude Include="Trainer.h" />
-    <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Solution_finder.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PEB.Screen_Net.Net\PEB.Screen_Net.Net\PEB.Screen_Net.Net.vcxproj">
+      <Project>{2d6baf7d-b544-4957-9ea9-fbe53fb544f2}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

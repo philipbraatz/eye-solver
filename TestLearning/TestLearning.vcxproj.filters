@@ -26,11 +26,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="unittest1.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_Evolution.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

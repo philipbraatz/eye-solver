@@ -17,7 +17,7 @@
 
 #include "EvoNet.h"
 #include "EvoNet.cpp"
-#include "Nnet.h"
+#include <Nnet.h>
 #include "utility.h"
 #include "capture.h"
 #include "Menu.h"
@@ -30,8 +30,6 @@ using namespace cv;
 
 int main()
 {
-	cout << "Start"<< endl;//debug
-
 	//pre-initialization
 	srand(static_cast <unsigned> (time(0)));
 

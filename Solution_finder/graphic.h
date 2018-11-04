@@ -8,7 +8,7 @@
 
 #include <vector>
 
-#include "utility.h"
+#include <utility.h>
 
 using namespace cv;
 using namespace std;
