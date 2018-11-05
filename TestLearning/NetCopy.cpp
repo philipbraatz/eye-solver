@@ -1,4 +1,5 @@
 #pragma once
+#include "stdafx.h"
 #include "../../TestLearning/stdafx.h";
 #include "EvoNet.h"
 

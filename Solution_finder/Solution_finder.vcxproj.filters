@@ -15,9 +15,6 @@
     <Filter Include="Source Files\Menu">
       <UniqueIdentifier>{1dac90d5-9d7b-4bd2-b62f-1d4a2972f919}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\utilities">
-      <UniqueIdentifier>{368f579e-54f1-4dd8-85a8-a6cfe43cdc0b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\AIControls">
       <UniqueIdentifier>{6011a597-0ee5-4556-a3a6-92a387dbd1df}</UniqueIdentifier>
     </Filter>
@@ -67,14 +64,14 @@
     <ClInclude Include="controller.h">
       <Filter>Source Files\AIControls</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Source Files\utilities</Filter>
-    </ClInclude>
     <ClInclude Include="Tracker.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Trainer.h">
       <Filter>Source Files\Training</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
