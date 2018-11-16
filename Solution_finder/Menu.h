@@ -8,9 +8,9 @@
 #include <iostream>
 #include <vector>
 
-#include "graphic.h"
+#include "../PEB.Display.Graph/Graph.h"
 #include "EvoNet.h"
-#include "utility.h"
+#include "../PEB.Utility/Utility.h"
 
 
 enum state

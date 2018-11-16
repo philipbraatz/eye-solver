@@ -8,7 +8,8 @@
 #include "targetver.h"
 
 // Headers for CppUnitTest
-#include "CppUnitTest.h"
+//#include <CppUnitTest.h>
+//#include "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\VS\UnitTest\include\CppUnitTest.h"
 
 //additional headers required
 #include "EvoNet.h"

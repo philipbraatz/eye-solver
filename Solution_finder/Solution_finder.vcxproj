@@ -103,7 +103,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)PEB.Screen_Net.Net\PEB.Screen_Net.Net;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;C:\Users\philb\source\repos\eye-solver\PEB.Utility;$(SolutionDir)PEB.Screen_Net.Net\PEB.Screen_Net.Net;C:\Users\philb\source\repos\eye-solver\PEB.Display.Graph;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
     </ClCompile>
     <Link />
@@ -138,7 +138,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)PEB.Screen_Net.Net\PEB.Screen_Net.Net;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;C:\Users\philb\source\repos\eye-solver\PEB.Utility;$(SolutionDir)PEB.Screen_Net.Net\PEB.Screen_Net.Net;C:\Users\philb\source\repos\eye-solver\PEB.Display.Graph;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <DebugInformationFormat>None</DebugInformationFormat>
@@ -156,7 +156,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="controller.cpp" />
-    <ClCompile Include="graphic.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="mouse.cpp" />
@@ -167,7 +166,6 @@
   <ItemGroup>
     <ClInclude Include="capture.h" />
     <ClInclude Include="controller.h" />
-    <ClInclude Include="graphic.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="resource.h" />
@@ -178,6 +176,9 @@
     <ResourceCompile Include="Solution_finder.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PEB.Display.Graph\PEB.Display.Graph.vcxproj">
+      <Project>{6a89a610-87e1-4ce8-b6d5-32578f285c3f}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\PEB.Screen_Net.Net\PEB.Screen_Net.Net\PEB.Screen_Net.Net.vcxproj">
       <Project>{2d6baf7d-b544-4957-9ea9-fbe53fb544f2}</Project>
     </ProjectReference>

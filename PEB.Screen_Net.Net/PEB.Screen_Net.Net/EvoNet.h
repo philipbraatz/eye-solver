@@ -4,7 +4,7 @@
 
 #include "Nnet.h"
 #include "lilNet.h"
-#include "utility.h"
+#include "../PEB.Utility/Utility.h"
 
 using std::vector;
 
@@ -12,6 +12,8 @@ template<class tnet>
 class EvoNet
 {
 public:
+	int counter;//temp
+
 	EvoNet(
 		int population, double mutateRate,
 		double Ninputs, double Nhiddens, int SizeHidden, double Noutputs,
@@ -61,6 +63,7 @@ public:
 	}
 	double getBestScore() { return best; }
 	double getAveScore() { return average; }
+	double getSuccessRate() { return successRate; }
 
 	int getInputSize() { return pop.front().GetInputSize(); }
 	int getOutputSize() { return pop.front().GetOutputSize(); }
@@ -84,7 +87,7 @@ protected:
 
 	double time_epoch, time_repop;
 
-	problem_type pt = IMAGE;
+	problem_type pt = TEXT;
 
 	vector<tnet> pop;
 
@@ -92,4 +95,6 @@ protected:
 	int bestNet;
 
 	double prevmed, best, average;
+
+	double successRate, prevBest;
 };

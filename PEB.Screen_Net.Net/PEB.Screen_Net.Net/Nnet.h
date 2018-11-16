@@ -13,8 +13,8 @@ using std::vector;
 
 const double e = 2.71828182845904523536;
 
-enum layer_type {
-	Ninputs, Nhiddens, Noutputs, SizeHidden
+enum Layer {
+	INPUTL, HIDDENL, OUTPUTL, HIDDEN_NODESL
 };
 enum problem_type {
 	TEXT,
@@ -55,12 +55,12 @@ public:
 	vector<double> m_goal;
 
 	Nnet();
-	Nnet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, problem_type mt);
+	Nnet(int num_inputs, int num_hiddens, int num_nodesHidden, int num_outputs, problem_type mt);
 	Nnet(std::string filename);
 	//Nnet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, std::vector<double> goal);
 
-	int Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, problem_type mt, bool loaded = false);
-	int GetLayerSize(layer_type l);
+	int Setup(int num_inputs, int num_hiddens, int num_nodesHidden, int num_outputs, problem_type mt, bool loaded = false);
+	int GetLayerSize(Layer l);
 
 	//set input and get output
 	vector<double> Initial_Propigation(vector<double> input);//for inheritience
@@ -108,8 +108,8 @@ protected:
 
 	problem_type pt;
 
-	void Normalize(double &input);
-	void AddBiases(vector<double> cur, vector<double> biases, vector<double> &out);
+	double Normalize(double input);
+	bool AddBiases(vector<double> cur, vector<double> biases, vector<double> &out);
 
 	void MutTable(double &weight);
 };

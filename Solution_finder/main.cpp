@@ -13,17 +13,19 @@
 #include <Windows.h>
 #include <Winuser.h>
 
-#include "graphic.h"
+#include "../PEB.Display.Graph/Graph.h"
 
 #include "EvoNet.h"
 #include "EvoNet.cpp"
 #include <Nnet.h>
-#include "utility.h"
+#include "../PEB.Utility/Utility.h"
 #include "capture.h"
 #include "Menu.h"
 #include "OCR.h"
 #include "Trainer.h"
 #include "Trainer.cpp"
+
+#include "Test_Net.h"
 
 using std::vector;
 using namespace cv;
@@ -60,7 +62,7 @@ int main()
 
 	Graph g;
 
-	netF.type = IMAGE;
+	netF.type = TEXT;
 	//bool graphOn = true;
 
 	pArea = new RECT();
@@ -68,10 +70,10 @@ int main()
 	option = mMenu.StartMenu(pArea, pmainNet,netF,trImage,trText);//start menu
 	vector<double> input, output;
 	//Rect area;
-	area.x = pArea->left*1.25;
+	area.x = (int)pArea->left*1.25;
 	area.y = pArea->top;
-	area.width = (pArea->right - pArea->left)*1.25;
-	area.height = (pArea->bottom - pArea->top)*1.25;
+	area.width = (int)(pArea->right - pArea->left)*1.25;
+	area.height = (int)(pArea->bottom - pArea->top)*1.25;
 
 	cout << "Initialized" << endl;
 
@@ -87,9 +89,9 @@ int main()
 			std::cout << (char)((input[i] - 32) / (126 - 32));
 		}
 	else if (option == NEW_IMAGE || option == CONTINUE_IMAGE)//image training
-		for (size_t i = 0; i < trImage.cols; i++)
-			for (size_t j = 0; j < trImage.rows; j++)		
-				for (size_t k = 0; k < trImage.channels(); k++)				
+		for (int i = 0; i < trImage.cols; i++)
+			for (int j = 0; j < trImage.rows; j++)		
+				for (int k = 0; k < trImage.channels(); k++)				
 					input.push_back(((double)trImage.at<Vec3b>(i,j).val[k]) / 128);
 
 	std::cout << std::endl;
@@ -121,11 +123,11 @@ int main()
 				(Mat)trImage, 
 				(bool)graphOn);
 		
-		if (yesNoPromt("Do you want to prune network?"))
-		{
-			cout << "starting pruning" << endl;
-			cout << "NOT IMPLIMENTED...skipping" << endl;
-		}
+		//if (yesNoPromt("Do you want to prune network?"))
+		//{
+		//	cout << "starting pruning" << endl;
+		//	cout << "NOT IMPLIMENTED...skipping" << endl;
+		//}
 		cout << "Done Generating Network" << endl;
 		mMenu.FinishTrainMenu(pArea, pmainNet,netF,trImage,trText);
 	}

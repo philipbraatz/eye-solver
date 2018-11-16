@@ -20,14 +20,14 @@
     <ClInclude Include="Nnet.h">
       <Filter>Source Files\Evolution</Filter>
     </ClInclude>
-    <ClInclude Include="Utility.h">
-      <Filter>Source Files\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="EvoNet.h">
       <Filter>Source Files\Evolution</Filter>
     </ClInclude>
     <ClInclude Include="LilNet.h">
       <Filter>Source Files\Evolution</Filter>
+    </ClInclude>
+    <ClInclude Include="Test_Net.h">
+      <Filter>Source Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

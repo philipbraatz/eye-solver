@@ -1,9 +1,9 @@
 #pragma once
-#include "graphic.h"
+#include "Graph.h"
 
 //shows image under name at x,y. resized to fit the image
 //call once to make the window
-int SetWindow(char name[] ,Mat Img, int x, int y)
+int SetWindow(char name[], Mat Img, int x, int y)
 {
 	if (Img.empty())// Check for invalid input
 		return -1;
@@ -51,15 +51,12 @@ int Graph::AddLine(vector<fPoint> alldata) {
 vector<vector<fPoint>> Graph::GetGraph()
 {
 	//CompactData();//uncommented
-	ScaleData();
 
 	outData.clear();
+
 	for (auto i = 0; i < lines.size(); i++)
 	{
-		vector<fPoint> line;
-		for (auto j = 0; j < lines[i].scaleData.size(); j++)
-			line.push_back(lines[i].scaleData[j]);
-		outData.push_back(line);
+		outData.push_back(ScaleLine(i));
 	}
 	return outData;
 }
@@ -71,7 +68,7 @@ void Graph::DrawGraph()
 
 	rectangle(
 		image,
-		Rect( space, space, (xmax-xmin)*xscale - space, (ymax-ymin)*yscale - space),
+		Rect(space, space, (xmax - xmin)*xscale - space, (ymax - ymin)*yscale - space),
 		Scalar(255, 0, 0)
 	);
 
@@ -96,7 +93,7 @@ void Graph::DrawGraph()
 	}
 	catch (const std::exception&)
 	{
-		cout << "ERROR: Image Invalid" << endl;
+		cout << "ERROR: Graph could not be displayed" << endl;
 	}
 
 	waitKey(1);
@@ -112,8 +109,10 @@ void Graph::CompactData()//Broken
 	//return nlines;
 }
 
-void Graph::ScaleData()
+vector<fPoint> Graph::ScaleLine(int line)
 {
+	vector<fPoint> scaledData;
+
 	//get data lengths
 
 	xmax = -RAND_MAX;
@@ -122,7 +121,7 @@ void Graph::ScaleData()
 	ymin = RAND_MAX;
 	for (auto i = 0; i < lines.size(); i++)
 	{
-		for (auto j = 0; j < lines[i].scaleData.size(); j++)
+		for (auto j = 0; j < lines[i].rawData.size(); j++)
 		{
 			if (xmax < lines[i].rawData[j].x)
 				xmax = lines[i].rawData[j].x;
@@ -140,20 +139,16 @@ void Graph::ScaleData()
 	double xdiff = xmax - xmin;
 	double ydiff = ymax - ymin;
 	xscale = (m_width - space * 2) / xdiff / 1.5;
-	yscale = (m_height - space * 2) / ydiff*1.5;
-	//xscale = m_width / xmax / 1.5;
-	//yscale= m_height / ymax * 1.5;
+	yscale = (m_height - space * 2) / ydiff * 1.5;
 
 	//scale data
-	for (auto i = 0; i < lines.size(); i++)
+	scaledData.resize(lines[line].rawData.size());
+	for (auto j = 0; j < lines[line].rawData.size(); j++)
 	{
-		lines[i].scaleData.resize(lines[i].rawData.size());
-		for (auto j = 0; j < lines[i].rawData.size(); j++)
-		{
-			fPoint scaled;
-			scaled.x = (lines[i].rawData[j].x - xmin)*xscale + space;
-			scaled.y = (lines[i].rawData[j].y - xmin)*yscale + space;
-			lines[i].scaleData[j] = scaled;
-		}
+		fPoint scaled;
+		scaled.x = (lines[line].rawData[j].x - xmin)*xscale + space;
+		scaled.y = (lines[line].rawData[j].y - xmin)*yscale + space;
+		scaledData[j] = scaled;
 	}
+	return scaledData;
 }

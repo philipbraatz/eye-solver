@@ -47,7 +47,7 @@ public:
 	}
 
 	//call to get new image
-	Mat Capture(double WidthScale=1, double HeightScale=1) {
+	Mat Capture(int WidthScale=1, int HeightScale=1) {
 		// Now update the pixels using BitBlt
 		BitBlt(hdcMem, 0, 0, size.width, size.height, hdcSys, size.x, size.y, SRCCOPY);
 		StretchBlt(hdcMem, 0, 0, WidthScale, HeightScale, hdcMem, 0, 0, size.width, size.height, SRCCOPY); //change SRCCOPY to NOTSRCCOPY for wacky colors !

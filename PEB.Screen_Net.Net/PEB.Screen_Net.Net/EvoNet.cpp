@@ -1,12 +1,11 @@
 #pragma once
-#include "../../TestLearning/stdafx.h";
 #include "EvoNet.h"
 
 template<class tnet>
 inline EvoNet<tnet>::EvoNet(
 	int population, double mutateRate,
 	double Ninputs, double Nhiddens, int SizeHidden, double Noutputs,
-	problem_type pt
+	problem_type problem
 )
 {
 	genCount = 0;
@@ -14,7 +13,7 @@ inline EvoNet<tnet>::EvoNet(
 	rate = mutateRate;
 	for (auto i = 0; i < population; i++)
 	{
-		tnet temp(Ninputs, Nhiddens, SizeHidden, Noutputs, pt);
+		tnet temp(Ninputs, Nhiddens, SizeHidden, Noutputs, problem);
 		pop.push_back(temp);
 	}
 }
@@ -36,12 +35,12 @@ inline void EvoNet<tnet>::DoEpoch(vector<double> input, bool testing, bool max, 
 
 	if (!testing)
 	{
-		genCount++; //= pop.front().getAge();
+		genCount++;
 	}
 
-	vector<std::thread*> t;//threads
-	int maxThreads = 8;
-	t.resize(size);// number of threads
+	//vector<std::thread*> t;//threads
+	//int maxThreads = 8;
+	//t.resize(size);// number of threads
 
 	bestout.resize(genCount);
 
@@ -51,19 +50,19 @@ inline void EvoNet<tnet>::DoEpoch(vector<double> input, bool testing, bool max, 
 	{
 		if (false)
 		{//TODO better thread implentation
-			if (maxThreads >= t.size())//limit threads
-			{
-				for (auto i = 0; i < t.size(); i++)//wait for all threads to finish
-				{
-					t.back()->join();
-					t.pop_back();//remove thread
-				}
-			}
-			//add new threads
-			if (pt == TEXT)
-				t.push_back(new std::thread([=] {SingleEpocTxt(output, i, input, testing, max, prune); }));
-			else if (pt == IMAGE)
-				t.push_back(new std::thread([=] {SingleEpocImg(output, i, input, testing, max, prune); }));
+			//if (maxThreads >= t.size())//limit threads
+			//{
+			//	for (auto i = 0; i < t.size(); i++)//wait for all threads to finish
+			//	{
+			//		t.back()->join();
+			//		t.pop_back();//remove thread
+			//	}
+			//}
+			////add new threads
+			//if (pt == TEXT)
+			//	t.push_back(new std::thread([=] {SingleEpocTxt(output, i, input, testing, max, prune); }));
+			//else if (pt == IMAGE)
+			//	t.push_back(new std::thread([=] {SingleEpocImg(output, i, input, testing, max, prune); }));
 		}
 		else//works better IDK why
 		{
@@ -141,21 +140,12 @@ void EvoNet<tnet>::SingleEpocTxt(vector<double> output, int i, vector<double> in
 		double score = 0;
 		for (auto j = 0; j < input.size(); j++)
 		{
-			if ((int)(output[j] * (126 - 32) + 32) == (int)(input[j] * (126 - 32) + 32))
-			{
-				score++;
-			}
-			else
-			{
-				score -= pow(abs(output[j] - input[j]), 2);
-			}
+
+			//if ((int)(output[j] * (126 - 32) + 32) == (int)(input[j] * (126 - 32) + 32))
+
+			score -= pow(abs(output[j] - input[j]), 2);//-Error Squared
 		}
 
-		//int score=0;
-		//for (auto j = 0; j < truth.size(); j++)
-		//{
-		//	score += pow(abs(output[j] - truth[j])*truth.size(),2);
-		//}
 		pop[i].setScore(score);
 
 		time_epoch += pop[i].GetSpeed();
@@ -225,17 +215,26 @@ inline void EvoNet<tnet>::updateStats(bool max)
 	}
 	if (best == abs(RAND_MAX))
 	{
-		best = 0;
+		//best = 0;
 	}
 	average /= size;
 
 	if (max)
 	{
-		if (average < prevmed)
-			std::cout << "No Improvement";
-		if (average > prevmed)
-			std::cout << "No Improvement";
+		if (average <= prevmed)
+			;// std::cout << "No Improvement";
+
+		if (prevBest < best)
+			successRate++;
 	}
+	else
+	{
+		if (average >= prevmed)
+			;//std::cout << "No Improvement";
+		if (prevBest > best)
+			successRate++;
+	}
+	prevBest = best;
 }
 
 //repopulate optimized to save only one chosen parent
@@ -290,7 +289,7 @@ void EvoNet<tnet>::clearNetworks()
 	rate = EvoNet::mutateRate;
 	for (auto i = 0; i < EvoNet::population; i++)
 	{
-		tnet temp(Ninputs, Nhiddens, SizeHidden, Noutputs, pt);
+		tnet temp(INPUTL, HIDDENL, HIDDEN_NODESL, OUTPUTL, pt);
 		pop.push_back(temp);
 	}
 }
@@ -311,11 +310,11 @@ double EvoNet<tnet>::getGeneticDiversity()
 	{
 		slice.push_back(
 			(layer)pop[i].getLayer(
-				layer_type::Ninputs).front()
+				Layer::INPUTL).front()
 		);//input
 		slice.push_back(
 			(layer)pop[i].getLayer(
-				layer_type::Noutputs).front()
+				Layer::OUTPUTL).front()
 		);//output
 
 		for (int j = 0; j < slice.front().size; j++)

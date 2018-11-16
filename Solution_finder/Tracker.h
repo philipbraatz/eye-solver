@@ -2,7 +2,7 @@
 #include <vector>
 #include <iomanip>
 
-#include "utility.h"
+#include "../PEB.Utility/Utility.h"
 using namespace std;
 
 class Tracker
@@ -21,10 +21,11 @@ public:
 	void display()
 	{
 		cout << std::setprecision(0);
-		getSpeed();
-		getPrevGenScore();
-		getTopScore();
-		getDiversity();
+		printSpeed();
+		printPrevGenScore();
+		printSuccessRate();
+		printTopScore();
+		printDiversity();
 		if (output != "")
 			cout << "\"" << output << "\"";
 		if (testString != output)
@@ -37,25 +38,30 @@ public:
 
 		testString = output;
 	}
-	void getDiversity()
+	void printDiversity()
 	{
 		//cout << "diff: " << to_string(dnaDiff) << "\t";
 	}
-	void update(double gps_, int Gen, double best, string out_ = "")
+	void update(int gps_, int Gen, double best,double successRate, string out_ = "")
 	{
 		output = out_;
 		gps = gps_;
 		score.x = Gen;
 		score.y = best;
+		success = successRate;
 		if (topScore.y < score.y)
 			topScore = score;
 
 	}
-	void getSpeed()
+	void printSuccessRate()
+	{
+		cout << "success%: " <<success << "\t";
+	}
+	void printSpeed()
 	{
 		cout << "gens/sec: " << to_string(gps) << "\t";
 	}
-	void getPrevGenScore()
+	void printPrevGenScore()
 	{
 		char p;
 		if (score.y > prevScore.y)
@@ -64,11 +70,11 @@ public:
 			p = '-';
 		cout << "Gen: " << to_string(score.x) << "\tScore: " << p << " " << to_string(score.y) << "\t";
 	}
-	void getTopScore()
+	void printTopScore()
 	{
 		cout << "Top Gen: " << topScore.x << "\tTop Score: " << topScore.y << "\t";
 	}
-	int getIncrease(int number)
+	int printIncrease(int number)
 	{
 		return increases[number];
 	}
@@ -77,6 +83,7 @@ private:
 	//	//10 last increases->gen#
 	int gps;//generations per second
 	double dnaDiff;
+	double success;
 	ifPoint score;//score-> gen# + score
 	ifPoint prevScore;//prevscore->previous new gen# + score
 	string testString;

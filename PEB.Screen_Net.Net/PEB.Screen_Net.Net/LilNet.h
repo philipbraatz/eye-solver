@@ -11,7 +11,7 @@ class lilNet :
 {
 public:
 	lilNet() { Setup(0, 0, 0, 0, problem_type::TEXT); }
-	lilNet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, problem_type pt) { Setup(Ninputs, Nhiddens, SizeHidden, Noutputs, pt); }
+	lilNet(int Ninputs, int Nhiddens, int SizeHidden, int Noutputs, problem_type pt) { Setup(Ninputs, Nhiddens, SizeHidden, Noutputs, pt); }
 	lilNet(std::string filename) { loadNet(filename); }
 
 	//call before pruning
@@ -38,7 +38,8 @@ public:
 		{
 			biases[b] = input.neurons[b].bias;
 		}
-		AddBiases(inputs, biases, out);
+		if (!AddBiases(inputs, biases, out))
+			std::cout << "Invalid Biases sizes";
 		for (auto i = 0; i < input.size; i++)
 		{
 			Normalize(out[i]);
@@ -56,7 +57,7 @@ public:
 					if ((i == prunes[p].x && j == prunes[p].y))
 					{
 						pruned = true;
-						p = prunes.size();
+						p = (int)prunes.size();
 					}
 				if (!pruned)
 					adder += input.neurons[j].value * input.neurons[j].weights[i];//node*weight
@@ -78,7 +79,7 @@ public:
 						if ((i == prunes[p].x && j == prunes[p].y))
 						{
 							pruned = true;
-							p = prunes.size();
+							p = (int)prunes.size();
 						}
 					if (!pruned)
 						adder += hidden[i - 1].neurons[j].value * hidden[i - 1].neurons[j].weights[k];
@@ -99,10 +100,10 @@ public:
 			{
 				bool pruned = false;
 				for (auto p = 0; p < prunes.size(); p++)
-					if ((SizeHidden - 1 == prunes[p].x && j == prunes[p].y))
+					if ((HIDDEN_NODESL - 1 == prunes[p].x && j == prunes[p].y))
 					{
 						pruned = true;
-						p = prunes.size();
+						p = (int)prunes.size();
 					}
 				if (!pruned)
 					adder += hidden.back().neurons[j].value * output.neurons[i].weights[j];//node*weight
@@ -123,8 +124,8 @@ public:
 private:
 	void getSmalls()
 	{
-		for (int i = 0; i < Nhiddens; i++)
-			for (int j = 0; j < SizeHidden; j++)
+		for (int i = 0; i < hidden.size(); i++)
+			for (int j = 0; j < HIDDEN_NODESL; j++)
 				if (hidden[i].neurons[j].value < trate && hidden[i].neurons[j].value > -trate)//if uselessly small
 					prunes.push_back({ i,j });
 	}

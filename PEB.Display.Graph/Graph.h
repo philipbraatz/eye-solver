@@ -8,7 +8,7 @@
 
 #include <vector>
 
-#include <utility.h>
+#include "../PEB.Utility/Utility.h"
 
 using namespace cv;
 using namespace std;
@@ -25,8 +25,7 @@ struct Slider
 struct linedata
 {
 	vector<fPoint> rawData;
-	vector<fPoint> sortData;
-	vector<fPoint> scaleData;
+	//vector<fPoint> scaleData;
 };
 
 struct Screen
@@ -39,8 +38,10 @@ struct Screen
 	int y;
 };
 
-//shows image under name at x,y. resized to fit the image
-//call once to make the window
+///<summary>
+///shows image under name at x,y. resized to fit the image
+///call once to make the window
+///<summary>
 int SetWindow(char name[], Mat Img, int x, int y);
 
 class Graph
@@ -50,8 +51,8 @@ public:
 	Graph(char name[], int width, int height);
 
 	void Setup(char name[], int width, int height);
-	
-	void SetLocation(int x, int y){ moveWindow(m_name, x, y); }
+
+	void SetLocation(int x, int y) { moveWindow(m_name, x, y); }
 
 	int AddLine(vector<fPoint> alldata);
 	void AddData(fPoint p, int id)
@@ -64,7 +65,7 @@ public:
 	void DrawGraph();
 
 private:
-	double xmin, xmax,ymin,ymax,xscale,yscale;
+	double xmin, xmax, ymin, ymax, xscale, yscale;
 	int m_width, m_height;
 
 	const int space = 5;
@@ -100,7 +101,7 @@ private:
 	//	}
 	//}
 
-	void ScaleData();
+	vector<fPoint> ScaleLine(int line);
 
 	void CompactData();
 };

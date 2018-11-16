@@ -8,12 +8,12 @@
 #include <iostream>
 #include <vector>
 
-#include "utility.h"
+#include "../PEB.Utility/Utility.h"
 
 using namespace cv;
 using std::string;
 
-const string ORDER = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+-=[]{}\|";
+const string ORDER = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
 class OCR
 {

@@ -13,12 +13,12 @@
 #include <Windows.h>
 #include <Winuser.h>
 
-#include "graphic.h"
+#include "../PEB.Display.Graph/Graph.h"
 
 #include "EvoNet.h"
 #include "EvoNet.cpp"
 #include <Nnet.h>
-#include "utility.h"
+#include "../PEB.Utility/Utility.h"
 #include "capture.h"
 //#include "Menu.h"
 #include "Tracker.h"
@@ -44,9 +44,9 @@ protected:
 	vector<double> output;
 
 
-	int count = NULL;
+	int counter = NULL;
 	int stale_Max = 500;
-	double STALE_P = .35;//changed for testing , use .2
+	double STALE_P = .2;//changed for testing , use .2
 	int staleCount = NULL;
 	double staleScore = NULL;
 
@@ -104,7 +104,7 @@ public:
 			
 			
 			if (area.height == 0)//error handle
-				cout << "ERROR area too small";
+				cout << "ERROR area not set";
 
 			//setup OCR screen
 			OCRScr.height = area.height;
@@ -180,19 +180,21 @@ public:
 			{
 				List[i].DoEpoch(input, false, true,prune);//set goal max =
 				List[i].repopulate(0.5);
-				List[i].updateStats(false);
+				List[i].updateStats(true);
 
-				count = List[i].getGenCount();
+				counter = List[i].getGenCount();
 				//Data
 
 				fPoint p;
-				p.x = count;
+				p.x = counter;
 				p.y = List[i].getBestScore();// /List[i].getTime();
 				g.AddData(p, i);
 
-				//std::cout << "\tScore: " << p.y << " | ";// old
+				double successs_Rate = List[i].
 
-				count = List[i].getGenCount();
+					//std::cout << "\tScore: " << p.y << " | ";// old
+
+				counter = 0;//List[i].getGenCount();
 				//cout << "Gen: " << count << " ";//old
 				track1.display();
 
@@ -204,7 +206,7 @@ public:
 					{
 						if (done && (int)txtAnswer[j] != sbest[j])
 							done = false;
-						int numDebug = abs(sbest[j] * (send - sstart) + sstart);
+						int numDebug = (int)abs(sbest[j] * (send - sstart) + sstart);
 						out += (char)(abs(sbest[j] * (send - sstart) + sstart));
 					}
 				if (imgAnswer.data)
@@ -221,7 +223,7 @@ public:
 								//({0,0}[0,0][0,1][0,2]),({1,0}[0,4][0,5][0,6]),({2,0}[0,7][0,8][0,9])			=C(R*cl+r)+c
 								//({0,1}[0,10][0,11][0,12]),({1,1}[0,13][0,14][0,15]),({2,1}[0,16][0,17][0,18]) [rows]*[channels]*col+row*[channels]+channel
 								//({0,2}[0,19][0,20][0,21]),({1,2}[0,22][0,23][0,24]),({2,2}[0,25][0,26][0,27]) = R*C*cl+r*C+c
-								outputImg.at<Vec3b>(Point(i, j))[k] = sbest[imgAnswer.channels()*(imgAnswer.rows*i + j) + k];
+								outputImg.at<Vec3b>(Point(i, j))[k] = (int)sbest[imgAnswer.channels()*(imgAnswer.rows*i + j) + k];
 							}
 						}
 					}
@@ -250,7 +252,7 @@ public:
 				//if (answer.compare(out))//if anwer and out are the same string
 				//	cout << "perfected Network! training done.";
 				//	done = true;
-				track1.update(frames,count,p.y,out);
+				track1.update(frames,counter,p.y,1,out);
 
 				if (List[i].getBestScore() == staleScore)
 					staleCount++;
@@ -289,7 +291,7 @@ public:
 					
 				}
 				else
-					stale_Max = List.front().getGenCount() * STALE_P;
+					stale_Max = (int)List.front().getGenCount() * STALE_P;
 			}
 
 

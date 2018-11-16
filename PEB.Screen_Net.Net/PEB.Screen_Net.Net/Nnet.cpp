@@ -1,6 +1,6 @@
 #pragma once
 #include "Nnet.h"
-#include "utility.h"
+#include "../PEB.Utility/Utility.h"
 
 #include <vector>
 #include <algorithm>
@@ -8,14 +8,14 @@ using std::vector;
 //initialize
 
 Nnet::Nnet() { Setup(0, 0, 0, 0, TEXT); }
-Nnet::Nnet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, problem_type mt) { Setup(Ninputs, Nhiddens, SizeHidden, Noutputs, mt); }
-Nnet::Nnet(std::string filename) {
-	loadNet(filename);
-}
+Nnet::Nnet(int num_inputs, int num_hiddens, int num_nodesHidden, int num_outputs, problem_type mt)
+	{ Setup(num_inputs, num_hiddens, num_nodesHidden, num_outputs, mt); }
+Nnet::Nnet(std::string filename) 
+	{loadNet(filename);}
 
-int Nnet::Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, problem_type mt, bool loaded)
+int Nnet::Setup(int num_inputs, int num_hiddens, int num_nodesHidden, int num_outputs, problem_type mt, bool loaded)
 {
-	if (!Ninputs || !Nhiddens || !SizeHidden || !Noutputs)//if an input is missing
+	if (!num_inputs || !num_hiddens || !num_nodesHidden || !num_outputs)//if an input is missing
 	{
 		return -1;
 	}
@@ -23,9 +23,9 @@ int Nnet::Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs
 	pt = mt;
 
 	//set sizes
-	input.size = Ninputs;
-	output.size = Noutputs;
-	m_Nhidden = SizeHidden;
+	input.size = num_inputs;
+	output.size = num_outputs;
+	m_Nhidden = num_nodesHidden;
 
 	//resize layers
 	input.neurons.resize(input.size);
@@ -89,20 +89,20 @@ int Nnet::Setup(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs
 	return 1;
 }
 
-int Nnet::GetLayerSize(layer_type l)
+int Nnet::GetLayerSize(Layer l)
 {
 	switch (l)
 	{
-	case Ninputs:
+	case Layer::INPUTL:
 		return input.size;
 		break;
-	case Nhiddens:
+	case Layer::HIDDENL:
 		return m_Nhidden;
 		break;
-	case Noutputs:
+	case Layer::OUTPUTL:
 		return output.size;
 		break;
-	case SizeHidden:
+	case Layer::HIDDEN_NODESL:
 		return hidden.front().size;
 		break;
 	default:
@@ -112,143 +112,15 @@ int Nnet::GetLayerSize(layer_type l)
 }
 
 vector<double> Nnet::Initial_Propigation(vector<double> inputs)
-{
-	//TIMER first
-	startProp = clock(); //Start timer
-
-	std::vector<double> biases, out;
-
-	/* ORDER
-		prev node * weight
-		bias
-		normalize
-		set node
-	*/
-
-	//Input layer
-	biases.resize(input.size);
-	bool test = input.size == input.neurons.size();
-	for (unsigned int b = 0; b < input.size; b++)
-	{
-		biases[b] = input.neurons[b].bias;
-	}
-	AddBiases(inputs, biases, out);
-	for (unsigned int i = 0; i < input.size; i++)
-	{
-		Normalize(out[i]);
-		input.neurons[i].value = out[i];
-	}
-
-	//First Hidden Layer
-	for (unsigned int i = 0; i < hidden.front().size; i++)
-	{
-		double adder = 0;
-		for (unsigned int j = 0; j < input.size; j++)
-			adder += input.neurons[j].value * input.neurons[j].weights[i];//node*weight
-		adder += hidden.front().neurons[i].bias;
-		Normalize(adder);
-		hidden.front().neurons[i].value = adder;
-	}
-
-	//Hidden Layers
-	for (unsigned int i = 1; i < m_Nhidden; i++) {
-		for (unsigned int j = 0; j < hidden[i].size; j++) {
-			double adder = 0;
-			for (unsigned int k = 0; k < hidden[i].size; k++)
-				adder += hidden[i - 1].neurons[j].value * hidden[i - 1].neurons[j].weights[k];
-			adder += hidden[i].neurons[j].bias;
-			Normalize(adder);
-			hidden[i].neurons[j].value = adder;
-		}
-	}
-
-	//Output Layer
-	out.resize(output.size);
-	for (unsigned int i = 0; i < output.size; i++)
-	{
-		double adder = 0;
-		for (unsigned int j = 0; j < m_Nhidden; j++)
-			adder += hidden.back().neurons[j].value * output.neurons[i].weights[j];//node*weight
-		adder += output.neurons[i].bias;
-		Normalize(adder);//normalize
-		output.neurons[i].value = adder;
-		out[i] = adder;
-	}
-
-	PassedProp = (clock() - startProp);// / CLOCKS_PER_SEC;
-	return out;
-}
+	{return Propigate(inputs);}
 vector<double> Nnet::Final_Propigation(vector<double> inputs)
-{
-	//TIMER first
-	startProp = clock(); //Start timer
-
-	std::vector<double> biases, out;
-
-	/* ORDER
-		prev node * weight
-		bias
-		normalize
-		set node
-	*/
-
-	//Input layer
-	biases.resize(input.size);
-	bool test = input.size == input.neurons.size();
-	for (unsigned int b = 0; b < input.size; b++)
-	{
-		biases[b] = input.neurons[b].bias;
-	}
-	AddBiases(inputs, biases, out);
-	for (unsigned int i = 0; i < input.size; i++)
-	{
-		Normalize(out[i]);
-		input.neurons[i].value = out[i];
-	}
-
-	//First Hidden Layer
-	for (unsigned int i = 0; i < hidden.front().size; i++)
-	{
-		double adder = 0;
-		for (unsigned int j = 0; j < input.size; j++)
-			adder += input.neurons[j].value * input.neurons[j].weights[i];//node*weight
-		adder += hidden.front().neurons[i].bias;
-		Normalize(adder);
-		hidden.front().neurons[i].value = adder;
-	}
-
-	//Hidden Layers
-	for (unsigned int i = 1; i < m_Nhidden; i++) {
-		for (unsigned int j = 0; j < hidden[i].size; j++) {
-			double adder = 0;
-			for (unsigned int k = 0; k < hidden[i].size; k++)
-				adder += hidden[i - 1].neurons[j].value * hidden[i - 1].neurons[j].weights[k];
-			adder += hidden[i].neurons[j].bias;
-			Normalize(adder);
-			hidden[i].neurons[j].value = adder;
-		}
-	}
-
-	//Output Layer
-	out.resize(output.size);
-	for (unsigned int i = 0; i < output.size; i++)
-	{
-		double adder = 0;
-		for (unsigned int j = 0; j < m_Nhidden; j++)
-			adder += hidden.back().neurons[j].value * output.neurons[i].weights[j];//node*weight
-		adder += output.neurons[i].bias;
-		Normalize(adder);//normalize
-		output.neurons[i].value = adder;
-		out[i] = adder;
-	}
-
-	PassedProp = (clock() - startProp);// / CLOCKS_PER_SEC;
-	return out;
-}
+	{return Propigate(inputs);}
 
 //set input and get output
 vector<double> Nnet::Propigate(vector<double> inputs)
 {
+	double adder = 0;//value of node
+
 	//TIMER first
 	startProp = clock(); //Start timer
 
@@ -261,9 +133,15 @@ vector<double> Nnet::Propigate(vector<double> inputs)
 		set node
 	*/
 
+	//errror handling
+	if (input.size != inputs.size())
+	{
+		std::cout << "Invalid input size";
+		return vector<double>{};
+	}
+
 	//Input layer
 	biases.resize(input.size);
-	bool test = input.size == input.neurons.size();
 	for (unsigned int b = 0; b < input.size; b++)
 	{
 		biases[b] = input.neurons[b].bias;
@@ -271,30 +149,30 @@ vector<double> Nnet::Propigate(vector<double> inputs)
 	AddBiases(inputs, biases, out);
 	for (unsigned int i = 0; i < input.size; i++)
 	{
-		Normalize(out[i]);
-		input.neurons[i].value = out[i];
+		
+		input.neurons[i].value = Normalize(out[i]);
 	}
 
 	//First Hidden Layer
 	for (unsigned int i = 0; i < hidden.front().size; i++)
 	{
-		double adder = 0;
+		adder = 0;
 		for (unsigned int j = 0; j < input.size; j++)
 			adder += input.neurons[j].value * input.neurons[j].weights[i];//node*weight
 		adder += hidden.front().neurons[i].bias;
-		Normalize(adder);
-		hidden.front().neurons[i].value = adder;
+		
+		hidden.front().neurons[i].value = Normalize(adder);;
 	}
 
 	//Hidden Layers
 	for (unsigned int i = 1; i < m_Nhidden; i++) {
 		for (unsigned int j = 0; j < hidden[i].size; j++) {
-			double adder = 0;
+			adder = 0;
 			for (unsigned int k = 0; k < hidden[i].size; k++)
 				adder += hidden[i - 1].neurons[j].value * hidden[i - 1].neurons[j].weights[k];
 			adder += hidden[i].neurons[j].bias;
-			Normalize(adder);
-			hidden[i].neurons[j].value = adder;
+			
+			hidden[i].neurons[j].value = Normalize(adder);
 		}
 	}
 
@@ -302,12 +180,12 @@ vector<double> Nnet::Propigate(vector<double> inputs)
 	out.resize(output.size);
 	for (unsigned int i = 0; i < output.size; i++)
 	{
-		double adder = 0;
+		adder = 0;
 		for (unsigned int j = 0; j < m_Nhidden; j++)
 			adder += hidden.back().neurons[j].value * output.neurons[i].weights[j];//node*weight
 		adder += output.neurons[i].bias;
-		Normalize(adder);//normalize
-		output.neurons[i].value = adder;
+		
+		output.neurons[i].value = Normalize(adder);//normalize
 		out[i] = adder;
 	}
 
@@ -315,19 +193,23 @@ vector<double> Nnet::Propigate(vector<double> inputs)
 	return out;
 }
 
-void Nnet::Normalize(double &input) {
-	input = 1 / (1 + pow(e, -input));
+double Nnet::Normalize(double input) {
+	return input = 1 / (1 + pow(e, -input));
 }
 
-void Nnet::AddBiases(vector<double> cur, vector<double> biases, vector<double> &out)
+bool Nnet::AddBiases(vector<double> cur, vector<double> biases, vector<double> &out)
 {
 	if (cur.size() == biases.size())
 	{
 		for (unsigned int i = 0; i < cur.size(); i++)
 			out.push_back(cur[i] + biases[i]);
+		return true;
 	}
 	else
+	{
+		return false;
 		std::cout << "ERROR: Invalid vector size";
+	}
 }
 
 inline void Nnet::MutTable(double & weight)
@@ -475,7 +357,7 @@ Nnet Nnet::loadNet(std::string filename)
 {
 	unsigned int sizeInput;
 	unsigned int sizeOutput;
-	unsigned int sizeHidden;
+	unsigned int num_nodesHidden;
 	unsigned int m_Nhidden;
 	unsigned int lversion;
 
@@ -499,13 +381,13 @@ Nnet Nnet::loadNet(std::string filename)
 		in.read((char *)&pt, sizeof(problem_type));	//problem type
 		in.read((char *)&sizeInput, sizeof(unsigned int));	//input layer size
 		in.read((char *)&sizeOutput, sizeof(unsigned int));	//output layer size
-		in.read((char *)&sizeHidden, sizeof(unsigned int));	//hidden layers size
+		in.read((char *)&num_nodesHidden, sizeof(unsigned int));	//hidden layers size
 		in.read((char *)&m_Nhidden, sizeof(unsigned int));	//number of hidden layers
 		std::cout << "Done" << std::endl;
 
 		//Resize Nnet
 		Nnet net;
-		net.Setup(sizeInput, m_Nhidden, sizeHidden, sizeOutput, pt, true);
+		net.Setup(sizeInput, m_Nhidden, num_nodesHidden, sizeOutput, pt, true);
 
 		//Load Biases
 		std::cout << "Reading  biases: " << std::fixed;//biases
