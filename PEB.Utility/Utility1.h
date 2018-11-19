@@ -23,15 +23,15 @@ struct fPoint
 	double x, y;
 };
 
-static double RandNum() { return static_cast <double> (rand()) / static_cast <double> (RAND_MAX); }
+//static double RandNum() { return static_cast <double> (rand()) / static_cast <double> (RAND_MAX); }
 
-static double GetTotalDif(std::vector<double> input, std::vector<double> output)
-{
-	double total = 0;
-	for (auto i = 0; i < input.size(); i++)
-		total += abs(input[i] - output[i]);
-	return total;
-}
+//static double GetTotalDif(std::vector<double> input, std::vector<double> output)
+//{
+//	double total = 0;
+//	for (auto i = 0; i < input.size(); i++)
+//		total += abs(input[i] - output[i]);
+//	return total;
+//}
 
 //Yes true
 //No false

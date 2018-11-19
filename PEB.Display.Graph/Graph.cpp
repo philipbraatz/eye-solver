@@ -18,11 +18,13 @@ int SetWindow(char name[], Mat Img, int x, int y)
 	}
 }
 
+//template<class Point2f>
 Graph::Graph(char name[], int width, int height)
 {
 	Setup(name, width, height);
 }
 
+//template<class Point2f>
 void Graph::Setup(char name[], int width, int height)
 {
 	Screen n;
@@ -36,19 +38,66 @@ void Graph::Setup(char name[], int width, int height)
 	}
 	else
 	{
-		cout << "ERROR setup invalid";
+		throw new exception("ERROR: setup invalid");
 	}
 }
 
-int Graph::AddLine(vector<fPoint> alldata) {
+//template<class Point2f>
+int Graph::AddLine(Scalar color)
+{
 	linedata newline;
-	newline.rawData = alldata;
+	newline.color = color;
 	lines.push_back(newline);
-	colors.push_back(Scalar(RandNum() * 255, RandNum() * 255, RandNum() * 255));
 	return lines.size();//return lines id
 }
 
-vector<vector<fPoint>> Graph::GetGraph()
+//template<class Point2f>
+int Graph::AddLine(Point2f Point, Scalar color)
+{
+	linedata newline;
+	newline.color = color;
+	newline.rawData.push_back(Point);
+	lines.push_back(newline);
+	return lines.size();//return lines id
+}
+
+//template<class Point2f>
+int Graph::AddLine(Point2f a, Point2f b, Scalar color)
+{
+	linedata newline;
+	newline.color= color;
+	newline.rawData.push_back(a);
+	newline.rawData.push_back(b);
+	lines.push_back(newline);
+	return lines.size();//return lines id
+}
+
+//template<class Point2f>
+int Graph::AddLine(vector<Point2f> alldata, Scalar color) {
+	linedata newline;
+	newline.color = color;
+	newline.rawData = alldata;
+	lines.push_back(newline);
+	return lines.size();//return lines id
+}
+
+//template<class Point2f>
+void Graph::DeleteLine(int lineID)
+{
+	lines.erase(lines.begin()+lineID-1);
+}
+
+//template<class Point2f>
+void Graph::DeletePoint(int lineID, bool fromLast, int count)
+{
+	if(fromLast)
+		for (int i = 0; i < count; i++) lines[lineID].rawData.pop_back();
+	else
+		lines[lineID].rawData.erase(lines[lineID].rawData.begin(), lines[lineID].rawData.begin()+count);
+}
+
+//template<class Point2f>
+vector<vector<Point2f>> Graph::GetGraph()
 {
 	//CompactData();//uncommented
 
@@ -61,6 +110,7 @@ vector<vector<fPoint>> Graph::GetGraph()
 	return outData;
 }
 
+//template<class Point2f>
 void Graph::DrawGraph()
 {
 	GetGraph();
@@ -80,7 +130,7 @@ void Graph::DrawGraph()
 				image,
 				{ (int)outData[i][j - 1].x,(int)outData[i][j - 1].y },
 				{ (int)outData[i][j].x,(int)outData[i][j].y },
-				colors[i],
+				lines[i].color,
 				4,
 				8
 			);
@@ -93,12 +143,13 @@ void Graph::DrawGraph()
 	}
 	catch (const std::exception&)
 	{
-		cout << "ERROR: Graph could not be displayed" << endl;
+		throw new exception("ERROR: Graph could not be displayed");
 	}
 
 	waitKey(1);
 }
 
+//template<class Point2f>
 void Graph::CompactData()//Broken
 {
 	vector<linedata> nlines;
@@ -109,9 +160,10 @@ void Graph::CompactData()//Broken
 	//return nlines;
 }
 
-vector<fPoint> Graph::ScaleLine(int line)
+//template<class Point2f>
+vector<Point2f> Graph::ScaleLine(int line)
 {
-	vector<fPoint> scaledData;
+	vector<Point2f> scaledData;
 
 	//get data lengths
 
@@ -145,7 +197,7 @@ vector<fPoint> Graph::ScaleLine(int line)
 	scaledData.resize(lines[line].rawData.size());
 	for (auto j = 0; j < lines[line].rawData.size(); j++)
 	{
-		fPoint scaled;
+		Point2f scaled;
 		scaled.x = (lines[line].rawData[j].x - xmin)*xscale + space;
 		scaled.y = (lines[line].rawData[j].y - xmin)*yscale + space;
 		scaledData[j] = scaled;

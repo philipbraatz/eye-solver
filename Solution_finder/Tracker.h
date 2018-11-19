@@ -2,8 +2,20 @@
 #include <vector>
 #include <iomanip>
 
-#include "../PEB.Utility/Utility.h"
+//#include "../PEB.Utility/Utility.h"
 using namespace std;
+
+//int x, double y
+struct ifPoint
+{
+	int x;
+	double y;
+};
+//double x. y
+struct fPoint
+{
+	double x, y;
+};
 
 class Tracker
 {

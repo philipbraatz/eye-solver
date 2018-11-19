@@ -1,10 +1,11 @@
 #pragma once
 #include <thread>
 #include <vector>
+#include <string>
 
 #include "Nnet.h"
 #include "lilNet.h"
-#include "../PEB.Utility/Utility.h"
+//#include "../PEB.Utility/Utility.h"
 
 using std::vector;
 
@@ -36,6 +37,8 @@ public:
 	//vector<Nnet> getPop() { return pop; }
 
 	void Reorder(bool max);
+
+	void change_mutateRate(double _rate);
 
 	// % of survivors to save and repopulate with
 	void repopulate(double save);
@@ -72,8 +75,8 @@ public:
 	//call after epoch and repopulation
 	double getTime() { return time_epoch + time_repop; }
 
-	void SaveBest(string name);
-	void EvoNet::LoadNet(string filename);
+	void SaveBest(std::string name);
+	void EvoNet::LoadNet(std::string filename);
 
 	void clearNetworks();
 

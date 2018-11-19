@@ -12,7 +12,7 @@ namespace TestNet
 		TEST_METHOD(Test_Evolution)
 		{
 			int inprovements = 0;
-			int max = 1000;
+			//int maximum = 1000;
 
 			EvoNet<Nnet> netGroup(10, 0.1, 3, 3, 3, 3, problem_type::TEXT);
 
@@ -37,7 +37,7 @@ namespace TestNet
 				best = netGroup.getBestScore();
 			}
 
-			Assert::IsTrue(TRUE);
+			Assert::IsTrue(true);
 		}
 
 	};

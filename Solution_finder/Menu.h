@@ -10,8 +10,30 @@
 
 #include "../PEB.Display.Graph/Graph.h"
 #include "EvoNet.h"
-#include "../PEB.Utility/Utility.h"
+//#include "../PEB.Utility/Utility.h"
 
+//Yes true
+//No false
+static bool yesNoPromt(string question)
+{
+	char ans;
+	std::cout << question << " (y/n)" << std::endl;
+	while (true)
+	{
+		std::cin >> ans;
+		switch (ans)
+		{
+		case 'y':
+			return true;
+			break;
+		case 'n':
+			return false;
+			break;
+		default:
+			break;
+		}
+	}
+}
 
 enum state
 {
@@ -22,6 +44,13 @@ enum state
 	CONTINUE_IMAGE,
 	LOAD_NET,
 	QUIT_TRAIN
+};
+
+struct Slider
+{
+	double value;
+	int slider_value;
+	int max;
 };
 
 class Menu
@@ -46,6 +75,8 @@ private:
 	void MenuSizeWindow(RECT * area);
 	void LoadFile(Mat &image, string &text);
 protected:
+	bool Exit = false;
+
 	string VERSION = "0.8.2";
 	string NAME = "Screen Net";
 	string AUTHOR = "Philip Braatz";

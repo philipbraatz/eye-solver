@@ -105,6 +105,12 @@ inline void EvoNet<tnet>::Reorder(bool max)
 
 	}
 }
+template<class tnet>
+inline void EvoNet<tnet>::change_mutateRate(double multiplier)
+{
+	rate *= multiplier;
+}
+
 //saves a percent of the population to be parents and produces mutated babies
 template<class tnet>
 inline void EvoNet<tnet>::repopulate(double save)
@@ -260,13 +266,13 @@ inline void EvoNet<tnet>::inbreed(tnet parent)
 }
 
 template<class tnet>
-inline void EvoNet<tnet>::SaveBest(string name)
+inline void EvoNet<tnet>::SaveBest(std::string name)
 {
 	pop.front().saveNet(name);
 }
 
 template<class tnet>
-inline void EvoNet<tnet>::LoadNet(string filename)
+inline void EvoNet<tnet>::LoadNet(std::string filename)
 {
 	tnet net;
 	pop = { net.loadNet(filename) };

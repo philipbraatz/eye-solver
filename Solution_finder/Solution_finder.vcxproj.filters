@@ -38,9 +38,6 @@
     <ClCompile Include="controller.cpp">
       <Filter>Source Files\AIControls</Filter>
     </ClCompile>
-    <ClCompile Include="Tracker.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

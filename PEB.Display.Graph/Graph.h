@@ -8,24 +8,19 @@
 
 #include <vector>
 
-#include "../PEB.Utility/Utility.h"
+//#include "../PEB.Utility/Utility.h"
 
 using namespace cv;
 using namespace std;
 
 const int COMPACT_SIZE = 10000;//CRASHES
 
-struct Slider
-{
-	double value;
-	int slider_value;
-	int max;
-};
-
+//template<class Point2f =Point2f>
 struct linedata
 {
-	vector<fPoint> rawData;
-	//vector<fPoint> scaleData;
+	vector<Point2f> rawData;
+	Scalar color;
+	//vector<fPoint2f> scaleData;
 };
 
 struct Screen
@@ -41,9 +36,10 @@ struct Screen
 ///<summary>
 ///shows image under name at x,y. resized to fit the image
 ///call once to make the window
-///<summary>
+///</summary>
 int SetWindow(char name[], Mat Img, int x, int y);
 
+//template<class Point2f>
 class Graph
 {
 public:
@@ -54,13 +50,27 @@ public:
 
 	void SetLocation(int x, int y) { moveWindow(m_name, x, y); }
 
-	int AddLine(vector<fPoint> alldata);
-	void AddData(fPoint p, int id)
-	{
-		lines[id].rawData.push_back(p);
-	}
+	//autoajust: bool
+	//	scales graph based on data
+	//zero: bool
+	//	view only above zero
+	//lineLength: int
+	//	deletes data past set length (moving graph)
 
-	vector<vector<fPoint>> GetGraph();
+	int AddLine(Scalar color = {0,0,0});
+	int AddLine(Point2f Point, Scalar color);
+	int AddLine(Point2f a, Point2f b, Scalar color);//adds a 2 Point2f line
+	int AddLine(vector<Point2f> allLine, Scalar color);
+
+	void DeleteLine(int lineID);
+	void DeleteAllLines() { lines.clear(); }
+
+	void AddPoint(Point2f Point, int lineID){lines[lineID].rawData.push_back(Point);}
+	void AddPointsList(vector<Point2f> list, int lineID) {for (int i = 0; i < list.size(); i++){AddPoint(list[i],lineID);}}
+
+	void DeletePoint(int lineID, bool fromLast, int count);
+
+	vector<vector<Point2f>> GetGraph();
 
 	void DrawGraph();
 
@@ -71,8 +81,8 @@ private:
 	const int space = 5;
 
 	vector<linedata> lines;
-	vector<Scalar> colors;
-	vector<vector<fPoint>> outData;
+	//vector<Scalar> colors;
+	vector<vector<Point2f>> outData;
 	char* m_name;
 
 	Mat image;
@@ -101,7 +111,7 @@ private:
 	//	}
 	//}
 
-	vector<fPoint> ScaleLine(int line);
+	vector<Point2f> ScaleLine(int line);
 
 	void CompactData();
 };

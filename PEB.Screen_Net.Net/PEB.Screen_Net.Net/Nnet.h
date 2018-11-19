@@ -11,6 +11,7 @@
 
 using std::vector;
 
+static double RandNum() { return static_cast <double> (rand()) / static_cast <double> (RAND_MAX); }
 const double e = 2.71828182845904523536;
 
 enum Layer {

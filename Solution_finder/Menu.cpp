@@ -112,41 +112,38 @@ void Menu::LoadFile(Mat &image, string &text)
 state Menu::mainMenu(RECT * area, Nnet *&ref,NetFrame &netF_,Mat &image,string &text)
 {
 	int chose = 0;//SAFTY not working
-	while (true)//LOAD / NEW
-	{
-		if (yesNoPromt("Would you like to load a Network?"))
-		{//Load Network
-			if (yesNoPromt("Load Complete(y) or Manual(n) save?")) {
-				Nnet n("complete.bin");
-				ref = &n;
-			}
-			else {
-				Nnet n("manual.bin");
-				ref = &n;
-			}
+	if (yesNoPromt("Would you like to load a Network?"))
+	{//Load Network
+		if (yesNoPromt("Load Complete(y) or Manual(n) save?")) {
+			Nnet n("complete.bin");
+			ref = &n;
+		}
+		else {
+			Nnet n("manual.bin");
+			ref = &n;
+		}
 			
 
-			if (yesNoPromt("Do you want to train the Network?"))
-			{//Train Network
-				SizeWindow(area);
-				 netF_= SliderFrame;
-				return CONTINUE_TEXT;
-			}
-			else//Test Network
-				return LOAD_NET;
-		}
-		else//New Network
-		{
-			LoadFile(image,text);
-
+		if (yesNoPromt("Do you want to train the Network?"))
+		{//Train Network
 			SizeWindow(area);
-			if (text != "")
-				return NEW_TEXT;
-			else if(image.data)
-				return NEW_IMAGE;
-			else
-				return NEW_DATA;
+				netF_= SliderFrame;
+			return CONTINUE_TEXT;
 		}
+		else//Test Network
+			return LOAD_NET;
+	}
+	else//New Network
+	{
+		LoadFile(image,text);
+
+		SizeWindow(area);
+		if (text != "")
+			return NEW_TEXT;
+		else if(image.data)
+			return NEW_IMAGE;
+		else
+			return NEW_DATA;
 	}
 }
 

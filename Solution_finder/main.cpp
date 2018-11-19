@@ -13,12 +13,13 @@
 #include <Windows.h>
 #include <Winuser.h>
 
-#include "../PEB.Display.Graph/Graph.h"
+#include <Graph.h>
+//#include "../PEB.Display.Graph/Graph.h"
 
 #include "EvoNet.h"
 #include "EvoNet.cpp"
 #include <Nnet.h>
-#include "../PEB.Utility/Utility.h"
+//#include "../PEB.Utility/Utility.h"
 #include "capture.h"
 #include "Menu.h"
 #include "OCR.h"
@@ -32,6 +33,7 @@ using namespace cv;
 
 int main()
 {
+
 	//pre-initialization
 	srand(static_cast <unsigned> (time(0)));
 
@@ -59,8 +61,6 @@ int main()
 	RECT* pArea=nullptr;
 
 	Menu mMenu;
-
-	Graph g;
 
 	netF.type = TEXT;
 	//bool graphOn = true;
@@ -97,8 +97,8 @@ int main()
 	std::cout << std::endl;
 
 	//do what couldn't get started in setup
-	g.Setup(chartScr.name, chartScr.width, chartScr.height);
-	g.AddLine({ { 0,0 } });
+	Graph g(chartScr.name, chartScr.width, chartScr.height);
+	g.AddLine(Scalar(255,255,255));
 
 	while (!exit)//main loop
 	{
@@ -117,7 +117,7 @@ int main()
  			t.train(
 				(Screen)imgTrScr, 
 				(Veiwer)vscreen, 
-				(Graph)g, 
+				(Graph)g,
 				(vector<double>)input, 
 				(int)count, blankS,
 				(Mat)trImage, 

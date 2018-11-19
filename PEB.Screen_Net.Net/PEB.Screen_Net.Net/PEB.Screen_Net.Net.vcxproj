@@ -134,6 +134,11 @@
     <ClCompile Include="LilNet.cpp" />
     <ClCompile Include="Nnet.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\PEB.Utility\PEB.Utility.vcxproj">
+      <Project>{b359af88-9e37-4fbf-b96d-211e82f3732d}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

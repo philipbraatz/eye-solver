@@ -13,12 +13,13 @@
 #include <Windows.h>
 #include <Winuser.h>
 
-#include "../PEB.Display.Graph/Graph.h"
+#include <Graph.h>
+//#include "../PEB.Display.Graph/Graph.h"
 
 #include "EvoNet.h"
 #include "EvoNet.cpp"
 #include <Nnet.h>
-#include "../PEB.Utility/Utility.h"
+//#include "../PEB.Utility/Utility.h"
 #include "capture.h"
 //#include "Menu.h"
 #include "Tracker.h"
@@ -185,10 +186,10 @@ public:
 				counter = List[i].getGenCount();
 				//Data
 
-				fPoint p;
+				Point2f p;
 				p.x = counter;
-				p.y = List[i].getBestScore();// /List[i].getTime();
-				g.AddData(p, i);
+				p.y = List[i].getBestScore()+100;// /List[i].getTime();
+				g.AddPoint(p, i);
 
 				double successs_Rate = List[i].
 
@@ -263,6 +264,11 @@ public:
 				}
 				
 			}
+			//if (List.front().getGenCount() % 4000 == 0)
+			//{
+			//	List.front().change_mutateRate(1.5);
+			//}
+
 			if (staleCount > stale_Max)
 			{
 				if (staleCount > List.front().getGenCount() * STALE_P)

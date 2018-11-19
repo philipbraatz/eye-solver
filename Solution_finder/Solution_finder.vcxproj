@@ -161,7 +161,6 @@
     <ClCompile Include="mouse.cpp" />
     <ClCompile Include="OCR.cpp" />
     <ClCompile Include="OCR.h" />
-    <ClCompile Include="Tracker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="capture.h" />
