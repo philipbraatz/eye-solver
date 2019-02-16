@@ -71,6 +71,11 @@ public:
 	int getInputSize() { return pop.front().GetInputSize(); }
 	int getOutputSize() { return pop.front().GetOutputSize(); }
 
+	Nnet getBestNetwork()
+	{
+		return pop[best];
+	}
+
 	//in seconds
 	//call after epoch and repopulation
 	double getTime() { return time_epoch + time_repop; }

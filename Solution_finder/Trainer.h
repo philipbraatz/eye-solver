@@ -14,6 +14,7 @@
 #include <Winuser.h>
 
 #include <Graph.h>
+#include "../PEB.Display.Net/NetDisplay.h"
 //#include "../PEB.Display.Graph/Graph.h"
 
 #include "EvoNet.h"
@@ -55,12 +56,16 @@ protected:
 
 	Screen chartScr;
 	Screen OCRScr;
+	Screen netScr;
 	Tracker track1;
 	OCR ocr;
 
 	Rect area;
 	RECT* pArea = nullptr;
 
+	NetDisplay netDis;
+
+	bool networkOn = true;
 	//Menu mMenu;
 
 	//state option = NEW;
@@ -125,6 +130,13 @@ public:
 			chartScr.name = "Chart";
 			chartScr.image = Mat::zeros(chartScr.width, chartScr.height, CV_8UC3);
 
+			netScr.height = 720;
+			netScr.width = 1080;
+			netScr.x = 120;
+			netScr.y = 30;
+			netScr.name = "Network";
+			netScr.image = Mat::zeros(netScr.width, netScr.height, CV_8UC3);
+
 			outputScr.height = 200;
 			outputScr.width = 350;
 			outputScr.x = 40;
@@ -133,8 +145,9 @@ public:
 			outputScr.image = Mat::zeros(outputScr.width, outputScr.height, CV_8UC3);
 
 			//Setup Graph
-
 			zero.push_back({ 0,0 });
+			//Setup Network Display
+			//netDis.setScreen();
 		}
 		//declare all EvoNet in List
 
@@ -150,9 +163,11 @@ public:
 		rate = .1;
 		hiddens = 2;
 		hsize = 4;
-		if(option == NEW_TEXT)
+		if (option == NEW_TEXT)
+		{
 			List.push_back(EvoNet<tNet>(size, rate, txtAnswer.length(),
-				hiddens, hsize, txtAnswer.length(),netf.type));
+				hiddens, hsize, txtAnswer.length(), netf.type));
+		}
 		else if (option == NEW_IMAGE)
 		{
 			List.push_back(EvoNet<tNet>(size, rate, imgAnswer.cols*imgAnswer.rows*imgAnswer.channels(),
@@ -163,7 +178,7 @@ public:
 
 	void train(Screen &OCRScr, Veiwer &vscreen, Graph &g,
 		vector<double> &input, int &i_count,
-		std::string &txtAnswer, Mat &imgAnswer, bool &graphOn)
+		std::string &txtAnswer, Mat &imgAnswer, bool &graphOn,bool &netdrawOn)
 	{
 		bool prune = false;
 
@@ -190,10 +205,8 @@ public:
 				p.x = counter;
 				p.y = List[i].getBestScore()+100;// /List[i].getTime();
 				g.AddPoint(p, i);
-
-				double successs_Rate = List[i].
-
-					//std::cout << "\tScore: " << p.y << " | ";// old
+				//netDis = &List[i];
+				//double successs_Rate = List[i].
 
 				counter = 0;//List[i].getGenCount();
 				//cout << "Gen: " << count << " ";//old
@@ -229,7 +242,15 @@ public:
 						}
 					}
 					out +=  to_string((int)(List[i].getAveScore()));
-
+					
+					if (networkOn)
+					{
+						//netDis.DrawNetwork();
+						tNet netT = List[i].getBestNetwork();
+						NetDisplay* netD = static_cast<NetDisplay*>(&netT);
+						netD->setScreen(netScr);
+						netD->DrawNetwork();
+					}
 					imshow("Network Output", outputImg);
 					waitKey(1);
 				}
@@ -305,6 +326,7 @@ public:
 			if (graphOn)
 				g.DrawGraph();//slows down a bit
 
+
 							  //INPUT
 			if (GetKeyState(VK_RIGHT) > 0)//if key right is down
 			{
@@ -316,6 +338,10 @@ public:
 					{
 						done = true;
 					}
+				}
+				else
+				{
+					yesNoPromt("DEBUG: " + done);
 				}
 			}
 			else if (GetKeyState(VK_LEFT) > 0)//if key left is down

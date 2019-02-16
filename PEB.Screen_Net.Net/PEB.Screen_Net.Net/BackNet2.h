@@ -34,10 +34,16 @@ struct NetFrame
 	problem_type type;
 };
 
+struct Weight {
+	double current;
+	double prevDelta;
+	double delta;
+};
+
 struct neuron
 {
 	double value;
-	vector<double> weights;
+	vector<Weight> weights;
 	double bias;
 
 	//vector<double> deltavalues;
@@ -49,21 +55,16 @@ struct layer
 	int size;
 };
 
-class Nnet
+class BackNet2
 {
 public:
 
 	vector<double> m_goal;
 
-	Nnet();
-	Nnet(int num_inputs, int num_hiddens, int num_nodesHidden, int num_outputs, problem_type mt);
-	Nnet(std::string filename);
+	BackNet2();
+	BackNet2(int num_inputs, int num_hiddens, int num_nodesHidden, int num_outputs, problem_type mt);
+	BackNet2(std::string filename);
 	//Nnet(double Ninputs, double Nhiddens, int SizeHidden, double Noutputs, std::vector<double> goal);
-
-	Nnet operator =(Nnet n) const
-	{
-		return n;
-	}
 
 	int Setup(int num_inputs, int num_hiddens, int num_nodesHidden, int num_outputs, problem_type mt, bool loaded = false);
 	int GetLayerSize(Layer l);
@@ -87,7 +88,7 @@ public:
 	double GetSpeed();
 
 	void saveNet(std::string name);
-	Nnet loadNet(std::string filename);
+	BackNet2 loadNet(std::string filename);
 
 	int GetInputSize() { return input.size; }
 	int GetOutputSize() { return output.size; }
@@ -110,7 +111,7 @@ protected:
 	layer output;
 	vector<layer> hidden;
 
-	int hiddenLayerCount;
+	int m_Nhidden;
 
 	problem_type pt;
 

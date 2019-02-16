@@ -68,7 +68,7 @@ public:
 		}
 
 		//Hidden Layers
-		for (auto i = 1; i < m_Nhidden; i++) {
+		for (auto i = 1; i < hiddenLayerCount; i++) {
 			for (auto j = 0; j < hidden[i].size; j++)
 			{
 				double adder = 0;
@@ -96,7 +96,7 @@ public:
 		for (auto i = 0; i < output.size; i++)
 		{
 			double adder = 0;
-			for (auto j = 0; j < m_Nhidden; j++)
+			for (auto j = 0; j < hiddenLayerCount; j++)
 			{
 				bool pruned = false;
 				for (auto p = 0; p < prunes.size(); p++)

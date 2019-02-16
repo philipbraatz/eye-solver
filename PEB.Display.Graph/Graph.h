@@ -1,4 +1,5 @@
 #pragma once
+#include "../PEB.Display.Graph/Screen.h"
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
@@ -21,16 +22,6 @@ struct linedata
 	vector<Point2f> rawData;
 	Scalar color;
 	//vector<fPoint2f> scaleData;
-};
-
-struct Screen
-{
-	Mat image;
-	char* name;
-	int width;
-	int height;
-	int x;
-	int y;
 };
 
 ///<summary>

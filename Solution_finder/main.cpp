@@ -14,6 +14,7 @@
 #include <Winuser.h>
 
 #include <Graph.h>
+//#include "../PEB.Display.Net/NetDisplay.h"
 //#include "../PEB.Display.Graph/Graph.h"
 
 #include "EvoNet.h"
@@ -63,7 +64,6 @@ int main()
 	Menu mMenu;
 
 	netF.type = TEXT;
-	//bool graphOn = true;
 
 	pArea = new RECT();
 	state option = NEW_DATA;
@@ -80,6 +80,7 @@ int main()
 	Veiwer vscreen(area);
 	Trainer<Nnet> t(netF,trImage,trText,input, option,area,chartScr,imgTrScr);//create trainer
 	bool graphOn = true;
+	bool nodeOn = true;
 
 	cout << "Setup Up Done" << endl;
 
@@ -102,6 +103,8 @@ int main()
 
 	while (!exit)//main loop
 	{
+		try
+		{
 		Mat blankM;
 		string blankS;
 		//train.train(OCRScr,vscreen,g,input, count,answer,graphOn);
@@ -112,7 +115,9 @@ int main()
 				(Graph)g, 
 				(vector<double>)input,
 				(int)count,trText,blankM,
-				(bool)graphOn);
+				(bool)graphOn,
+				(bool)nodeOn
+			);
 		else if(option == NEW_IMAGE)
  			t.train(
 				(Screen)imgTrScr, 
@@ -121,8 +126,14 @@ int main()
 				(vector<double>)input, 
 				(int)count, blankS,
 				(Mat)trImage, 
-				(bool)graphOn);
-		
+				(bool)graphOn,
+				(bool)nodeOn
+			);
+		}
+		catch (const std::exception& e)
+		{
+			throw e;
+		}
 		//if (yesNoPromt("Do you want to prune network?"))
 		//{
 		//	cout << "starting pruning" << endl;

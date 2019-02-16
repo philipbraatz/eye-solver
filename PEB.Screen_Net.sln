@@ -9,7 +9,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PEB.Screen_Net.Net", "PEB.S
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PEB.Screen_Net.Test", "PEB.Screen_Net.Test2\PEB.Screen_Net.Test2\PEB.Screen_Net.Test2.vcxproj", "{ED9E59B5-4979-40A0-AAE1-D9907BADFCE7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PEB.Display.Graph", "PEB.Display.Graph\PEB.Display.Graph.vcxproj", "{6A89A610-87E1-4CE8-B6D5-32578F285C3F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PEB.Display.Screen", "PEB.Display.Graph\PEB.Display.Graph.vcxproj", "{6A89A610-87E1-4CE8-B6D5-32578F285C3F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

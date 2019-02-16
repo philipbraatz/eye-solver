@@ -295,7 +295,7 @@ void EvoNet<tnet>::clearNetworks()
 	rate = EvoNet::mutateRate;
 	for (auto i = 0; i < EvoNet::population; i++)
 	{
-		tnet temp(INPUTL, HIDDENL, HIDDEN_NODESL, OUTPUTL, pt);
+		tnet temp(INPUTL, HIDDENLCOUNT, HIDDEN_NODESL, OUTPUTL, pt);
 		pop.push_back(temp);
 	}
 }

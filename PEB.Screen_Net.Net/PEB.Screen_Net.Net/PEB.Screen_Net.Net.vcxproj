@@ -124,12 +124,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BackNet.h" />
+    <ClInclude Include="BackNet2.h" />
     <ClInclude Include="EvoNet.h" />
     <ClInclude Include="LilNet.h" />
     <ClInclude Include="Nnet.h" />
     <ClInclude Include="Test_Net.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BackNet.cpp" />
+    <ClCompile Include="BackNet2.cpp" />
     <ClCompile Include="EvoNet.cpp" />
     <ClCompile Include="LilNet.cpp" />
     <ClCompile Include="Nnet.cpp" />

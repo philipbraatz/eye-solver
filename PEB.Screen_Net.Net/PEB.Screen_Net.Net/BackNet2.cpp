@@ -1,5 +1,5 @@
 #pragma once
-#include "Nnet.h"
+#include "BackNet2.h"
 //#include "../PEB.Utility/Utility.h"
 
 #include <vector>
@@ -7,13 +7,17 @@
 using std::vector;
 //initialize
 
-Nnet::Nnet() { Setup(0, 0, 0, 0, TEXT); }
-Nnet::Nnet(int num_inputs, int num_hiddens, int num_nodesHidden, int num_outputs, problem_type mt)
-	{ Setup(num_inputs, num_hiddens, num_nodesHidden, num_outputs, mt); }
-Nnet::Nnet(std::string filename) 
-	{loadNet(filename);}
+BackNet2::BackNet2() { Setup(0, 0, 0, 0, TEXT); }
+BackNet2::BackNet2(int num_inputs, int num_hiddens, int num_nodesHidden, int num_outputs, problem_type mt)
+{
+	Setup(num_inputs, num_hiddens, num_nodesHidden, num_outputs, mt);
+}
+BackNet2::BackNet2(std::string filename)
+{
+	loadNet(filename);
+}
 
-int Nnet::Setup(int num_inputs, int num_hiddens, int num_nodesHidden, int num_outputs, problem_type mt, bool loaded)
+int BackNet2::Setup(int num_inputs, int num_hiddens, int num_nodesHidden, int num_outputs, problem_type mt, bool loaded)
 {
 	if (!num_inputs || !num_hiddens || !num_nodesHidden || !num_outputs)//if an input is missing
 	{
@@ -25,15 +29,15 @@ int Nnet::Setup(int num_inputs, int num_hiddens, int num_nodesHidden, int num_ou
 	//set sizes
 	input.size = num_inputs;
 	output.size = num_outputs;
-	hiddenLayerCount = num_nodesHidden;
+	m_Nhidden = num_nodesHidden;
 
 	//resize layers
 	input.neurons.resize(input.size);
 	output.neurons.resize(output.size);
-	hidden.resize(hiddenLayerCount);
-	for (unsigned int i = 0; i < hiddenLayerCount; i++)
+	hidden.resize(m_Nhidden);
+	for (unsigned int i = 0; i < m_Nhidden; i++)
 	{
-		hidden[i].size = hiddenLayerCount;
+		hidden[i].size = m_Nhidden;
 		hidden[i].neurons.resize(hidden[i].size);
 	}
 
@@ -49,7 +53,7 @@ int Nnet::Setup(int num_inputs, int num_hiddens, int num_nodesHidden, int num_ou
 		if (!loaded)
 		{
 			for (unsigned int j = 0; j < hidden.front().size; j++)
-				input.neurons[i].weights[j] = RandNum();
+				input.neurons[i].weights[j].current = RandNum();
 			input.neurons[i].bias = RandNum();
 		}
 	}
@@ -59,11 +63,11 @@ int Nnet::Setup(int num_inputs, int num_hiddens, int num_nodesHidden, int num_ou
 		if (!loaded)
 		{
 			for (unsigned int j = 0; j < hidden.back().size; j++)
-				output.neurons[i].weights[j] = RandNum();
+				output.neurons[i].weights[j].current = RandNum();
 			output.neurons[i].bias = RandNum();
 		}
 	}
-	for (unsigned int i = 0; i < hiddenLayerCount - 1; i++)
+	for (unsigned int i = 0; i < m_Nhidden - 1; i++)
 	{//HIDDEN
 		for (unsigned int j = 0; j < hidden[i].size; j++)
 		{
@@ -71,7 +75,7 @@ int Nnet::Setup(int num_inputs, int num_hiddens, int num_nodesHidden, int num_ou
 			if (!loaded)
 			{
 				for (unsigned int k = 0; k < hidden[i].size; k++)
-					hidden[i].neurons[j].weights[k] = RandNum();
+					hidden[i].neurons[j].weights[k].current = RandNum();
 				hidden[i].neurons[j].bias = RandNum();
 			}
 		}
@@ -82,14 +86,14 @@ int Nnet::Setup(int num_inputs, int num_hiddens, int num_nodesHidden, int num_ou
 		if (!loaded)
 		{
 			for (unsigned int j = 0; j < output.size; j++)
-				hidden.back().neurons[i].weights[j] = RandNum();
+				hidden.back().neurons[i].weights[j].current = RandNum();
 			hidden.back().neurons[i].bias = RandNum();
 		}
 	}
 	return 1;
 }
 
-int Nnet::GetLayerSize(Layer l)
+int BackNet2::GetLayerSize(Layer l)
 {
 	switch (l)
 	{
@@ -97,7 +101,7 @@ int Nnet::GetLayerSize(Layer l)
 		return input.size;
 		break;
 	case Layer::HIDDENLCOUNT:
-		return hiddenLayerCount;
+		return m_Nhidden;
 		break;
 	case Layer::OUTPUTL:
 		return output.size;
@@ -111,13 +115,17 @@ int Nnet::GetLayerSize(Layer l)
 	}
 }
 
-vector<double> Nnet::Initial_Propigation(vector<double> inputs)
-	{return Propigate(inputs);}
-vector<double> Nnet::Final_Propigation(vector<double> inputs)
-	{return Propigate(inputs);}
+vector<double> BackNet2::Initial_Propigation(vector<double> inputs)
+{
+	return Propigate(inputs);
+}
+vector<double> BackNet2::Final_Propigation(vector<double> inputs)
+{
+	return Propigate(inputs);
+}
 
 //set input and get output
-vector<double> Nnet::Propigate(vector<double> inputs)
+vector<double> BackNet2::Propigate(vector<double> inputs)
 {
 	double adder = 0;//value of node
 
@@ -149,7 +157,7 @@ vector<double> Nnet::Propigate(vector<double> inputs)
 	AddBiases(inputs, biases, out);
 	for (unsigned int i = 0; i < input.size; i++)
 	{
-		
+
 		input.neurons[i].value = Normalize(out[i]);
 	}
 
@@ -158,20 +166,20 @@ vector<double> Nnet::Propigate(vector<double> inputs)
 	{
 		adder = 0;
 		for (unsigned int j = 0; j < input.size; j++)
-			adder += input.neurons[j].value * input.neurons[j].weights[i];//node*weight
+			adder += input.neurons[j].value * input.neurons[j].weights[i].current;//node*weight
 		adder += hidden.front().neurons[i].bias;
-		
+
 		hidden.front().neurons[i].value = Normalize(adder);;
 	}
 
 	//Hidden Layers
-	for (unsigned int i = 1; i < hiddenLayerCount; i++) {
+	for (unsigned int i = 1; i < m_Nhidden; i++) {
 		for (unsigned int j = 0; j < hidden[i].size; j++) {
 			adder = 0;
 			for (unsigned int k = 0; k < hidden[i].size; k++)
-				adder += hidden[i - 1].neurons[j].value * hidden[i - 1].neurons[j].weights[k];
+				adder += hidden[i - 1].neurons[j].value * hidden[i - 1].neurons[j].weights[k].current;
 			adder += hidden[i].neurons[j].bias;
-			
+
 			hidden[i].neurons[j].value = Normalize(adder);
 		}
 	}
@@ -181,10 +189,10 @@ vector<double> Nnet::Propigate(vector<double> inputs)
 	for (unsigned int i = 0; i < output.size; i++)
 	{
 		adder = 0;
-		for (unsigned int j = 0; j < hiddenLayerCount; j++)
-			adder += hidden.back().neurons[j].value * output.neurons[i].weights[j];//node*weight
+		for (unsigned int j = 0; j < m_Nhidden; j++)
+			adder += hidden.back().neurons[j].value * output.neurons[i].weights[j].current;//node*weight
 		adder += output.neurons[i].bias;
-		
+
 		output.neurons[i].value = Normalize(adder);//normalize
 		out[i] = adder;
 	}
@@ -193,11 +201,11 @@ vector<double> Nnet::Propigate(vector<double> inputs)
 	return out;
 }
 
-double Nnet::Normalize(double input) {
+double BackNet2::Normalize(double input) {
 	return input = 1 / (1 + pow(e, -input));
 }
 
-bool Nnet::AddBiases(vector<double> cur, vector<double> biases, vector<double> &out)
+bool BackNet2::AddBiases(vector<double> cur, vector<double> biases, vector<double> &out)
 {
 	if (cur.size() == biases.size())
 	{
@@ -212,7 +220,7 @@ bool Nnet::AddBiases(vector<double> cur, vector<double> biases, vector<double> &
 	}
 }
 
-inline void Nnet::MutTable(double & weight)
+inline void BackNet2::MutTable(double & weight)
 {
 	const int MAX_WEIGHT = 9999;
 
@@ -239,7 +247,7 @@ inline void Nnet::MutTable(double & weight)
 	}
 }
 
-void Nnet::Mutate(double rate)
+void BackNet2::Mutate(double rate)
 {
 	//TIMER first
 	startMut = clock(); //Start timer
@@ -249,22 +257,22 @@ void Nnet::Mutate(double rate)
 	for (unsigned int i = 0; i < input.size; i++) {//input
 		for (unsigned int j = 0; j < hidden.front().size; j++) {
 			if (rate > RandNum())//if rand is less that its mutate rate
-				MutTable(input.neurons[i].weights[j]);//mutate
+				MutTable(input.neurons[i].weights[j].current);//mutate
 		}
 	}
-	for (unsigned int i = 1; i < hiddenLayerCount; i++) {//hidden
+	for (unsigned int i = 1; i < m_Nhidden; i++) {//hidden
 		for (unsigned int j = 0; j < hidden[i].size; j++) {
 			for (unsigned int k = 0; k < hidden[i].size; k++) {
 
 				if (rate > RandNum())//if rand is less that its mutate rate
-					MutTable(hidden[i - 1].neurons[j].weights[k]);//mutate
+					MutTable(hidden[i - 1].neurons[j].weights[k].current);//mutate
 			}
 		}
 	}
 	for (unsigned int i = 0; i < hidden.back().size; i++) {//last hidden
 		for (unsigned int j = 0; j < output.size; j++) {
 			if (rate > RandNum())//if rand is less that its mutate rate
-				MutTable(hidden.back().neurons[i].weights[j]);//mutate
+				MutTable(hidden.back().neurons[i].weights[j].current);//mutate
 			//std::cout << "\b\b\b\b\b\b\b\b\b\b\b\b";
 			//std::cout << "\b\b\b\b\b\b\b\b\b\b\b\b";
 		}
@@ -275,7 +283,7 @@ void Nnet::Mutate(double rate)
 		if (rate > RandNum())
 			MutTable(input.neurons[i].bias);
 	}
-	for (unsigned int i = 0; i < hiddenLayerCount; i++) {
+	for (unsigned int i = 0; i < m_Nhidden; i++) {
 		for (unsigned int j = 0; j < hidden[i].size; j++) {
 			if (rate > RandNum())
 				MutTable(hidden[i].neurons[j].bias);
@@ -289,7 +297,7 @@ void Nnet::Mutate(double rate)
 	PassedMut = (clock() - startMut);// / CLOCKS_PER_SEC;
 }
 
-vector<double> Nnet::getLastLayer()
+vector<double> BackNet2::getLastLayer()
 {
 	vector<double> out;
 	for (unsigned int i = 0; i < output.size; i++)
@@ -301,14 +309,14 @@ vector<double> Nnet::getLastLayer()
 
 //in seconds
 //call after propigate and mutate
-double Nnet::GetSpeed() {
+double BackNet2::GetSpeed() {
 	double total = PassedMut + PassedProp;
 	PassedMut = 0;	//prevents double counting	//
 	PassedProp = 0;	//							//
 	return total;
 }
 
-void Nnet::saveNet(std::string name)
+void BackNet2::saveNet(std::string name)
 {
 	name.append(".bin");
 	std::ofstream out(name, std::ios_base::binary);
@@ -322,38 +330,38 @@ void Nnet::saveNet(std::string name)
 		out.write((char *)&input.size, sizeof(unsigned int));			//input layer size
 		out.write((char *)&output.size, sizeof(unsigned int));			//output layer size
 		out.write((char *)&hidden.front().size, sizeof(unsigned int));	//hidden layers size
-		out.write((char *)&hiddenLayerCount, sizeof(unsigned int));			//number of hidden layers
+		out.write((char *)&m_Nhidden, sizeof(unsigned int));			//number of hidden layers
 
 		std::cout << "Writing  biases" << std::fixed << std::endl;	//biases
 		for (unsigned int i = 0; i < input.size; i++)
 			out.write((char *)&input.neurons[i].bias, sizeof(double));
 		for (unsigned int i = 0; i < output.size; i++)
 			out.write((char *)&output.neurons[i].bias, sizeof(double));
-		for (unsigned int i = 0; i < hiddenLayerCount; i++)
+		for (unsigned int i = 0; i < m_Nhidden; i++)
 			for (unsigned int j = 0; j < hidden[i].size; j++)
 				out.write((char *)&output.neurons[i].bias, sizeof(double));
 
 		std::cout << "Writing  weights" << std::fixed << std::endl;	//weights
 		for (unsigned int i = 0; i < input.size; i++)
 			for (unsigned int j = 0; j < hidden.front().size; j++)
-				out.write((char *)&input.neurons[i].weights[j], sizeof(double));
+				out.write((char *)&input.neurons[i].weights[j].current, sizeof(double));
 		for (unsigned int i = 0; i < output.size; i++)
 			for (unsigned int j = 0; j < hidden.back().size; j++)
-				out.write((char *)&output.neurons[i].weights[j], sizeof(double));
-		for (unsigned int i = 0; i < hiddenLayerCount - 1; i++)
+				out.write((char *)&output.neurons[i].weights[j].current, sizeof(double));
+		for (unsigned int i = 0; i < m_Nhidden - 1; i++)
 			for (unsigned int j = 0; j < hidden[i].size; ++j)
 				for (unsigned int k = 0; k < hidden[i + 1].size; k++)
-					out.write((char*)&hidden[i].neurons[j].weights[k], sizeof(double));
+					out.write((char*)&hidden[i].neurons[j].weights[k].current, sizeof(double));
 		for (unsigned int i = 0; i < hidden.back().size; i++)//Last Hidden Layer
 			for (unsigned int j = 0; j < output.size; j++)
-				out.write((char*)&hidden.back().neurons[i].weights[j], sizeof(double));
+				out.write((char*)&hidden.back().neurons[i].weights[j].current, sizeof(double));
 
 
 		out.close();
 	}
 }
 
-Nnet Nnet::loadNet(std::string filename)
+BackNet2 BackNet2::loadNet(std::string filename)
 {
 	unsigned int sizeInput;
 	unsigned int sizeOutput;
@@ -372,7 +380,7 @@ Nnet Nnet::loadNet(std::string filename)
 		{
 			std::cout << "This file is an older version " << lversion << ".0" << std::endl;
 			std::cout << "UNABLE to load file";
-			return Nnet();
+			return BackNet2();
 		}
 
 		//Get Nnet sizes
@@ -386,7 +394,7 @@ Nnet Nnet::loadNet(std::string filename)
 		std::cout << "Done" << std::endl;
 
 		//Resize Nnet
-		Nnet net;
+		BackNet2 net;
 		net.Setup(sizeInput, m_Nhidden, num_nodesHidden, sizeOutput, pt, true);
 
 		//Load Biases
@@ -395,7 +403,7 @@ Nnet Nnet::loadNet(std::string filename)
 			in.read((char *)&net.input.neurons[i].bias, sizeof(double));
 		for (unsigned int i = 0; i < net.output.size; i++)
 			in.read((char *)&net.output.neurons[i].bias, sizeof(double));
-		for (unsigned int i = 0; i < net.hiddenLayerCount; i++)
+		for (unsigned int i = 0; i < net.m_Nhidden; i++)
 			for (unsigned int j = 0; j < net.hidden[i].size; j++)
 				in.read((char *)&net.output.neurons[i].bias, sizeof(double));
 		std::cout << "Done" << std::endl;
@@ -404,21 +412,21 @@ Nnet Nnet::loadNet(std::string filename)
 		std::cout << "Reading  weights: " << std::fixed << std::endl;//weights
 		for (unsigned int i = 0; i < net.input.size; i++)
 			for (unsigned int j = 0; j < net.hidden.front().size; j++)
-				in.read((char *)&net.input.neurons[i].weights[j], sizeof(double));
+				in.read((char *)&net.input.neurons[i].weights[j].current, sizeof(double));
 		for (unsigned int i = 0; i < net.output.size; i++)
 			for (unsigned int j = 0; j < net.hidden.back().size; j++)
-				in.read((char *)&net.output.neurons[i].weights[j], sizeof(double));
-		for (unsigned int i = 0; i < net.hiddenLayerCount - 1; i++)
+				in.read((char *)&net.output.neurons[i].weights[j].current, sizeof(double));
+		for (unsigned int i = 0; i < net.m_Nhidden - 1; i++)
 			for (unsigned int j = 0; j < net.hidden[i].size; ++j)
 				for (unsigned int k = 0; k < net.hidden[i + 1].size; k++)
-					in.read((char*)&net.hidden[i].neurons[j].weights[k], sizeof(double));
+					in.read((char*)&net.hidden[i].neurons[j].weights[k].current, sizeof(double));
 		for (unsigned int i = 0; i < net.hidden.back().size; i++)//Last Hidden Layer
 			for (unsigned int j = 0; j < net.output.size; j++)
-				in.read((char*)&net.hidden.back().neurons[i].weights[j], sizeof(double));
+				in.read((char*)&net.hidden.back().neurons[i].weights[j].current, sizeof(double));
 		std::cout << "Done" << std::endl;
 
 		*this = net;
 		return net;
 	}
-	return Nnet();//error
+	return BackNet2();//error
 }
