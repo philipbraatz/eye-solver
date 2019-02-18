@@ -25,7 +25,7 @@ namespace PEB.Network.Test
         {
             double fill = .5;
 
-            double expected = 0.9099;
+            double expected = 0.62245;
 
             Reader net = new Reader(2, 3, 4, 2,fill);
             List<Double> inputs=new List<double>();
@@ -33,7 +33,7 @@ namespace PEB.Network.Test
             inputs.Add(0.5);
             List<double> outputs= net.Propigate(inputs);
             foreach (var i in outputs)
-                Assert.AreEqual(expected,i,0.0001);
+                Assert.AreEqual(expected,i,0.00001);
             
         }
     }

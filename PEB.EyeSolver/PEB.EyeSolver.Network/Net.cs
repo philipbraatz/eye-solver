@@ -30,82 +30,74 @@ namespace PEB.EyeSolver.Network
         public problem_type type;
     };
 
+    /// <summary>
+    ///holds current value and weights for next layer
+    /// </summary>
     public class Neuron
     {
         public double value=0;
         public List<double> weights=new List<double>();
-        public double bias=0;
 
         //double> deltavalues;
-
+        private Random r = new Random();
         //initializes randomly
         public void Fill(int weightSize)
         {
-            Random r = new Random();
             for (int i = 0; i < weightSize; i++)
                 weights.Add(r.NextDouble());
-            value = 0;
-            bias = r.NextDouble();
         }
 
         //recommend for killing with 0 or 1
-        public void Fill(int weightSize, double value)
+        public void Fill(int weightSize, double value=-123.456)
         {
             Neuron n = new Neuron();
             for (int i = 0; i < weightSize; i++)
-                weights.Add(value);
-            value = 0;
-            bias = value;
+                if(value != -123.456)
+                    weights.Add(value);
+                else
+                    weights.Add(r.NextDouble());
         }
 
     };
 
     public class Layer : List<Neuron>
     {
-        public void Fill(int layerSize, int weightSize)
-        {
-            for (int i = 0; i < layerSize; i++)
-            {
-                Neuron n = new Neuron();
-                n.Fill(weightSize);
-                this.Add(n);
-            }
-                
-        }
+        private Random r = new Random();
+        public double bias = 0;
 
-        public void Fill(int layerSize, int weightSize, double value)
+        public Layer Fill(int layerSize, int weightSize, double value= -123.456)
         {
             for (int i = 0; i < layerSize; i++)
             {
                 Neuron n =new Neuron();
-                n.Fill(weightSize, value);
+                if (value != -123.456)
+                    n.Fill(weightSize, value);
+                else
+                    n.Fill(weightSize);
                 this.Add(n);
             }
-                
+            if (value != -123.456)
+                bias = value;
+            else
+                bias = r.NextDouble();
+            return this;
         }
     };
 
     public class Chunk : List<Layer>
     {
-        public void Fill(int chunkSize,int layerSize, int weightSize)
+        public void Fill(int chunkSize,int layerSize, int weightSize, double value = -123.456)
         {
             for (int i = 0; i < chunkSize; i++)
             {
                 Layer l =new Layer();
-                l.Fill(layerSize, weightSize);
+                if(value != -123.456)
+                    l.Fill(layerSize, weightSize, value);
+                else
+                    l.Fill(layerSize, weightSize);
                 this.Add(l);
             }
                 
-        }
-
-        public void Fill(int chunkSize, int layerSize, int weightSize, double value)
-        {
-            for (int i = 0; i < chunkSize; i++)
-            {
-                Layer l = new Layer();
-                l.Fill(layerSize, weightSize,value);
-                this.Add(l);
-            }
         }
     };
 
@@ -114,5 +106,10 @@ namespace PEB.EyeSolver.Network
         public static readonly double e = 2.71828182845904523536;
 
         public static double Normalize(double input) => input = 1 / (1 + Math.Pow(e, -input));
+        public static void Normalize(ref List<double> input)
+        {
+            for (int i = 0; i < input.Count; i++)
+                input[i] = 1 / (1 + Math.Pow(e, -input[i]));
+        } 
     }
 }

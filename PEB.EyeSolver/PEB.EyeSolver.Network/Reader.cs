@@ -27,42 +27,15 @@ namespace PEB.EyeSolver.Network
         protected Chunk hiddenLayers;
 
 
-        protected void AddBiases(List<double> cur, List<double> biases, ref List<double> output)
+        protected void AddBiases(ref List<double> layer,double bias)
         {
-            try
-            {
-                if (cur.Count == biases.Count)
-                    for (int i = 0; i < cur.Count; i++)
-                        output.Add(cur[i] + biases[i]);
-                else
-                    throw new Exception("ERROR: Invalid List sizes");
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-                throw;
-            }
+            List<double> output =new List<double>();
+            for (int i = 0; i < layer.Count; i++)
+                output.Add(layer[i] + bias);
+            layer = output;
         }
 
-        public Reader(int num_inputs, int num_hiddens, int num_nodesHidden, int num_outputs)
-        {
-            if (num_inputs == 0 || num_hiddens == 0 || num_nodesHidden == 0 || num_outputs == 0) //if an inputLayer is missing
-                throw new Exception("Invalid Reader: All network layers have to be greater than 0");
-
-            //reset layers
-            inputLayer=new Layer();
-            outputLayer = new Layer();
-            hiddenLayers = new Chunk();
-
-            //resize weights
-            //randomize weightsH
-            //randomize biases
-            inputLayer.Fill(num_inputs, num_nodesHidden);
-            outputLayer.Fill(num_outputs, 0);//no weights come out last layer
-            hiddenLayers.Fill(num_hiddens, num_nodesHidden, num_nodesHidden);
-            hiddenLayers[num_hiddens - 1].Fill(num_nodesHidden, num_outputs);//last hidden layer
-        }
-        public Reader(int num_inputs, int num_hiddens, int num_nodesHidden, int num_outputs,double fillValue)
+        private void Init(int num_inputs, int num_hiddens, int num_nodesHidden, int num_outputs, double value=-123.456 )
         {
             if (num_inputs == 0 || num_hiddens == 0 || num_nodesHidden == 0 || num_outputs == 0) //if an inputLayer is missing
                 throw new Exception("Invalid Reader: All network layers have to be greater than 0");
@@ -72,13 +45,23 @@ namespace PEB.EyeSolver.Network
             outputLayer = new Layer();
             hiddenLayers = new Chunk();
 
-            //resize weights
-            //randomize weightsH
-            //randomize biases
-            inputLayer.Fill(num_inputs, num_nodesHidden,fillValue);
-            outputLayer.Fill(num_outputs, num_outputs, fillValue);
-            hiddenLayers.Fill(num_hiddens, num_nodesHidden, num_nodesHidden, fillValue);
-            hiddenLayers[num_hiddens - 1].Fill(num_nodesHidden, num_outputs, fillValue);//last hidden layer
+            //set layers
+            inputLayer.Fill(num_inputs, num_nodesHidden, value);
+            outputLayer.Fill(num_outputs,0, value);
+            hiddenLayers.Fill(num_hiddens-1, num_nodesHidden, num_nodesHidden, value);
+            hiddenLayers.Add(new Layer().Fill(num_nodesHidden, num_outputs, value));//last hidden layer
+
+            double fakevalue = -33;
+            fakevalue += 22;
+        }
+
+        public Reader(int num_inputs, int num_hiddens, int num_nodesHidden, int num_outputs)
+        {
+            Init(num_inputs, num_hiddens, num_nodesHidden, num_outputs);
+        }
+        public Reader(int num_inputs, int num_hiddens, int num_nodesHidden, int num_outputs,double fillValue)
+        {
+            Init( num_inputs,  num_hiddens,  num_nodesHidden,  num_outputs, fillValue);
         }
 
         public int GetLayerSize(LayerType l)
@@ -122,43 +105,41 @@ namespace PEB.EyeSolver.Network
                 output = new List<double>();
 
             //Input layer
-            for (int b = 0; b < inputLayer.Count; b++)
-                biases.Add( inputLayer[b].bias);
-            AddBiases(inputs, biases,ref output);
+            AddBiases(ref inputs, inputLayer.bias);
             for (int i = 0; i < inputLayer.Count; i++)
-                inputLayer[i].value = algs.Normalize(output[i]);
+                inputLayer[i].value = algs.Normalize( inputs[i]);
 
             //First Hidden Layer
-            for (int i = 0; i < hiddenLayers.First().Count; i++)
+            for (int i = 0; i < hiddenLayers.First().Count; i++)//output nodes
             {
                 adder = 0;
-                for (int j = 0; j < inputLayer.Count; j++)
+                for (int j = 0; j < inputLayer.Count; j++)//input nodes
                     adder += inputLayer[j].value * inputLayer[j].weights[i];//prevnode * weight
-                adder += hiddenLayers.First()[i].bias;
+                adder += hiddenLayers.First().bias;
 
                 hiddenLayers[0][i].value = algs.Normalize(adder);
             }
 
             //Hidden Layers
-            for (int i = 1; i < hiddenLayers.Count; i++)
-                for (int j = 0; j < hiddenLayers[i].Count; j++)
+            for (int i = 0; i < hiddenLayers.Count - 1; i++)//Layer
+                for (int j = 0; j < hiddenLayers[i].Count; j++)//output nodes
                 {
                     adder = 0;
-                    for (int k = 0; k < hiddenLayers[i].Count; k++)
-                        adder += hiddenLayers[i - 1][j].value * hiddenLayers[i - 1][j].weights[k];
-                    adder += hiddenLayers[i][j].bias;
+                    for (int k = 0; k < hiddenLayers[i].Count; k++)//input nodes
+                        adder += hiddenLayers[i][k].value * hiddenLayers[i][k].weights[j];//prevnode * weight
+                    adder += hiddenLayers[i].bias;
 
                     hiddenLayers[i][j].value = algs.Normalize(adder);
                 }
 
-            List<double> ret=new List<double>();
             //Output Layer
+            List<double> ret=new List<double>();
             for (int i = 0; i < outputLayer.Count; i++)
             {
                 adder = 0;
                 for (int j = 0; j < hiddenLayers.Last().Count; j++)
                     adder += hiddenLayers.Last()[j].value * hiddenLayers.Last()[j].weights[i];//prevnode*weight
-                adder += outputLayer[i].bias;
+                adder += outputLayer.bias;
                 outputLayer[i].value = algs.Normalize(adder);// Normalize(adder);//normalize
                 ret.Add( outputLayer[i].value);
             }

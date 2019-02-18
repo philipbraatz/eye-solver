@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -19,12 +20,31 @@ namespace PEB.EyeSolver.Network.Evolution
         Reader
     {
         private int passedMut =0;
-        private double mut_rate;
+        public double mut_rate;
+        private double error=0;
  
         private Stopwatch timer =new Stopwatch();
 
+        public List<double> Propigate(List<double> inputs,List<double> goals)
+        {
+            error = 0;
+            List<double> output = this.Propigate(inputs);//propigation
+            for (int i = 0; i < goals.Count; i++)
+                error += Math.Pow(goals[i] - output[i], 2);//calc error
+            if (error == 0)
+            {
+                throw  new Exception("Perfected learning");
+            }
+            return output;
+        }
+
         public Mutator(int num_inputs, int num_hiddens, int num_nodesHidden, int num_outputs, double mutate_rate) :
             base(num_inputs, num_hiddens, num_nodesHidden, num_outputs)
+        {
+            mut_rate =mutate_rate;
+        }
+        public Mutator(int num_inputs, int num_hiddens, int num_nodesHidden, int num_outputs,double fill, double mutate_rate) :
+            base(num_inputs, num_hiddens, num_nodesHidden, num_outputs,fill)
         {
             mut_rate = mutate_rate;
         }
@@ -79,60 +99,43 @@ namespace PEB.EyeSolver.Network.Evolution
             }
 
             //biases
-            for (int i = 0; i < inputLayer.Count; i++)
-            {
+            if (mut_rate > rnd.NextDouble())//INPUT
+                MutTable(ref inputLayer.bias);
+            for (int i = 0; i < hiddenLayers.Count; i++)//HIDDEN
                 if (mut_rate > rnd.NextDouble())
-                    MutTable(ref inputLayer[i].bias);
-            }
-            for (int i = 0; i < hiddenLayers.Count; i++)
-            {
-                for (int j = 0; j < hiddenLayers[i].Count; j++)
-                {
-                    if (mut_rate > rnd.NextDouble())
-                    {
-                        var temp = hiddenLayers[i][j].bias;
-                        MutTable(ref temp);
-                        hiddenLayers[i][j].bias = temp;
-                    }
-                }
-            }
-            for (int i = 0; i < outputLayer.Count; i++)
-            {
-                if (mut_rate > rnd.NextDouble())
-                {
-                    var temp = outputLayer[i].bias;
-                    MutTable(ref temp);
-                    outputLayer[i].bias = temp;
-                }
-            }
+                    MutTable(ref hiddenLayers[i].bias);
+            if (mut_rate > rnd.NextDouble())//OUTPUT
+                MutTable(ref outputLayer.bias);
             timer.Stop();
             passedMut += (int)timer.ElapsedMilliseconds;// / CLOCKS_PER_SEC;
         }
 
-        public double MutTable(ref double weight)
+        private double MutTable(ref double weight)
         {
-            const int MAX_WEIGHT = 4;
+            const int MAX_WEIGHT = 8;
 
-            int choice = (int)(rnd.Next(0, 5));
+            int choice = (int)(rnd.Next(0, 6));
             double r = rnd.NextDouble()+0.5;
 
             //limit min/max
             if (weight > MAX_WEIGHT)
                 weight = MAX_WEIGHT;
-            else if (weight < -MAX_WEIGHT)
-                weight = -MAX_WEIGHT;
+            else if (weight < 0)
+                weight = rnd.NextDouble() / 1000;
 
             switch (choice)
             {
                 case 0://weight = 25% to 225%
                     return weight *= r*r;
-                case 1://invert weight
-                    return weight *= -1;
-                case 2://massively increase/ decrease
+                case 1://low weight
+                    return weight = r / 1000;
+                case 2://high weight
+                    return weight = 1.5-r / 1000;
+                case 3://massively increase/ decrease
                     return weight = Math.Pow(weight, r);
-                case 3://increase slightly
+                case 4://increase slightly
                     return weight *=1-r/1000;
-                case 4://decrease slightly
+                case 5://decrease slightly
                     return weight *=1+r/1000;
                 default:
                     throw new Exception("Unreachable Code reached");
@@ -146,6 +149,11 @@ namespace PEB.EyeSolver.Network.Evolution
             passedMut = 0;  //prevents double counting	//
             passedProp = 0; //							//
             return total;
+        }
+
+        public double getError()
+        {
+            return error;
         }
     }
 }
