@@ -35,14 +35,14 @@ namespace PEB.Network.Test
 
             net.Propigate(inputs,goals);
             List<double> error = net.getError();
-            net = net.Sort();
+            net.Sort();
             double expected = net.getError().Last();
 
             for (int i = 0; i < 100; i++)
             {
-                net.Mutate();
+                net.Mutate(0.5);
                 net.Propigate(inputs, goals);
-                net = net.Sort();
+                net.Sort();
 
                 double testing = net.Last().getError();
 

@@ -4,9 +4,49 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PEB.EyeSolver.UI"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="EyeSolver" Height="539" Width="967" Background="White">
+    <Grid Margin="0,0,2,-1" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="9*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="173*"/>
+            <RowDefinition Height="6*"/>
+        </Grid.RowDefinitions>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF9E9E9E" Offset="0"/>
+                <GradientStop Color="White" Offset="0.566"/>
+                <GradientStop Color="#FF3D0D6C" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="43,34,0,0" TextWrapping="Wrap" Text="4" VerticalAlignment="Top" Width="55"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="103,34,0,0" TextWrapping="Wrap" Text="4" VerticalAlignment="Top" Width="55"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="163,34,0,0" TextWrapping="Wrap" Text="4" VerticalAlignment="Top" Width="85"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="254,34,0,0" TextWrapping="Wrap" Text="4" VerticalAlignment="Top" Width="86"/>
+        <Label Content="Inputs" HorizontalAlignment="Left" Margin="43,3,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.105,0.077"/>
+        <Label Content="Outputs" HorizontalAlignment="Left" Margin="103,3,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.105,0.077"/>
+        <Label Content="Hidden Layers" HorizontalAlignment="Left" Margin="163,3,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.105,0.077"/>
+        <Label Content="Hidden Nodes" HorizontalAlignment="Left" Margin="254,3,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.105,0.077"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="345,34,0,0" TextWrapping="Wrap" Text=".1" VerticalAlignment="Top" Width="86"/>
+        <Label Content="Mutation Rate" HorizontalAlignment="Left" Margin="345,3,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.105,0.077"/>
+        <Button Content="Create" HorizontalAlignment="Left" Margin="132,125,0,0" VerticalAlignment="Top" Width="75" />
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="43,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="115"/>
+        <Label Content="Goal" HorizontalAlignment="Left" Margin="43,62,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.105,0.077"/>
+        <TextBox x:Name="txbOut" HorizontalAlignment="Left" Height="23" Margin="163,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="115"/>
+        <Label Content="Goal" HorizontalAlignment="Left" Margin="163,62,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.105,0.077"/>
+
+        <lvc:CartesianChart Series="{Binding SeriesCollection }" LegendLocation="Right" Loaded="CartesianChart_Loaded" Grid.ColumnSpan="2" >
+            <lvc:CartesianChart.AxisY>
+                <lvc:Axis Title="Sales" LabelFormatter="{Binding YFormatter}"></lvc:Axis>
+            </lvc:CartesianChart.AxisY>
+            <lvc:CartesianChart.AxisX>
+                <lvc:Axis Title="Month" Labels="{Binding Labels}"></lvc:Axis>
+            </lvc:CartesianChart.AxisX>
+        </lvc:CartesianChart>
+
     </Grid>
 </Window>
