@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PEB.EyeSolver.Network", "PE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PEB.Network.Test", "PEB.Network.Test\PEB.Network.Test.csproj", "{239E3E47-236B-4685-A7BD-DE9F58978317}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PEB.EyeSolver.UI.Console", "PEB.EyeSolver.UI.Console\PEB.EyeSolver.UI.Console.csproj", "{8B07B15A-E67A-4028-B018-9AABBDE065C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{239E3E47-236B-4685-A7BD-DE9F58978317}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{239E3E47-236B-4685-A7BD-DE9F58978317}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{239E3E47-236B-4685-A7BD-DE9F58978317}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B07B15A-E67A-4028-B018-9AABBDE065C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B07B15A-E67A-4028-B018-9AABBDE065C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B07B15A-E67A-4028-B018-9AABBDE065C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B07B15A-E67A-4028-B018-9AABBDE065C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

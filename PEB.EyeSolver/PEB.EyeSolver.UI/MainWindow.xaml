@@ -34,12 +34,12 @@
         <TextBox HorizontalAlignment="Left" Height="23" Margin="345,34,0,0" TextWrapping="Wrap" Text=".1" VerticalAlignment="Top" Width="86"/>
         <Label Content="Mutation Rate" HorizontalAlignment="Left" Margin="345,3,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.105,0.077"/>
         <Button Content="Create" HorizontalAlignment="Left" Margin="132,125,0,0" VerticalAlignment="Top" Width="75" />
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="43,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="115"/>
+        <TextBox x:Name="txbError" HorizontalAlignment="Left" Height="23" Margin="43,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="115"/>
         <Label Content="Goal" HorizontalAlignment="Left" Margin="43,62,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.105,0.077"/>
         <TextBox x:Name="txbOut" HorizontalAlignment="Left" Height="23" Margin="163,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="115"/>
         <Label Content="Goal" HorizontalAlignment="Left" Margin="163,62,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.105,0.077"/>
 
-        <lvc:CartesianChart Series="{Binding SeriesCollection }" LegendLocation="Right" Loaded="CartesianChart_Loaded" Grid.ColumnSpan="2" >
+        <lvc:CartesianChart Series="{Binding SeriesCollection }" LegendLocation="Right" Loaded="CartesianChart_Loaded" Grid.ColumnSpan="2" Margin="283,62,0,0" >
             <lvc:CartesianChart.AxisY>
                 <lvc:Axis Title="Sales" LabelFormatter="{Binding YFormatter}"></lvc:Axis>
             </lvc:CartesianChart.AxisY>

@@ -50,7 +50,7 @@ namespace PEB.EyeSolver.Network.Evolution
         {
             if (inputs.Count != this.First().GetLayerSize(LayerType.INPUT) ||
                 goals.Count != this.First().GetLayerSize(LayerType.OUTPUT))
-
+                throw new Exception("parameters do not make network size");
             foreach (var network in this)
                 propOut.Add( network.Propigate(inputs, goals));
             return propOut;
